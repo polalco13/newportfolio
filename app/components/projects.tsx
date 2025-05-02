@@ -15,20 +15,20 @@ export default function Projects() {
     {
       title: "Grade Tracker",
       description:
-        "A comprehensive mobile application for students to track assignments, grades, and academic progress with real-time updates and notifications. Built with React Native and Firebase for seamless cross-platform performance.",
+        "A comprehensive mobile application for students to track assignments, grades, and academic progress with real-time updates. Built with React Native and Firebase for seamless cross-platform performance.",
       image: "/images/notas-app.png",
       detailImage: "/images/notas-app-detail.png",
-      tags: ["React Native", "TypeScript", "Firebase", "Redux"],
+      tags: ["React Native", "TypeScript", "Firebase"],
       github: "https://github.com/polalco13/",
       demo: "https://gradetracker.es/",
     },
     {
       title: "Busos Penedès",
       description:
-        "Real-time bus tracking application with route planning, schedules, and notifications for public transportation in the Penedès region. Leverages Firebase for real-time data synchronization and Google Maps API for accurate location tracking.",
+        "Real-time bus tracking application with route planning, schedules for public transportation in the Penedès region. Leverages Firebase for real-time data synchronization.",
       image: "/images/bus-app.png",
       detailImage: "/images/busos-penedes-detail.png",
-      tags: ["React Native", "TypeScript", "Firebase", "Google Maps API"],
+      tags: ["React Native", "TypeScript", "Firebase"],
       github: "https://github.com/polalco13/",
       demo: "https://busos-alco.vercel.app/",
     },

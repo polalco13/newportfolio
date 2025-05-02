@@ -9,26 +9,26 @@ export default function Experience() {
     {
       degree: "Computer Engineering",
       institution: "Universitat Politècnica de Catalunya (UPC)",
-      period: "2021 - 2025",
+      period: "2021 - Present",
       description:
-        "Pursuing a degree in Computer Engineering with focus on software development, algorithms, and mobile application development.",
+        "Currently pursuing a Bachelor’s degree in Computer Engineering with a specialization in software development, algorithm design, and system architecture.",
     },
     {
       degree: "Scientific Baccalaureate",
       institution: "Institut Intermunicipal del Penedès",
       period: "2019 - 2021",
       description:
-        "Completed Scientific Baccalaureate with focus on mathematics, physics, and technology at Institut Intermunicipal del Penedès in Sant Sadurní d'Anoia.",
+        "Completed a Scientific Baccalaureate focusing on advanced mathematics, physics, and technological applications at Institut Intermunicipal del Penedès in Sant Sadurní d’Anoia.",
     },
   ]
 
   const experiences = [
     {
       title: "Junior Software Engineer",
-      company: "Tech Company",
+      company: "GooApps",
       period: "2025 - Present",
       description:
-        "Developing and maintaining mobile applications using React Native and TypeScript. Working with Firebase for backend services and implementing real-time features.",
+        "Designing, developing, and maintaining mobile applications using React Native and Angular, with an emphasis on real-time features and delivering production-ready solutions.",
     },
   ]
 
