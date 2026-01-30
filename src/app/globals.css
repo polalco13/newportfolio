@@ -9,8 +9,13 @@
   --color-text-muted: #737373;     /* 4.8:1 contrast ratio - passes AA */
   --color-border: #D4D4D4;
 
+  /* Accent color - Electric blue */
+  --color-accent: #2563EB;
+  --color-accent-hover: #1D4ED8;
+  --color-accent-light: #DBEAFE;
+
   /* Focus ring */
-  --color-focus: #000000;
+  --color-focus: #2563EB;
 }
 
 @layer base {
@@ -64,4 +69,16 @@ body {
   background: var(--color-bg);
   color: var(--color-text-primary);
   font-family: "Inter", sans-serif;
+  /* Subtle dot pattern background */
+  background-image: radial-gradient(circle at 1px 1px, rgba(0, 0, 0, 0.03) 1px, transparent 0);
+  background-size: 24px 24px;
+}
+
+/* Gradient accent for header area */
+.header-gradient {
+  background: linear-gradient(
+    180deg,
+    var(--color-accent-light) 0%,
+    transparent 100%
+  );
 }
