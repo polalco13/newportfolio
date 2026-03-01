@@ -1,7 +1,7 @@
 "use client";
 
-import { motion, stagger, useAnimate, useInView } from "motion/react";
-import { useEffect, ReactNode } from "react";
+import { motion } from "motion/react";
+import type { ReactNode } from "react";
 
 // Fade up animation for sections
 export function FadeUp({

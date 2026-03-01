@@ -30,11 +30,11 @@
 
   /* Font utilities */
   .font-display {
-    font-family: "Instrument Serif", serif;
+    font-family: var(--font-display), serif;
   }
 
   .font-body {
-    font-family: "Inter", sans-serif;
+    font-family: var(--font-inter), sans-serif;
   }
 
   /* Global focus states - WCAG 2.2 compliant */
@@ -68,7 +68,7 @@
 body {
   background: var(--color-bg);
   color: var(--color-text-primary);
-  font-family: "Inter", sans-serif;
+  font-family: var(--font-inter), sans-serif;
   /* Subtle dot pattern background */
   background-image: radial-gradient(circle at 1px 1px, rgba(0, 0, 0, 0.03) 1px, transparent 0);
   background-size: 24px 24px;

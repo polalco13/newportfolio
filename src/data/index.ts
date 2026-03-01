@@ -22,24 +22,22 @@ export const projects: Project[] = [
     description:
       "Best grade calculator for university students. Track your academic progress and calculate your GPA easily.",
     tags: ["React", "TypeScript", "Node.js"],
-    link: "https://github.com/polalcoverro/grade-tracker",
-    github: "https://github.com/polalcoverro/grade-tracker",
+    link: "https://www.gradetracker.es/"
   },
   {
     title: "DJ Portfolio",
     description:
       "Dynamic portfolio website for DJ services. Showcasing events, mixes, and booking information.",
     tags: ["React", "Tailwind CSS", "Framer Motion"],
-    link: "https://github.com/polalcoverro/dj-portfolio",
-    github: "https://github.com/polalcoverro/dj-portfolio",
+    link: "https://dj-alco.vercel.app/",
   },
   {
     title: "Bus Schedule",
     description:
       "Best bus schedule app for Alt Penedès - Barcelona route. Real-time updates and trip planning.",
     tags: ["JavaScript", "API", "CSS3"],
-    link: "https://github.com/polalcoverro/bus-schedule",
-    github: "https://github.com/polalcoverro/bus-schedule",
+    link: "https://busos-alco.vercel.app/",
+    github: "https://github.com/polalco13/transport-penedes",
   },
   {
     title: "Contenido De Calidad",
