@@ -2,6 +2,7 @@
 
 import { motion } from "motion/react";
 import { ArrowDown, Mail } from "lucide-react";
+import Image from "next/image";
 import { AvatarPulse } from "./animations";
 import { personalInfo } from "@/data";
 
@@ -23,10 +24,15 @@ export function Header() {
       {/* Avatar with accent ring */}
       <div className="relative">
         <div className="absolute -inset-1 bg-gradient-to-br from-[var(--color-accent)] to-blue-400 rounded-full opacity-75 blur-sm" />
-        <AvatarPulse className="relative w-[100px] h-[100px] sm:w-[120px] sm:h-[120px] rounded-full bg-black flex items-center justify-center cursor-pointer ring-2 ring-white">
-          <span className="font-body text-[30px] sm:text-[36px] font-medium text-white">
-            {personalInfo.initials}
-          </span>
+        <AvatarPulse className="relative w-[100px] h-[100px] sm:w-[120px] sm:h-[120px] rounded-full overflow-hidden cursor-pointer ring-2 ring-white bg-white">
+          <Image
+            src="/profile.jpeg"
+            alt={`${personalInfo.name} profile picture`}
+            fill
+            className="object-contain scale-130 mt-4"
+            sizes="(max-width: 640px) 100px, 120px"
+            priority
+          />
         </AvatarPulse>
       </div>
 

@@ -22,14 +22,16 @@ export const projects: Project[] = [
     description:
       "Best grade calculator for university students. Track your academic progress and calculate your GPA easily.",
     tags: ["React", "TypeScript", "Node.js"],
-    link: "https://www.gradetracker.es/"
+    link: "https://www.gradetracker.es/",
+    image: "/gt-20260413.png",
   },
   {
-    title: "DJ Portfolio",
+    title: "Mon DJ Portfolio",
     description:
       "Dynamic portfolio website for DJ services. Showcasing events, mixes, and booking information.",
     tags: ["React", "Tailwind CSS", "Framer Motion"],
-    link: "https://dj-alco.vercel.app/",
+    link: "https://mondj-website.vercel.app/",
+    image: "/mondj.png",
   },
   {
     title: "Bus Schedule",
@@ -38,13 +40,15 @@ export const projects: Project[] = [
     tags: ["JavaScript", "API", "CSS3"],
     link: "https://busos-alco.vercel.app/",
     github: "https://github.com/polalco13/transport-penedes",
+    image: "/busos.png",
   },
   {
-    title: "Contenido De Calidad",
+    title: "FIB HUB",
     description:
-      "Platform for selling digital items. E-commerce solution with secure payments and content delivery.",
+      "Your resource hub for FIB. Everything you need to complete your degree: notes, exams, solutions, professor reviews, and much more.",
     tags: ["React", "Node.js", "PostgreSQL"],
-    link: "https://github.com/polalcoverro/contenido-de-calidad",
+    link: "https://fib-hub.vercel.app/",
+    image: "/fibhub.png",
   },
 ];
 
@@ -61,45 +65,41 @@ export interface Experience {
 
 export const experience: Experience[] = [
   {
-    role: "Intern Full-Stack Developer",
-    company: "GooApps®",
-    dates: "2025",
-    type: "Internship",
+    role: "Frontend Developer",
+    company: "Opsmonitor (California, USA)",
+    dates: "Feb 2026 — Apr 2026",
+    type: "Remote",
     typeStyle: "filled",
     description:
-      "Developed and maintained mobile applications using React and worked on CRM systems built with Angular.",
+      "Developed the infrastructure and core components for a new web application to optimize processes in a U.S.-based logistics company, building a scalable and maintainable frontend using React.",
     bullets: [
-      "Built mobile apps with React Native",
-      "Developed CRM features using Angular",
-      "Collaborated in Agile/Scrum environment",
+      "Built a scalable React frontend architecture and reusable core components",
+      "Used AI tools and agentic systems to improve efficiency and automate workflows",
     ],
   },
   {
     role: "Intern Full-Stack Developer",
-    company: "ESSI - UPC",
-    dates: "2025",
+    company: "ESSI - UPC (Barcelona, Spain)",
+    dates: "Sep 2025 — Jan 2026",
     type: "Internship",
     typeStyle: "outlined",
     description:
       "Implemented a fully customized deployment of the Taiga platform using Docker, including backend, frontend, and asynchronous services.",
     bullets: [
-      "Deployed Taiga platform with Docker",
-      "Configured backend and frontend services",
-      "Set up asynchronous task processing",
+      "Implemented and customized a full Docker-based deployment of Taiga",
+      "Configured backend, frontend, and async services for software engineering course project tracking",
     ],
   },
   {
-    role: "DJ",
-    company: "Freelance",
-    dates: "2020 — Present",
-    type: "Freelance",
+    role: "Intern Full-Stack Developer",
+    company: "GooApps (Barcelona, Spain)",
+    dates: "Mar 2025 — Jul 2025",
+    type: "Internship",
     typeStyle: "muted",
     description:
-      "Working as a DJ for private and corporate events. Professional reliability and client management.",
+      "Developed and maintained mobile applications using React and contributed to CRM systems built with Angular.",
     bullets: [
-      "Managed private and corporate events",
-      "Built strong client relationships",
-      "Developed professional reliability skills",
+      "Contributed to React-based mobile apps and Angular CRM features",
     ],
   },
 ];
@@ -110,15 +110,22 @@ export interface Education {
   school: string;
   years: string;
   description: string;
+  thesis?: string;
+  grade?: string;
+  specialization?: string;
 }
 
 export const education: Education[] = [
   {
-    degree: "Computer Engineering",
-    school: "Facultat d'Informàtica de Barcelona (FIB-UPC)",
-    years: "2021 — 2025",
-    description:
-      "Comprehensive program covering software development, algorithms, databases, and system architecture. Specialized in full-stack development.",
+    degree: "B.S. in Computer Engineering (Software Engineering Major)",
+    school: "Universitat Politècnica de Catalunya (UPC) - FIB",
+    years: "2021 — 2026",
+    description: "",
+    thesis:
+      "Adaptation and Extension of the Taiga Tool for Project Tracking in Software Engineering Courses.",
+    grade: "9.3/10 (Excellent)",
+    specialization:
+      "Advanced software architecture, agile methodologies, and full-stack development.",
   },
 ];
 
@@ -153,7 +160,7 @@ export interface Language {
 export const languages: Language[] = [
   { name: "Spanish", level: "Native" },
   { name: "Catalan", level: "Native" },
-  { name: "English", level: "Fluent" },
+  { name: "English", level: "Fluent (B2)" },
 ];
 
 // Contact
@@ -175,5 +182,5 @@ export const personalInfo = {
   location: "Barcelona, Spain",
   timezone: "CET (UTC+1)",
   about:
-    "I recently graduated in Computer Engineering from FIB-UPC and I'm looking for my first full-time role. During my internships at GooApps and ESSI-UPC, I shipped React Native apps, built Angular CRMs, and deployed containerized platforms with Docker. When I'm not coding, I DJ at private events — it taught me how to read a room and deliver under pressure. I care about clean code, good UX, and building things that solve real problems.",
+    "Recent Software Engineering graduate from FIB-UPC with hands-on experience in frontend and full-stack development. Skilled in building scalable web applications with React, Next.js, Firebase, and Docker, as well as integrating AI-powered features and automation workflows. Passionate about creating high-performance, accessible, and user-centered digital products.",
 };
