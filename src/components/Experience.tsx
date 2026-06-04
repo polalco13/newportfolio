@@ -1,64 +1,59 @@
-"use client";
-
-import { FadeUp, StaggerContainer, StaggerItem, HoverLift } from "./animations";
+import { FadeUp, StaggerContainer, StaggerItem } from "./animations";
 import { experience } from "@/data";
 
 export function Experience() {
   return (
     <FadeUp>
-      <section
-        id="experience"
-        className="flex flex-col gap-6 sm:gap-8 scroll-mt-20"
-      >
-        <h2 className="font-display italic text-2xl sm:text-3xl text-[var(--color-text-primary)]">
-          Experience
-        </h2>
-        <StaggerContainer className="flex flex-col gap-6 sm:gap-8" staggerDelay={0.15}>
-          {experience.map((job, i) => (
-            <StaggerItem key={i}>
-              <HoverLift
-                className={`flex flex-col gap-3 ${i < experience.length - 1 ? "pb-6 sm:pb-8 border-b border-[var(--color-border)]" : ""}`}
-              >
-                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2 sm:gap-0">
+      <section id="experience" className="grid gap-6 scroll-mt-24 sm:gap-7 lg:grid-cols-[220px_1fr] lg:gap-12">
+        <div>
+          <p className="font-body text-xs font-semibold uppercase tracking-[0.16em] text-[var(--color-text-muted)]">
+            Experience
+          </p>
+          <h2 className="mt-2 font-display text-[32px] italic leading-tight text-[var(--color-text-primary)] sm:text-4xl">
+            Teams, internships, and product work.
+          </h2>
+        </div>
+
+        <StaggerContainer className="flex flex-col gap-5 sm:gap-7" staggerDelay={0.1}>
+          {experience.map((job) => (
+            <StaggerItem key={`${job.role}-${job.company}`}>
+              <article className="border-t border-[var(--color-border)] py-6 first:border-t-0 first:pt-0 last:pb-0 sm:py-8">
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                   <div className="flex flex-col gap-1">
-                    <h3 className="font-display italic text-lg sm:text-xl text-[var(--color-text-primary)]">
+                    <h3 className="font-display text-[26px] italic leading-tight text-[var(--color-text-primary)] sm:text-2xl">
                       {job.role}
                     </h3>
-                    <span className="font-body text-sm font-medium text-[var(--color-text-primary)]">
+                    <p className="font-body text-sm font-semibold text-[var(--color-text-primary)]">
                       {job.company}
-                    </span>
+                    </p>
                   </div>
-                  <div className="flex items-center gap-2">
+                  <div className="flex flex-wrap items-center gap-2">
                     <span
-                      className={`font-body text-xs font-medium px-2.5 py-1 transition-all ${
+                      className={`font-body text-xs font-semibold px-2.5 py-1 ${
                         job.typeStyle === "filled"
-                          ? "bg-black text-white"
+                          ? "bg-[var(--color-text-primary)] text-white"
                           : job.typeStyle === "outlined"
-                            ? "bg-white text-black border border-black"
-                            : "bg-white text-[var(--color-text-muted)] border border-[var(--color-text-muted)]"
+                            ? "border border-[var(--color-border-strong)] bg-white text-[var(--color-text-primary)]"
+                            : "border border-[var(--color-border)] bg-white text-[var(--color-text-muted)]"
                       }`}
                     >
                       {job.type}
                     </span>
-                    <span className="font-body text-xs text-[var(--color-text-muted)]">
+                    <span className="font-body text-xs font-medium text-[var(--color-text-muted)]">
                       {job.dates}
                     </span>
                   </div>
                 </div>
-                <p className="font-body text-sm text-[var(--color-text-secondary)] leading-relaxed">
+
+                <p className="mt-4 font-body text-sm leading-relaxed text-[var(--color-text-secondary)]">
                   {job.description}
                 </p>
-                <ul className="flex flex-col gap-1.5 pl-4 pt-2">
-                  {job.bullets.map((bullet, j) => (
-                    <li
-                      key={j}
-                      className="font-body text-sm text-[var(--color-text-secondary)]"
-                    >
-                      • {bullet}
-                    </li>
+                <ul className="mt-4 list-disc space-y-2 pl-5 font-body text-sm leading-relaxed text-[var(--color-text-secondary)]">
+                  {job.bullets.map((bullet) => (
+                    <li key={bullet}>{bullet}</li>
                   ))}
                 </ul>
-              </HoverLift>
+              </article>
             </StaggerItem>
           ))}
         </StaggerContainer>

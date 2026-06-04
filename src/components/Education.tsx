@@ -1,67 +1,73 @@
-"use client";
-
+import { GraduationCap } from "lucide-react";
 import { FadeUp, StaggerContainer, StaggerItem } from "./animations";
 import { education } from "@/data";
 
 export function Education() {
   return (
     <FadeUp>
-      <section className="flex flex-col gap-6 sm:gap-8 scroll-mt-20">
-        <h2 className="font-display italic text-2xl sm:text-3xl text-[var(--color-text-primary)]">
-          Education
-        </h2>
-        <StaggerContainer className="flex flex-col gap-5 sm:gap-6" staggerDelay={0.1}>
-          {education.map((edu, i) => (
+      <section id="education" className="grid gap-6 scroll-mt-24 sm:gap-7 lg:grid-cols-[220px_1fr] lg:gap-12">
+        <div>
+          <p className="font-body text-xs font-semibold uppercase tracking-[0.16em] text-[var(--color-text-muted)]">
+            Education
+          </p>
+          <h2 className="mt-2 font-display text-[32px] italic leading-tight text-[var(--color-text-primary)] sm:text-4xl">
+            Software engineering foundation.
+          </h2>
+        </div>
+
+        <StaggerContainer className="flex flex-col gap-4" staggerDelay={0.08}>
+          {education.map((edu) => (
             <StaggerItem key={`${edu.degree}-${edu.school}`}>
-              <div
-                className={`flex flex-col gap-2 ${i < education.length - 1 ? "pb-5 sm:pb-6 border-b border-[var(--color-border)]" : ""}`}
-              >
-                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1 sm:gap-0">
-                  <div className="flex flex-col gap-1">
-                    <h3 className="font-display italic text-lg sm:text-xl text-[var(--color-text-primary)]">
-                      {edu.degree}
-                    </h3>
-                    <span className="font-body text-sm font-medium text-[var(--color-text-primary)]">
-                      {edu.school}
-                    </span>
+              <article className="border border-[var(--color-border)] bg-white p-4 sm:p-6">
+                <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                  <div className="flex gap-3">
+                    <GraduationCap
+                      size={22}
+                      className="mt-1 shrink-0 text-[var(--color-accent)]"
+                      aria-hidden="true"
+                    />
+                    <div>
+                      <h3 className="font-display text-[24px] italic leading-tight text-[var(--color-text-primary)] sm:text-2xl">
+                        {edu.degree}
+                      </h3>
+                      <p className="mt-1 font-body text-sm font-semibold text-[var(--color-text-primary)]">
+                        {edu.school}
+                      </p>
+                    </div>
                   </div>
-                  <span className="font-body text-xs text-[var(--color-text-muted)]">
+                  <span className="font-body text-xs font-medium text-[var(--color-text-muted)]">
                     {edu.years}
                   </span>
                 </div>
-                <p className="font-body text-sm text-[var(--color-text-secondary)] leading-relaxed">
+
+                <p className="mt-4 font-body text-sm leading-relaxed text-[var(--color-text-secondary)]">
                   {edu.description}
                 </p>
 
-                {(edu.thesis || edu.grade || edu.specialization) && (
-                  <div className="mt-2 flex flex-col gap-2.5 rounded-xl border border-[var(--color-border)] bg-neutral-50 p-3 sm:p-4">
-                    {edu.thesis && (
-                      <p className="font-body text-sm text-[var(--color-text-secondary)] leading-relaxed">
-                        <span className="font-semibold text-[var(--color-text-primary)]">Bachelor&apos;s Thesis (TFG): </span>
-                        {edu.thesis}
-                      </p>
-                    )}
+                <div className="mt-5 grid gap-3 border-t border-[var(--color-border)] pt-5">
+                  {edu.thesis && (
+                    <p className="font-body text-sm leading-relaxed text-[var(--color-text-secondary)]">
+                      <span className="font-semibold text-[var(--color-text-primary)]">
+                        Bachelor&apos;s Thesis:
+                      </span>{" "}
+                      {edu.thesis}
+                    </p>
+                  )}
 
+                  <div className="flex flex-wrap gap-2">
                     {edu.grade && (
-                      <div className="flex items-center gap-2">
-                        <span className="font-body text-xs text-[var(--color-text-muted)] uppercase tracking-wide">
-                          Grade
-                        </span>
-                        <span className="font-body text-xs font-semibold px-2.5 py-1 bg-white border border-[var(--color-border)] text-[var(--color-text-primary)]">
-                          {edu.grade}
-                        </span>
-                      </div>
+                      <span className="border border-[var(--color-border)] bg-[var(--color-bg-soft)] px-2.5 py-1 font-body text-xs font-semibold text-[var(--color-text-primary)]">
+                        Grade: {edu.grade}
+                      </span>
                     )}
-
                     {edu.specialization && (
-                      <p className="font-body text-sm text-[var(--color-text-secondary)] leading-relaxed">
-                        <span className="font-semibold text-[var(--color-text-primary)]">Specialization: </span>
+                      <span className="border border-[var(--color-border)] bg-[var(--color-bg-soft)] px-2.5 py-1 font-body text-xs font-semibold text-[var(--color-text-primary)]">
                         {edu.specialization}
-                      </p>
+                      </span>
                     )}
                   </div>
-                )}
-              </div>
+                </div>
+              </article>
             </StaggerItem>
           ))}
         </StaggerContainer>

@@ -1,6 +1,3 @@
-"use client";
-
-import { motion } from "motion/react";
 import { FadeUp, StaggerContainer, StaggerItem } from "./animations";
 import { tools } from "@/data";
 import { toolIcons } from "./ToolIcons";
@@ -8,28 +5,30 @@ import { toolIcons } from "./ToolIcons";
 export function Tools() {
   return (
     <FadeUp>
-      <section className="flex flex-col gap-5 sm:gap-6 scroll-mt-20">
-        <h2 className="font-display italic text-2xl sm:text-3xl text-[var(--color-text-primary)]">
-          Tools
-        </h2>
+      <section className="flex scroll-mt-24 flex-col gap-5 sm:gap-6">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+          <h2 className="font-display text-[32px] italic leading-tight text-[var(--color-text-primary)] sm:text-4xl">
+            Daily tools
+          </h2>
+          <p className="max-w-sm font-body text-sm leading-relaxed text-[var(--color-text-secondary)]">
+            The practical environment behind the work: editor, version control, containers, and API testing.
+          </p>
+        </div>
+
         <StaggerContainer
-          className="flex flex-wrap gap-6 sm:gap-8"
-          staggerDelay={0.06}
+          className="grid grid-cols-2 gap-3 sm:grid-cols-5"
+          staggerDelay={0.05}
         >
           {tools.map((tool) => (
             <StaggerItem key={tool.name}>
-              <motion.div
-                whileHover={{ y: -3, scale: 1.05 }}
-                transition={{ duration: 0.2 }}
-                className="flex flex-col items-center gap-2.5 w-16 sm:w-20"
-              >
-                <div className="text-[var(--color-text-primary)] hover:text-[var(--color-accent)] transition-colors">
+              <div className="flex h-full flex-col items-center justify-center gap-2.5 border border-[var(--color-border)] bg-white p-3.5 text-center transition-colors hover:border-[var(--color-border-strong)] sm:gap-3 sm:p-4">
+                <div className="text-[var(--color-text-primary)]" aria-hidden="true">
                   {toolIcons[tool.icon]}
                 </div>
-                <span className="font-body text-xs text-[var(--color-text-secondary)]">
+                <span className="font-body text-xs font-medium text-[var(--color-text-secondary)]">
                   {tool.name}
                 </span>
-              </motion.div>
+              </div>
             </StaggerItem>
           ))}
         </StaggerContainer>

@@ -1,79 +1,43 @@
-"use client";
-
-import { FadeUp, StaggerContainer, StaggerItem, SkillChip } from "./animations";
+import { FadeUp, StaggerContainer, StaggerItem } from "./animations";
 import { skills } from "@/data";
+
+const skillGroups = [
+  { label: "Languages", values: skills.languages },
+  { label: "Frontend", values: skills.frontend },
+  { label: "Backend & Infrastructure", values: skills.backend },
+  { label: "Working Style", values: skills.methodologies },
+];
 
 export function Skills() {
   return (
     <FadeUp>
-      <section className="flex flex-col gap-6 sm:gap-8 scroll-mt-20">
-        <h2 className="font-display italic text-2xl sm:text-3xl text-[var(--color-text-primary)]">
-          Skills & Stack
-        </h2>
-        <div className="flex flex-col gap-5">
-          {/* Programming Languages */}
-          <div className="flex flex-col gap-2">
-            <h3 className="font-body text-xs font-medium text-[var(--color-text-muted)] uppercase tracking-wide">
-              Programming Languages
-            </h3>
-            <StaggerContainer className="flex flex-wrap gap-2" staggerDelay={0.03}>
-              {skills.languages.map((skill) => (
-                <StaggerItem key={skill}>
-                  <SkillChip className="font-body text-xs sm:text-sm font-medium px-3 py-1.5 bg-[var(--color-accent)] text-white inline-block">
-                    {skill}
-                  </SkillChip>
-                </StaggerItem>
-              ))}
-            </StaggerContainer>
-          </div>
+      <section id="skills" className="flex scroll-mt-24 flex-col gap-6 sm:gap-9">
+        <div className="max-w-2xl">
+          <p className="font-body text-xs font-semibold uppercase tracking-[0.16em] text-[var(--color-text-muted)]">
+            Stack
+          </p>
+          <h2 className="mt-2 font-display text-[32px] italic leading-tight text-[var(--color-text-primary)] sm:text-4xl">
+            Tools I can be productive with quickly.
+          </h2>
+        </div>
 
-          {/* Frontend */}
-          <div className="flex flex-col gap-2">
-            <h3 className="font-body text-xs font-medium text-[var(--color-text-muted)] uppercase tracking-wide">
-              Frontend
-            </h3>
-            <StaggerContainer className="flex flex-wrap gap-2" staggerDelay={0.03}>
-              {skills.frontend.map((skill) => (
-                <StaggerItem key={skill}>
-                  <SkillChip className="font-body text-xs sm:text-sm font-medium px-3 py-1.5 bg-white text-black border border-black inline-block">
-                    {skill}
-                  </SkillChip>
-                </StaggerItem>
-              ))}
-            </StaggerContainer>
-          </div>
-
-          {/* Backend & Databases */}
-          <div className="flex flex-col gap-2">
-            <h3 className="font-body text-xs font-medium text-[var(--color-text-muted)] uppercase tracking-wide">
-              Backend & Databases
-            </h3>
-            <StaggerContainer className="flex flex-wrap gap-2" staggerDelay={0.03}>
-              {skills.backend.map((skill) => (
-                <StaggerItem key={skill}>
-                  <SkillChip className="font-body text-xs sm:text-sm font-medium px-3 py-1.5 bg-white text-black border border-black inline-block">
-                    {skill}
-                  </SkillChip>
-                </StaggerItem>
-              ))}
-            </StaggerContainer>
-          </div>
-
-          {/* Methodologies */}
-          <div className="flex flex-col gap-2">
-            <h3 className="font-body text-xs font-medium text-[var(--color-text-muted)] uppercase tracking-wide">
-              Methodologies
-            </h3>
-            <StaggerContainer className="flex flex-wrap gap-2" staggerDelay={0.03}>
-              {skills.methodologies.map((skill) => (
-                <StaggerItem key={skill}>
-                  <SkillChip className="font-body text-xs sm:text-sm font-medium px-3 py-1.5 bg-white text-[var(--color-text-secondary)] border border-[var(--color-text-muted)] inline-block">
-                    {skill}
-                  </SkillChip>
-                </StaggerItem>
-              ))}
-            </StaggerContainer>
-          </div>
+        <div className="grid gap-4 md:grid-cols-2">
+          {skillGroups.map((group) => (
+            <div key={group.label} className="border border-[var(--color-border)] bg-white p-4 sm:p-5">
+              <h3 className="font-body text-xs font-semibold uppercase tracking-[0.16em] text-[var(--color-text-muted)]">
+                {group.label}
+              </h3>
+              <StaggerContainer className="mt-4 flex flex-wrap gap-2" staggerDelay={0.025}>
+                {group.values.map((skill) => (
+                  <StaggerItem key={skill}>
+                    <span className="inline-block bg-[var(--color-bg-soft)] px-3 py-1.5 font-body text-sm font-medium text-[var(--color-text-primary)]">
+                      {skill}
+                    </span>
+                  </StaggerItem>
+                ))}
+              </StaggerContainer>
+            </div>
+          ))}
         </div>
       </section>
     </FadeUp>

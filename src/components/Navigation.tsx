@@ -1,79 +1,101 @@
 "use client";
 
-import { motion, AnimatePresence } from "motion/react";
 import { Menu, X } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { navItems } from "@/data";
 
-interface NavigationProps {
-  isScrolled: boolean;
-}
+const MOBILE_NAV_ID = "mobile-navigation";
 
-export function Navigation({ isScrolled }: NavigationProps) {
+export function Navigation() {
+  const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 12);
+    };
+
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  useEffect(() => {
+    if (!mobileMenuOpen) {
+      return;
+    }
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setMobileMenuOpen(false);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [mobileMenuOpen]);
+
   return (
-    <motion.nav
-      initial={{ y: -100 }}
-      animate={{ y: isScrolled ? 0 : -100 }}
-      transition={{ duration: 0.3 }}
-      className="fixed top-0 left-0 right-0 z-50 bg-[var(--color-bg)]/95 backdrop-blur-sm border-b border-[var(--color-border)]"
+    <nav
+      aria-label="Primary navigation"
+      className={`fixed left-0 right-0 top-0 z-50 border-b backdrop-blur-md transition-colors duration-200 ${
+        isScrolled
+          ? "border-[var(--color-border)] bg-[var(--color-bg)]/92 shadow-[0_14px_40px_-32px_rgba(15,23,42,0.45)]"
+          : "border-transparent bg-[var(--color-bg)]/80"
+      }`}
     >
-      <div className="max-w-[680px] mx-auto px-5 sm:px-10 py-3 flex items-center justify-between">
+      <div className="mx-auto flex max-w-[1040px] items-center justify-between px-5 py-3 sm:px-8 lg:px-10">
         <a
-          href="#"
-          className="font-display italic text-lg text-[var(--color-text-primary)]"
+          href="#main-content"
+          className="font-display text-xl italic text-[var(--color-text-primary)]"
+          aria-label="Pol Alcoverro home"
         >
           PA
         </a>
 
-        {/* Desktop nav */}
-        <div className="hidden sm:flex items-center gap-6">
+        <div className="hidden items-center gap-1 sm:flex">
           {navItems.map((item) => (
             <a
               key={item.href}
               href={item.href}
-              className="font-body text-sm text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] transition-colors"
+              className="px-3 py-2 font-body text-sm font-medium text-[var(--color-text-secondary)] transition-colors hover:text-[var(--color-text-primary)]"
             >
               {item.label}
             </a>
           ))}
         </div>
 
-        {/* Mobile menu button */}
         <button
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="sm:hidden p-2 -mr-2"
+          type="button"
+          onClick={() => setMobileMenuOpen((open) => !open)}
+          className="inline-flex h-10 w-10 items-center justify-center text-[var(--color-text-primary)] transition-colors hover:bg-[var(--color-bg-soft)] sm:hidden"
           aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+          aria-controls={MOBILE_NAV_ID}
+          aria-expanded={mobileMenuOpen}
         >
           {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
         </button>
       </div>
 
-      {/* Mobile menu */}
-      <AnimatePresence>
-        {mobileMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            className="sm:hidden border-t border-[var(--color-border)] bg-[var(--color-bg)]"
-          >
-            <div className="px-5 py-4 flex flex-col gap-3">
-              {navItems.map((item) => (
-                <a
-                  key={item.href}
-                  href={item.href}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="font-body text-sm text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] transition-colors py-2"
-                >
-                  {item.label}
-                </a>
-              ))}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </motion.nav>
+      <div
+        id={MOBILE_NAV_ID}
+        className={`sm:hidden ${
+          mobileMenuOpen ? "block" : "hidden"
+        } border-t border-[var(--color-border)] bg-[var(--color-bg)]`}
+      >
+        <div className="mx-auto flex max-w-[1040px] flex-col px-5 py-3">
+          {navItems.map((item) => (
+            <a
+              key={item.href}
+              href={item.href}
+              onClick={() => setMobileMenuOpen(false)}
+              className="py-3 font-body text-sm font-medium text-[var(--color-text-secondary)] transition-colors hover:text-[var(--color-text-primary)]"
+            >
+              {item.label}
+            </a>
+          ))}
+        </div>
+      </div>
+    </nav>
   );
 }

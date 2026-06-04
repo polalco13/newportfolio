@@ -1,9 +1,8 @@
 "use client";
 
-import { motion } from "motion/react";
+import { motion, useReducedMotion } from "motion/react";
 import type { ReactNode } from "react";
 
-// Fade up animation for sections
 export function FadeUp({
   children,
   delay = 0,
@@ -13,14 +12,16 @@ export function FadeUp({
   delay?: number;
   className?: string;
 }) {
+  const reduceMotion = useReducedMotion();
+
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
+      initial={false}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-50px" }}
       transition={{
-        duration: 0.5,
-        delay,
+        duration: reduceMotion ? 0 : 0.5,
+        delay: reduceMotion ? 0 : delay,
         ease: [0.21, 0.47, 0.32, 0.98],
       }}
       className={className}
@@ -30,7 +31,6 @@ export function FadeUp({
   );
 }
 
-// Staggered children animation
 export function StaggerContainer({
   children,
   className = "",
@@ -40,9 +40,11 @@ export function StaggerContainer({
   className?: string;
   staggerDelay?: number;
 }) {
+  const reduceMotion = useReducedMotion();
+
   return (
     <motion.div
-      initial="hidden"
+      initial={false}
       whileInView="visible"
       viewport={{ once: true, margin: "-50px" }}
       variants={{
@@ -50,7 +52,7 @@ export function StaggerContainer({
         visible: {
           opacity: 1,
           transition: {
-            staggerChildren: staggerDelay,
+            staggerChildren: reduceMotion ? 0 : staggerDelay,
           },
         },
       }}
@@ -68,15 +70,17 @@ export function StaggerItem({
   children: ReactNode;
   className?: string;
 }) {
+  const reduceMotion = useReducedMotion();
+
   return (
     <motion.div
       variants={{
-        hidden: { opacity: 0, y: 15 },
+        hidden: reduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 15 },
         visible: {
           opacity: 1,
           y: 0,
           transition: {
-            duration: 0.4,
+            duration: reduceMotion ? 0 : 0.4,
             ease: [0.21, 0.47, 0.32, 0.98],
           },
         },
@@ -88,7 +92,6 @@ export function StaggerItem({
   );
 }
 
-// Hover scale effect
 export function HoverScale({
   children,
   className = "",
@@ -98,11 +101,13 @@ export function HoverScale({
   className?: string;
   scale?: number;
 }) {
+  const reduceMotion = useReducedMotion();
+
   return (
     <motion.div
-      whileHover={{ scale }}
-      whileTap={{ scale: 0.98 }}
-      transition={{ duration: 0.2 }}
+      whileHover={reduceMotion ? undefined : { scale }}
+      whileTap={reduceMotion ? undefined : { scale: 0.98 }}
+      transition={{ duration: reduceMotion ? 0 : 0.2 }}
       className={className}
     >
       {children}
@@ -110,7 +115,6 @@ export function HoverScale({
   );
 }
 
-// Hover lift effect (for cards)
 export function HoverLift({
   children,
   className = "",
@@ -118,10 +122,12 @@ export function HoverLift({
   children: ReactNode;
   className?: string;
 }) {
+  const reduceMotion = useReducedMotion();
+
   return (
     <motion.div
-      whileHover={{ y: -2 }}
-      transition={{ duration: 0.2 }}
+      whileHover={reduceMotion ? undefined : { y: -2 }}
+      transition={{ duration: reduceMotion ? 0 : 0.2 }}
       className={className}
     >
       {children}
@@ -129,7 +135,6 @@ export function HoverLift({
   );
 }
 
-// Avatar pulse animation
 export function AvatarPulse({
   children,
   className = "",
@@ -137,15 +142,17 @@ export function AvatarPulse({
   children: ReactNode;
   className?: string;
 }) {
+  const reduceMotion = useReducedMotion();
+
   return (
     <motion.div
-      initial={{ scale: 0.8, opacity: 0 }}
+      initial={false}
       animate={{ scale: 1, opacity: 1 }}
       transition={{
-        duration: 0.6,
+        duration: reduceMotion ? 0 : 0.55,
         ease: [0.21, 0.47, 0.32, 0.98],
       }}
-      whileHover={{ scale: 1.05 }}
+      whileHover={reduceMotion ? undefined : { y: -3 }}
       className={className}
     >
       {children}
@@ -153,7 +160,6 @@ export function AvatarPulse({
   );
 }
 
-// Text reveal animation (character by character)
 export function TextReveal({
   text,
   className = "",
@@ -163,13 +169,15 @@ export function TextReveal({
   className?: string;
   delay?: number;
 }) {
+  const reduceMotion = useReducedMotion();
+
   return (
     <motion.span
-      initial={{ opacity: 0, y: 20 }}
+      initial={false}
       animate={{ opacity: 1, y: 0 }}
       transition={{
-        duration: 0.6,
-        delay,
+        duration: reduceMotion ? 0 : 0.6,
+        delay: reduceMotion ? 0 : delay,
         ease: [0.21, 0.47, 0.32, 0.98],
       }}
       className={className}
@@ -179,7 +187,6 @@ export function TextReveal({
   );
 }
 
-// Skill chip with hover effect
 export function SkillChip({
   children,
   className = "",
@@ -187,11 +194,13 @@ export function SkillChip({
   children: ReactNode;
   className?: string;
 }) {
+  const reduceMotion = useReducedMotion();
+
   return (
     <motion.span
-      whileHover={{ scale: 1.05, y: -2 }}
-      whileTap={{ scale: 0.95 }}
-      transition={{ duration: 0.2 }}
+      whileHover={reduceMotion ? undefined : { scale: 1.04, y: -2 }}
+      whileTap={reduceMotion ? undefined : { scale: 0.98 }}
+      transition={{ duration: reduceMotion ? 0 : 0.2 }}
       className={className}
     >
       {children}
@@ -199,7 +208,6 @@ export function SkillChip({
   );
 }
 
-// Link with underline animation
 export function AnimatedLink({
   children,
   href,
@@ -211,13 +219,15 @@ export function AnimatedLink({
   className?: string;
   external?: boolean;
 }) {
+  const reduceMotion = useReducedMotion();
+
   return (
     <motion.a
       href={href}
       target={external ? "_blank" : undefined}
       rel={external ? "noopener noreferrer" : undefined}
-      whileHover={{ x: 3 }}
-      transition={{ duration: 0.2 }}
+      whileHover={reduceMotion ? undefined : { x: 3 }}
+      transition={{ duration: reduceMotion ? 0 : 0.2 }}
       className={className}
     >
       {children}

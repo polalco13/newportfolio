@@ -1,8 +1,10 @@
+import { personalInfo } from "@/data";
+
 export function Footer() {
   return (
-    <footer className="pt-10 sm:pt-12 border-t border-[var(--color-border)]">
-      <p className="font-body text-xs text-[var(--color-text-muted)] text-center">
-        © {new Date().getFullYear()} Pol Alcoverro · Designed & built in Barcelona
+    <footer className="border-t border-[var(--color-border)] py-8">
+      <p className="font-body text-center text-xs text-[var(--color-text-muted)]">
+        &copy; {new Date().getFullYear()} {personalInfo.name}. Designed and built in Barcelona.
       </p>
     </footer>
   );

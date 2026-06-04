@@ -1,6 +1,3 @@
-"use client";
-
-import { motion } from "motion/react";
 import { ExternalLink, Github } from "lucide-react";
 import Image from "next/image";
 import { FadeUp, StaggerContainer, StaggerItem } from "./animations";
@@ -9,108 +6,105 @@ import { projects } from "@/data";
 export function Projects() {
   return (
     <FadeUp>
-      <section
-        id="projects"
-        className="flex flex-col gap-6 sm:gap-8 scroll-mt-20"
-      >
-        <h2 className="font-display italic text-2xl sm:text-3xl text-[var(--color-text-primary)]">
-          Selected Projects
-        </h2>
+      <section id="projects" className="flex scroll-mt-24 flex-col gap-6 sm:gap-9">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <p className="font-body text-xs font-semibold uppercase tracking-[0.16em] text-[var(--color-text-muted)]">
+              Selected work
+            </p>
+            <h2 className="mt-2 font-display text-[32px] italic leading-tight text-[var(--color-text-primary)] sm:text-4xl">
+              Products and useful interfaces.
+            </h2>
+          </div>
+          <p className="max-w-sm font-body text-sm leading-relaxed text-[var(--color-text-secondary)]">
+            A focused set of shipped projects showing product thinking, frontend craft, and full-stack delivery.
+          </p>
+        </div>
+
         <StaggerContainer
-          className="grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-6"
-          staggerDelay={0.1}
+          className="grid grid-cols-1 gap-4 sm:gap-5 lg:grid-cols-2"
+          staggerDelay={0.08}
         >
-          {projects.map((project, i) => (
-            <StaggerItem key={i}>
-              <motion.a
-                href={project.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                whileHover={{ y: -4 }}
-                transition={{ duration: 0.2 }}
-                className="group block bg-white border border-[var(--color-border)] overflow-hidden hover:border-black transition-colors"
-                aria-label={`${project.title} - Opens in new tab`}
+          {projects.map((project) => (
+            <StaggerItem key={project.title}>
+              <article
+                className={`group flex h-full flex-col overflow-hidden border bg-white transition-colors hover:border-[var(--color-border-strong)] ${
+                  project.featured
+                    ? "border-[var(--color-border-strong)]"
+                    : "border-[var(--color-border)]"
+                }`}
               >
-                {/* Project image or placeholder */}
-                <div className="aspect-video bg-neutral-100 relative overflow-hidden">
-                  {project.image ? (
-                    <Image
-                      src={project.image}
-                      alt={`Screenshot of ${project.title}`}
-                      fill
-                      className="object-cover group-hover:scale-105 transition-transform duration-300"
-                    />
-                  ) : (
-                    <>
-                      {/* Stylized placeholder */}
-                      <div className="absolute inset-0 bg-gradient-to-br from-neutral-900 to-neutral-700" />
-                      <div className="absolute inset-0 opacity-20">
-                        <svg
-                          className="w-full h-full"
-                          viewBox="0 0 100 100"
-                          preserveAspectRatio="none"
-                        >
-                          <pattern
-                            id={`dots-${i}`}
-                            width="8"
-                            height="8"
-                            patternUnits="userSpaceOnUse"
-                          >
-                            <circle cx="1" cy="1" r="1" fill="white" />
-                          </pattern>
-                          <rect
-                            width="100"
-                            height="100"
-                            fill={`url(#dots-${i})`}
-                          />
-                        </svg>
-                      </div>
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <span className="font-display italic text-5xl sm:text-6xl text-white/10 group-hover:text-white/20 transition-colors">
-                          {String(i + 1).padStart(2, "0")}
-                        </span>
-                      </div>
-                    </>
+                <div className="relative aspect-[4/3] overflow-hidden bg-[var(--color-bg-soft)] sm:aspect-[16/10]">
+                  <Image
+                    src={project.image}
+                    alt={`Screenshot of ${project.title}`}
+                    fill
+                    className="object-cover transition-transform duration-500 group-hover:scale-[1.025]"
+                    sizes="(max-width: 1024px) 100vw, 500px"
+                  />
+                  {project.status && (
+                    <span className="absolute left-2.5 top-2.5 bg-white/92 px-2.5 py-1 font-body text-[11px] font-semibold text-[var(--color-text-primary)] shadow-[0_12px_30px_-24px_rgba(15,23,42,0.45)] sm:left-3 sm:top-3 sm:text-xs">
+                      {project.status}
+                    </span>
                   )}
                 </div>
 
-                {/* Content */}
-                <div className="p-4 sm:p-5 flex flex-col gap-2 sm:gap-3">
-                  <div className="flex items-start justify-between gap-2">
-                    <h3 className="font-display italic text-lg sm:text-xl text-[var(--color-text-primary)] group-hover:text-black">
+                <div className="flex flex-1 flex-col gap-3.5 p-4 sm:gap-4 sm:p-6">
+                  <div className="flex flex-col gap-2">
+                    <p className="font-body text-[11px] font-semibold uppercase tracking-[0.12em] text-[var(--color-accent)] sm:text-xs sm:tracking-[0.14em]">
+                      {project.role}
+                    </p>
+                    <h3 className="font-display text-[26px] italic leading-tight text-[var(--color-text-primary)] sm:text-2xl">
                       {project.title}
                     </h3>
-                    <div
-                      className="flex items-center gap-2 shrink-0"
-                      aria-hidden="true"
-                    >
-                      {project.github && (
-                        <Github
-                          size={14}
-                          className="text-[var(--color-text-muted)]"
-                        />
-                      )}
-                      <ExternalLink
-                        size={14}
-                        className="text-[var(--color-text-muted)] group-hover:text-black transition-colors"
-                      />
-                    </div>
                   </div>
-                  <p className="font-body text-sm text-[var(--color-text-secondary)] leading-relaxed line-clamp-2">
+
+                  <p className="font-body text-sm leading-relaxed text-[var(--color-text-secondary)]">
                     {project.description}
                   </p>
-                  <div className="flex flex-wrap gap-1.5 pt-1">
-                    {project.tags.map((tag) => (
-                      <span
-                        key={tag}
-                        className="font-body text-xs text-[var(--color-text-secondary)] bg-neutral-100 px-2 py-0.5"
+                  <p className="font-body text-sm leading-relaxed text-[var(--color-text-primary)]">
+                    {project.impact}
+                  </p>
+
+                  <div className="mt-auto flex flex-col gap-4">
+                    <div className="flex flex-wrap gap-2">
+                      {project.tags.map((tag) => (
+                        <span
+                          key={tag}
+                          className="bg-[var(--color-bg-soft)] px-2.5 py-1 font-body text-xs font-medium text-[var(--color-text-secondary)]"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+
+                    <div className="flex flex-wrap gap-2">
+                      <a
+                        href={project.liveUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={`Open ${project.title} live site in a new tab`}
+                        className="inline-flex min-h-10 flex-1 items-center justify-center gap-2 border border-[var(--color-border-strong)] px-3 py-2 font-body text-xs font-semibold text-[var(--color-text-primary)] transition-colors hover:bg-[var(--color-text-primary)] hover:text-white sm:flex-none"
                       >
-                        {tag}
-                      </span>
-                    ))}
+                        Live
+                        <ExternalLink size={14} aria-hidden="true" />
+                      </a>
+                      {project.githubUrl && (
+                        <a
+                          href={project.githubUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          aria-label={`Open ${project.title} source code in a new tab`}
+                          className="inline-flex min-h-10 flex-1 items-center justify-center gap-2 border border-[var(--color-border)] px-3 py-2 font-body text-xs font-semibold text-[var(--color-text-secondary)] transition-colors hover:border-[var(--color-border-strong)] hover:text-[var(--color-text-primary)] sm:flex-none"
+                        >
+                          Code
+                          <Github size={14} aria-hidden="true" />
+                        </a>
+                      )}
+                    </div>
                   </div>
                 </div>
-              </motion.a>
+              </article>
             </StaggerItem>
           ))}
         </StaggerContainer>
