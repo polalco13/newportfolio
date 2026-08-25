@@ -89,7 +89,7 @@ export const experience: Experience[] = [
   {
     role: "Software Engineer",
     company: "Mafrica (Manresa, Barcelona)",
-    dates: "May 2026 - Present",
+    dates: "May 2026 - Aug 2026",
     type: "On-site",
     typeStyle: "filled",
     description:
