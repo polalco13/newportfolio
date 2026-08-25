@@ -78,14 +78,6 @@ body {
   );
 }
 
-.motion-portrait-video {
-  display: block;
-}
-
-.motion-portrait-poster {
-  display: none;
-}
-
 /* Gradient accent for header area */
 .header-gradient {
   background: linear-gradient(
@@ -105,11 +97,4 @@ body {
     transition-duration: 0.01ms !important;
   }
 
-  .motion-portrait-video {
-    display: none;
-  }
-
-  .motion-portrait-poster {
-    display: block;
-  }
 }

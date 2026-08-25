@@ -71,26 +71,15 @@ export function Header() {
 
       <FadeUp delay={0.18} className="order-1 hidden justify-self-center sm:block lg:order-2 lg:justify-self-end">
         <div className="relative aspect-[9/16] w-[150px] sm:w-[220px] lg:w-[250px]">
-          <div className="absolute inset-0 border border-[var(--color-border-strong)] bg-white" />
-          <div className="absolute -bottom-2 -right-2 h-full w-full bg-[var(--color-accent-light)] sm:-bottom-3 sm:-right-3" />
-          <AvatarPulse className="relative h-full w-full overflow-hidden border border-[var(--color-border-strong)] bg-white">
-            <video
-              className="motion-portrait-video h-full w-full bg-black object-contain"
-              aria-label={`${personalInfo.name} animated profile portrait`}
-              autoPlay
-              loop
-              muted
-              playsInline
-              poster="/profile.jpeg"
-              preload="metadata"
-            >
-              <source src="/alco.mp4" type="video/mp4" />
-            </video>
+          <div className="absolute inset-0 rounded-2xl border border-[var(--color-border-strong)] bg-white" />
+          <div className="absolute -bottom-2 -right-2 h-full w-full rounded-2xl bg-[var(--color-accent-light)] sm:-bottom-3 sm:-right-3" />
+          <AvatarPulse className="relative h-full w-full overflow-hidden rounded-2xl border border-[var(--color-border-strong)] bg-[var(--color-bg-card)] shadow-[0_16px_40px_rgba(15,23,42,0.08)]">
+            <div className="absolute inset-x-0 top-0 h-14 bg-gradient-to-b from-[var(--color-accent-light)] to-transparent" />
             <Image
               src="/profile.jpeg"
               alt={`${personalInfo.name} profile portrait`}
               fill
-              className="motion-portrait-poster hidden object-contain object-[center_24%]"
+              className="object-cover object-[center_24%]"
               sizes="(max-width: 640px) 150px, (max-width: 1024px) 220px, 250px"
               priority
             />
