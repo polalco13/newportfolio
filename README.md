@@ -1,57 +1,40 @@
-# Pol Alcoverro Portfolio
+# Pol Alcoverro — Portfolio
 
-Personal portfolio for Pol Alcoverro, built as a focused one-page site for technical recruiters and engineering teams.
+A new editorial portfolio for recruiters, engineering teams, and collaborators. Built with Next.js App Router, React, TypeScript, and Lucide icons. Content is rendered on the server; only navigation and the clipboard interaction require client JavaScript.
 
-## Stack
-
-- Next.js 16 App Router
-- React 19
-- TypeScript
-- Tailwind CSS 4
-- Motion
-- lucide-react
-
-## Local Development
+## Run locally
 
 ```bash
-npm install
+npm ci
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000).
-
-On Windows PowerShell, use `npm.cmd` if script execution policy blocks `npm.ps1`:
+Open [localhost:3000](http://localhost:3000).
 
 ```bash
-npm.cmd run dev
+npm run lint
+npm run build
+npm start
 ```
 
-## Verification
+## Editing the portfolio
 
-```bash
-npm.cmd run lint
-npm.cmd run build
-```
+- `src/app/page.tsx`: page sections and semantic markup.
+- `src/app/globals.css`: design tokens, layouts, responsive rules, and reduced-motion support.
+- `src/components/PortfolioControls.tsx`: mobile navigation, current-section indicator, and email copy interaction.
+- `src/data/index.ts`: personal details, experience, education, skills, and links.
+- `src/data/case-studies.ts`: project descriptions, roles, approaches, outcomes, screenshots, and destinations.
+- `public/projects/`: optimized screenshots of the live projects. Grade Tracker uses supplied brand artwork because its live site blocks automated screenshots.
+- `public/Pol-Alcoverro-CV.pdf`: existing supplied CV. This document predates the newest roles shown on the site and should be replaced with an updated CV when available.
 
-The production route `/` should remain statically prerendered. The generated Open Graph image is served from `/opengraph-image`.
+Project outcomes are qualitative; no unverified usage or business metrics have been added. Project screenshots were captured on 21 September 2026. The Bus Schedule description reflects its current implementation using local timetable data.
 
-## Content Model
+## Deployment
 
-Portfolio content lives in `src/data/index.ts`. The main project shape is:
+Deploy using a Next.js-compatible host. The homepage, robots.txt, and sitemap.xml are statically generated. Next.js optimizes and serves the images. The existing Open Graph image route is retained.
 
-```ts
-{
-  title: string;
-  role: string;
-  description: string;
-  impact: string;
-  tags: string[];
-  liveUrl: string;
-  githubUrl?: string;
-  image: string;
-  featured?: boolean;
-  status?: string;
-}
-```
+The canonical URL, robots sitemap URL, sitemap entry, and Person structured data currently use `https://polalcoverro.com`. Update them if the production domain changes.
 
-No resume PDF is linked until a real `public/resume.pdf` file exists.
+## Accessibility
+
+Includes a skip link, semantic sections and headings, visible keyboard focus, native keyboard-accessible project disclosures, an Escape-dismissable mobile navigation, a clipboard status announcement, reduced-motion styles, and responsive layouts down to 320px.

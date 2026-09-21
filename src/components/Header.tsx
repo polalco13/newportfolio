@@ -76,7 +76,7 @@ export function Header() {
           <AvatarPulse className="relative h-full w-full overflow-hidden rounded-2xl border border-[var(--color-border-strong)] bg-[var(--color-bg-card)] shadow-[0_16px_40px_rgba(15,23,42,0.08)]">
             <div className="absolute inset-x-0 top-0 h-14 bg-gradient-to-b from-[var(--color-accent-light)] to-transparent" />
             <Image
-              src="/profile.jpeg"
+              src="/profile_alco.png"
               alt={`${personalInfo.name} profile portrait`}
               fill
               className="object-cover object-[center_24%]"
