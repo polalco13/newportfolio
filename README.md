@@ -24,7 +24,7 @@ npm start
 - `src/components/PortfolioControls.tsx`: mobile navigation, current-section indicator, and email copy interaction.
 - `src/data/index.ts`: personal details, experience, education, skills, and links.
 - `src/data/case-studies.ts`: project descriptions, roles, approaches, outcomes, screenshots, and destinations.
-- `public/projects/`: optimized screenshots of the live projects. Grade Tracker uses supplied brand artwork because its live site blocks automated screenshots.
+- `public/projects/`: optimized screenshots of the live projects. Grade Tracker uses the supplied screenshot at `public/gt.png`.
 - `public/Pol-Alcoverro-CV.pdf`: existing supplied CV. This document predates the newest roles shown on the site and should be replaced with an updated CV when available.
 
 Project outcomes are qualitative; no unverified usage or business metrics have been added. Project screenshots were captured on 21 September 2026. The Bus Schedule description reflects its current implementation using local timetable data.

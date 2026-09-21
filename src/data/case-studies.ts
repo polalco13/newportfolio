@@ -6,8 +6,8 @@ export const caseStudies = [
     domain: "gradetracker.es",
     summary: "A clearer picture of your grades. A better plan for what’s next.",
     tags: ["React", "TypeScript", "Node.js"],
-    image: "/projects/grade-tracker.webp",
-    imageAlt: "Grade Tracker project monogram",
+    image: "/gt.png",
+    imageAlt: "Grade Tracker homepage with course grades and academic planning",
     liveUrl: "https://www.gradetracker.es/",
     problem:
       "Course grades are scattered, and understanding how a result affects an overall average can turn into a spreadsheet exercise.",

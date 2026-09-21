@@ -167,6 +167,7 @@ export default function Home() {
                         alt={project.imageAlt}
                         width={1440}
                         height={1000}
+                        loading="eager"
                         sizes="(max-width: 700px) 92vw, 46vw"
                         className="project-image"
                       />

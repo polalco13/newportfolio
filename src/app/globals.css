@@ -426,22 +426,6 @@ h2 {
   width: 100%;
   height: auto;
 }
-.grade-tracker .browser-frame {
-  position: absolute;
-  inset: 60px 30px 20px;
-  border: 0;
-  background: transparent;
-  box-shadow: none;
-  transform: none;
-}
-.grade-tracker .browser-toolbar {
-  display: none;
-}
-.grade-tracker .project-image {
-  height: 100%;
-  object-fit: contain;
-  mix-blend-mode: multiply;
-}
 .visit-project {
   display: inline-flex;
   align-items: center;

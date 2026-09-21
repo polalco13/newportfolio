@@ -30,7 +30,7 @@ export const projects: Project[] = [
       "Turns scattered course grades into a clear academic picture with fast what-if calculations and a focused UX.",
     tags: ["React", "TypeScript", "Node.js"],
     liveUrl: "https://www.gradetracker.es/",
-    image: "/gt-20260413.png",
+    image: "/gt.png",
     featured: true,
     status: "Live product",
   },
