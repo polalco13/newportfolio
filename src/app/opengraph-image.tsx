@@ -1,7 +1,5 @@
 import { ImageResponse } from "next/og";
 
-export const runtime = "edge";
-
 export const alt = "Pol Alcoverro - Software Engineer and Full-Stack Developer";
 export const size = {
   width: 1200,
@@ -19,10 +17,11 @@ export default async function Image() {
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
-          background: "#FAFAFA",
-          color: "#000",
+          background: "#191a18",
+          color: "#f2f3ea",
           padding: "72px",
-          fontFamily: "Inter, Arial, sans-serif",
+          fontFamily: "Arial, sans-serif",
+          borderBottom: "18px solid #ee4f24",
         }}
       >
         <div
@@ -34,23 +33,22 @@ export default async function Image() {
             fontWeight: 700,
           }}
         >
-          <span>PA</span>
-          <span style={{ color: "#2563EB", fontSize: 24 }}>Barcelona, Spain</span>
+          <span style={{ display: "flex", fontSize: 44 }}>pa<span style={{ color: "#ee4f24" }}>.</span></span>
+          <span style={{ color: "#b2b5a9", fontSize: 24 }}>Barcelona, Spain</span>
         </div>
 
         <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
           <h1
             style={{
               maxWidth: 860,
-              fontSize: 82,
-              lineHeight: 0.98,
-              fontStyle: "italic",
-              fontWeight: 400,
+              fontSize: 96,
+              lineHeight: 1,
+              fontWeight: 700,
               margin: 0,
-              fontFamily: "Georgia, serif",
+              letterSpacing: "-5px",
             }}
           >
-            Pol Alcoverro
+            POL ALCOVERRO
           </h1>
           <p
             style={{
@@ -58,7 +56,7 @@ export default async function Image() {
               fontSize: 34,
               lineHeight: 1.35,
               margin: 0,
-              color: "#525252",
+              color: "#b2b5a9",
             }}
           >
             Software Engineer and Full-Stack Developer building React, Next.js,
@@ -71,11 +69,11 @@ export default async function Image() {
             display: "flex",
             gap: 16,
             fontSize: 22,
-            color: "#525252",
+            color: "#b2b5a9",
           }}
         >
           <span>FIB-UPC graduate</span>
-          <span style={{ color: "#D4D4D4" }}>/</span>
+          <span style={{ color: "#ee4f24" }}>/</span>
           <span>Frontend and full-stack roles</span>
         </div>
       </div>

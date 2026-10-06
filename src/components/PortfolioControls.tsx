@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { ArrowUpRight, Check, Copy, Menu, X } from "lucide-react";
+import { ArrowUpRight, Check, Copy, Menu, Moon, Sun, X } from "lucide-react";
 
 const links = [
   { label: "Work", href: "#projects" },
@@ -13,6 +13,7 @@ const links = [
 export function PortfolioNav() {
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState("");
+  const [theme, setTheme] = useState<"light" | "dark" | null>(null);
   const toggle = useRef<HTMLButtonElement>(null);
   const navigation = useRef<HTMLElement>(null);
 
@@ -41,7 +42,7 @@ export function PortfolioNav() {
       }
     };
     const onResize = () => {
-      if (window.innerWidth > 760) setOpen(false);
+      if (window.innerWidth > 767) setOpen(false);
     };
     document.addEventListener("keydown", onKey);
     window.addEventListener("resize", onResize);
@@ -57,7 +58,7 @@ export function PortfolioNav() {
         <a
           href="#"
           className="wordmark"
-        aria-label="pa. — Pol Alcoverro, home"
+          aria-label="pa. - Pol Alcoverro, home"
           onClick={() => setOpen(false)}
         >
           pa<span>.</span>
@@ -86,6 +87,20 @@ export function PortfolioNav() {
             Contact me <ArrowUpRight size={16} />
           </a>
         </nav>
+        <button
+          className="theme-toggle"
+          aria-label="Switch color theme"
+          title="Switch color theme"
+          onClick={() => {
+            const current = theme ?? (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+            const next = current === "dark" ? "light" : "dark";
+            document.documentElement.dataset.theme = next;
+            setTheme(next);
+          }}
+        >
+          <Sun className="theme-sun" size={18} />
+          <Moon className="theme-moon" size={18} />
+        </button>
         <a className="nav-contact" href="#contact">
           Let’s talk <ArrowUpRight size={16} />
         </a>

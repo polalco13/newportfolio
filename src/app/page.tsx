@@ -1,7 +1,6 @@
 import Image from "next/image";
 import {
   ArrowDown,
-  ArrowDownRight,
   ArrowRight,
   ArrowUpRight,
   Download,
@@ -20,6 +19,7 @@ import {
 } from "@/data";
 import { PortfolioNav, CopyEmail } from "@/components/PortfolioControls";
 import { caseStudies } from "@/data/case-studies";
+import { Reveal } from "@/components/PortfolioMotion";
 
 const external = { target: "_blank", rel: "noopener noreferrer" } as const;
 
@@ -71,7 +71,7 @@ export default function Home() {
               <p className="hero-intro">
                 I’m Pol Alcoverro, a software engineer in Barcelona.
                 <br className="desktop-break" /> I turn complex problems into
-                clear, reliable web experiences — from the first interface to
+                clear, reliable web experiences, from the first interface to
                 the systems behind it.
               </p>
               <div className="hero-actions">
@@ -94,13 +94,10 @@ export default function Home() {
                   alt="Pol Alcoverro"
                   width={1024}
                   height={1536}
-                  priority
-                  sizes="(max-width: 600px) 96px, (max-width: 1000px) 230px, 280px"
+                  preload
+                  sizes="(max-width: 767px) 180px, (max-width: 1100px) 260px, 340px"
                   className="portrait"
                 />
-                <span className="portrait-symbol" aria-hidden="true">
-                  ✳
-                </span>
               </div>
               <div className="portrait-caption">
                 <span>Pol Alcoverro</span>
@@ -110,18 +107,6 @@ export default function Home() {
               </div>
             </div>
           </div>
-          <div className="hero-bottom">
-            <div className="hero-stack">
-              <span className="muted">Built with intention. Built with</span>
-              <span>React</span>
-              <span>Next.js</span>
-              <span>TypeScript</span>
-              <span>Node.js</span>
-            </div>
-            <a className="scroll-link" href="#projects">
-              A little further down <ArrowDownRight size={16} />
-            </a>
-          </div>
         </section>
         <section
           className="work-section section-pad"
@@ -129,52 +114,36 @@ export default function Home() {
           aria-labelledby="projects-title"
         >
           <div className="container">
-            <div className="section-heading">
+            <Reveal className="section-heading">
               <div>
-                <p className="eyebrow section-index">01 / Selected work</p>
                 <h2 id="projects-title">Built to be used.</h2>
               </div>
               <p>
                 Real problems. Considered solutions.
                 <br />A selection of products I’ve brought to life.
               </p>
-            </div>
+            </Reveal>
             <div className="project-grid">
-              {caseStudies.map((project, index) => (
-                <article className="project-card" key={project.slug}>
+              {caseStudies.map((project) => (
+                <Reveal
+                  className={`project-card project-${project.slug}`}
+                  key={project.slug}
+                >
+                  <p className="project-category">{project.category}</p>
                   <a
                     className={`project-visual ${project.slug}`}
                     href={project.liveUrl}
                     {...external}
                     title={`Visit ${project.title} (opens in a new tab)`}
                   >
-                    <div className="project-visual-top">
-                      <span>{project.category}</span>
-                      <span className="project-number">0{index + 1}</span>
-                    </div>
-                    <div className="browser-frame">
-                      <div className="browser-toolbar">
-                        <span className="browser-dots" aria-hidden="true">
-                          <i />
-                          <i />
-                          <i />
-                        </span>
-                        <span>{project.domain}</span>
-                        <ArrowUpRight size={11} />
-                      </div>
-                      <Image
-                        src={project.image}
-                        alt={project.imageAlt}
-                        width={1440}
-                        height={1000}
-                        loading="eager"
-                        sizes="(max-width: 700px) 92vw, 46vw"
-                        className="project-image"
-                      />
-                    </div>
-                    <span className="visit-project">
-                      Visit project <ArrowUpRight size={15} />
-                    </span>
+                    <Image
+                      src={project.image}
+                      alt={project.imageAlt}
+                      width={1440}
+                      height={1000}
+                      sizes="(max-width: 767px) 90vw, (max-width: 1400px) 55vw, 700px"
+                      className="project-image"
+                    />
                   </a>
                   <div className="project-title-row">
                     <h3>
@@ -182,7 +151,14 @@ export default function Home() {
                         {project.title}
                       </a>
                     </h3>
-                    <ArrowUpRight size={23} aria-hidden="true" />
+                    <a
+                      className="project-visit"
+                      href={project.liveUrl}
+                      {...external}
+                      aria-label={`Visit ${project.title} (opens in a new tab)`}
+                    >
+                      <ArrowUpRight size={25} aria-hidden="true" />
+                    </a>
                   </div>
                   <p className="project-description">{project.summary}</p>
                   <ul className="tags" aria-label="Technologies">
@@ -226,7 +202,7 @@ export default function Home() {
                       </div>
                     </div>
                   </details>
-                </article>
+                </Reveal>
               ))}
             </div>
             <div className="work-footer">
@@ -245,7 +221,6 @@ export default function Home() {
         >
           <div className="section-heading">
             <div>
-              <p className="eyebrow section-index">02 / Experience</p>
               <h2 id="experience-title">
                 From learning.
                 <br />
@@ -260,13 +235,13 @@ export default function Home() {
           </div>
           <div className="experience-list">
             {experience.map((job, index) => (
-              <article className="experience-row" key={job.company}>
+              <Reveal className="experience-row" key={job.company}>
                 <div className="experience-date">
-                  <span>{job.dates.replaceAll(" - ", " — ")}</span>
+                  <span>{job.dates}</span>
                   <span className="job-type">{job.type}</span>
                 </div>
                 <div className="experience-role">
-                  <span className="job-number">
+                  <span className="job-number" aria-hidden="true">
                     0{experience.length - index}
                   </span>
                   <div>
@@ -282,7 +257,7 @@ export default function Home() {
                     ))}
                   </ul>
                 </div>
-              </article>
+              </Reveal>
             ))}
           </div>
           <a
@@ -300,7 +275,6 @@ export default function Home() {
         >
           <div className="container about-grid">
             <div>
-              <p className="eyebrow section-index">03 / A bit about me</p>
               <h2 id="about-title">
                 Curious by nature.
                 <br />
@@ -354,7 +328,6 @@ export default function Home() {
         >
           <div className="section-heading">
             <div>
-              <p className="eyebrow section-index">04 / My toolkit</p>
               <h2 id="skills-title">
                 The right tools.
                 <br />A thoughtful approach.
@@ -368,7 +341,7 @@ export default function Home() {
           </div>
           <div className="skills-grid">
             <div className="skill-group">
-              <span className="skill-number">01</span>
+              <span className="skill-label">Frontend</span>
               <h3>Interfaces that make sense.</h3>
               <p>
                 Responsive applications, reusable components, and clear user
@@ -381,7 +354,7 @@ export default function Home() {
               </ul>
             </div>
             <div className="skill-group">
-              <span className="skill-number">02</span>
+              <span className="skill-label">Backend</span>
               <h3>Systems that hold up.</h3>
               <p>
                 APIs, relational data, and containerized services that support
@@ -394,7 +367,7 @@ export default function Home() {
               </ul>
             </div>
             <div className="skill-group">
-              <span className="skill-number">03</span>
+              <span className="skill-label">Engineering</span>
               <h3>Strong engineering foundations.</h3>
               <p>
                 Typed code, collaborative development, and a practical approach
@@ -415,7 +388,7 @@ export default function Home() {
         >
           <div className="container">
             <div className="contact-top">
-              <p className="eyebrow">05 / What’s next?</p>
+              <p className="eyebrow">What’s next?</p>
               <span className="availability">
                 <span className="status-dot" /> Available for frontend &
                 full-stack roles
@@ -467,7 +440,7 @@ export default function Home() {
         <a
           className="wordmark"
           href="#"
-          aria-label="pa. — Pol Alcoverro, back to top"
+          aria-label="pa. - Pol Alcoverro, back to top"
         >
           pa<span>.</span>
         </a>
