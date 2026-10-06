@@ -20,6 +20,7 @@ import {
 import { PortfolioNav, CopyEmail } from "@/components/PortfolioControls";
 import { caseStudies } from "@/data/case-studies";
 import { Reveal } from "@/components/PortfolioMotion";
+import Certifications from "@/components/Certifications";
 
 const external = { target: "_blank", rel: "noopener noreferrer" } as const;
 
@@ -381,6 +382,7 @@ export default function Home() {
             </div>
           </div>
         </section>
+        <Certifications />
         <section
           className="contact-section"
           id="contact"

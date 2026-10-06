@@ -12,4 +12,5 @@ export { Skills } from "./Skills";
 export { Tools } from "./Tools";
 export { Languages } from "./Languages";
 export { Contact } from "./Contact";
+export { default as Certifications } from "./Certifications";
 export { Footer } from "./Footer";

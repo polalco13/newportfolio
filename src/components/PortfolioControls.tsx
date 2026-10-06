@@ -8,6 +8,7 @@ const links = [
   { label: "Experience", href: "#experience" },
   { label: "About", href: "#about" },
   { label: "Skills", href: "#skills" },
+  { label: "Certifications", href: "#certifications" },
 ];
 
 export function PortfolioNav() {

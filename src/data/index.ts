@@ -3,6 +3,7 @@ export const navItems = [
   { label: "About", href: "#about" },
   { label: "Work", href: "#projects" },
   { label: "Experience", href: "#experience" },
+  { label: "Certifications", href: "#certifications" },
   { label: "Contact", href: "#contact" },
 ];
 
@@ -162,6 +163,37 @@ export const education: Education[] = [
     grade: "9.3/10 (Excellent)",
     specialization:
       "Advanced software architecture, agile methodologies, and full-stack development.",
+  },
+];
+
+// Certifications
+export interface Certification {
+  title: string;
+  issuer: string;
+  issuedAt: string;
+  issuedLabel: string;
+  credentialId: string;
+  credentialUrl: string;
+}
+
+export const certifications: Certification[] = [
+  {
+    title: "Develop Generative AI Applications: Get Started",
+    issuer: "IBM",
+    issuedAt: "2026-10-06",
+    issuedLabel: "October 2026",
+    credentialId: "A5TH5K9VIYXQ",
+    credentialUrl:
+      "https://www.coursera.org/account/accomplishments/verify/A5TH5K9VIYXQ",
+  },
+  {
+    title: "Machine Learning with Python",
+    issuer: "IBM",
+    issuedAt: "2026-09-28",
+    issuedLabel: "September 2026",
+    credentialId: "P4CZYK5HGZ4K",
+    credentialUrl:
+      "https://www.coursera.org/account/accomplishments/verify/P4CZYK5HGZ4K",
   },
 ];
 
