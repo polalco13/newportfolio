@@ -68,7 +68,7 @@ export const caseStudies = [
     liveUrl: "https://busos-alco.vercel.app/",
     githubUrl: "https://github.com/polalco13/transport-penedes",
     problem:
-      "For the Alt Penedès–Barcelona commute, timetable information needs to be fast to find and easy to read on a phone.",
+      "For the Alt Penedès-Barcelona commute, timetable information needs to be fast to find and easy to read on a phone.",
     role: "Product design and development of a route-focused timetable application.",
     process:
       "Prioritize frequently checked routes and present local timetable data in a mobile-friendly interface, with origin, destination, and travel-day filters.",
