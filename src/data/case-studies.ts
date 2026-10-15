@@ -1,4 +1,26 @@
-export const caseStudies = [
+export interface CaseStudy {
+  slug: string;
+  title: string;
+  category: string;
+  domain?: string;
+  summary: string;
+  tags: string[];
+  image?: string;
+  imageAlt?: string;
+  liveUrl?: string;
+  githubUrl?: string;
+  /** Client work without a public URL or screenshots. */
+  confidential?: {
+    headline: string;
+    facts: string[];
+  };
+  problem: string;
+  role: string;
+  process: string;
+  outcome: string;
+}
+
+export const caseStudies: CaseStudy[] = [
   {
     slug: "grade-tracker",
     title: "Grade Tracker",
@@ -74,5 +96,24 @@ export const caseStudies = [
       "Prioritize frequently checked routes and present local timetable data in a mobile-friendly interface, with origin, destination, and travel-day filters.",
     outcome:
       "A live utility that makes commuting information easier to scan, with direct access to route details and publicly available source code.",
+  },
+  {
+    slug: "opsmonitor",
+    title: "Opsmonitor",
+    category: "Client project · Logistics",
+    summary:
+      "The foundations of a new logistics web app, built remotely for a US team.",
+    tags: ["React", "TypeScript", "Component library", "AI-assisted workflow"],
+    confidential: {
+      headline: "Core UI and app structure for a logistics workflow platform.",
+      facts: ["Remote · California, USA", "Feb – Apr 2026", "Private codebase"],
+    },
+    problem:
+      "A new logistics product needed a solid starting point: an application structure and UI building blocks the team could keep extending without slowing down.",
+    role: "Frontend developer working remotely with a California-based team, responsible for application infrastructure and core interface components.",
+    process:
+      "Build reusable React UI primitives and the application structure for workflow tooling, using AI-assisted development to iterate quickly while keeping the codebase typed and maintainable.",
+    outcome:
+      "A typed, component-driven foundation for the web application, ready for the team to build new workflow screens on top of.",
   },
 ];

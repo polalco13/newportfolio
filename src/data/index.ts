@@ -89,28 +89,28 @@ export interface Experience {
 export const experience: Experience[] = [
   {
     role: "Software Engineer",
+    company: "The Etailers (Barcelona, Spain)",
+    dates: "Oct 2026 - Present",
+    type: "Current role",
+    typeStyle: "filled",
+    description:
+      "Building software at a Barcelona e-commerce agency that helps brands create, run, and grow their online stores, with strong expertise in Magento and Adobe Commerce.",
+    bullets: [
+      "Develop data pipelines that collect market indicators from official sources and feed EcommGuard analytics dashboards",
+      "Automate recurring data and operations tasks so client teams get up-to-date information without manual work",
+    ],
+  },
+  {
+    role: "Software Engineer",
     company: "Mafrica (Manresa, Barcelona)",
     dates: "May 2026 - Aug 2026",
     type: "On-site",
-    typeStyle: "filled",
+    typeStyle: "outlined",
     description:
       "Maintaining and developing useful internal software for the company, with a focus on practical tools that support day-to-day operations.",
     bullets: [
       "Maintain existing business software and improve reliability for internal users",
       "Develop practical features and workflow improvements aligned with company needs",
-    ],
-  },
-  {
-    role: "Frontend Developer",
-    company: "Opsmonitor (California, USA)",
-    dates: "Feb 2026 - Apr 2026",
-    type: "Remote",
-    typeStyle: "outlined",
-    description:
-      "Developed infrastructure and core UI for a new logistics web application, with a focus on maintainable React components and reliable delivery.",
-    bullets: [
-      "Built reusable React UI primitives and application structure for workflow tooling",
-      "Used AI-assisted development workflows to speed up iteration while keeping the codebase typed and maintainable",
     ],
   },
   {
@@ -249,7 +249,7 @@ export const personalInfo = {
     "I build production-minded web and mobile apps with React, Next.js, Angular, and Node.js.",
   location: "Barcelona, Spain",
   timezone: "CET (UTC+1)",
-  availability: "Available for frontend and full-stack roles",
+  availability: "Software Engineer at The Etailers",
   highlights: [
     "FIB-UPC Software Engineering graduate",
     "React, Next.js, Angular, Node.js",
