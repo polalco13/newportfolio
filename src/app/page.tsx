@@ -38,6 +38,11 @@ export default function Home() {
             jobTitle: "Software Engineer & Full-Stack Developer",
             email: contact.email,
             sameAs: [contact.github, contact.linkedin],
+            worksFor: {
+              "@type": "Organization",
+              name: "The Etailers",
+              url: "https://www.theetailers.com",
+            },
             alumniOf: {
               "@type": "CollegeOrUniversity",
               name: "Universitat Politècnica de Catalunya",
@@ -59,7 +64,7 @@ export default function Home() {
           <div className="hero-topline">
             <p className="eyebrow">Software engineer & full-stack developer</p>
             <span className="availability">
-              <span className="status-dot" /> Open to opportunities
+              <span className="status-dot" /> {personalInfo.availability}
             </span>
           </div>
           <div className="hero-grid">
@@ -131,35 +136,54 @@ export default function Home() {
                   key={project.slug}
                 >
                   <p className="project-category">{project.category}</p>
-                  <a
-                    className={`project-visual ${project.slug}`}
-                    href={project.liveUrl}
-                    {...external}
-                    title={`Visit ${project.title} (opens in a new tab)`}
-                  >
-                    <Image
-                      src={project.image}
-                      alt={project.imageAlt}
-                      width={1440}
-                      height={1000}
-                      sizes="(max-width: 767px) 90vw, (max-width: 1400px) 55vw, 700px"
-                      className="project-image"
-                    />
-                  </a>
-                  <div className="project-title-row">
-                    <h3>
-                      <a href={project.liveUrl} {...external}>
-                        {project.title}
-                      </a>
-                    </h3>
+                  {project.confidential ? (
+                    <div className={`project-visual project-confidential ${project.slug}`}>
+                      <p className="confidential-headline">
+                        {project.confidential.headline}
+                      </p>
+                      <ul className="confidential-facts">
+                        {project.confidential.facts.map((fact) => (
+                          <li key={fact}>{fact}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  ) : (
                     <a
-                      className="project-visit"
+                      className={`project-visual ${project.slug}`}
                       href={project.liveUrl}
                       {...external}
-                      aria-label={`Visit ${project.title} (opens in a new tab)`}
+                      title={`Visit ${project.title} (opens in a new tab)`}
                     >
-                      <ArrowUpRight size={25} aria-hidden="true" />
+                      <Image
+                        src={project.image!}
+                        alt={project.imageAlt ?? ""}
+                        width={1440}
+                        height={1000}
+                        sizes="(max-width: 767px) 90vw, (max-width: 1400px) 55vw, 700px"
+                        className="project-image"
+                      />
                     </a>
+                  )}
+                  <div className="project-title-row">
+                    <h3>
+                      {project.liveUrl ? (
+                        <a href={project.liveUrl} {...external}>
+                          {project.title}
+                        </a>
+                      ) : (
+                        project.title
+                      )}
+                    </h3>
+                    {project.liveUrl && (
+                      <a
+                        className="project-visit"
+                        href={project.liveUrl}
+                        {...external}
+                        aria-label={`Visit ${project.title} (opens in a new tab)`}
+                      >
+                        <ArrowUpRight size={25} aria-hidden="true" />
+                      </a>
+                    )}
                   </div>
                   <p className="project-description">{project.summary}</p>
                   <ul className="tags" aria-label="Technologies">
@@ -192,9 +216,13 @@ export default function Home() {
                         <p>{project.outcome}</p>
                       </div>
                       <div className="case-links">
-                        <a href={project.liveUrl} {...external}>
-                          Explore live project <ArrowUpRight size={15} />
-                        </a>
+                        {project.liveUrl ? (
+                          <a href={project.liveUrl} {...external}>
+                            Explore live project <ArrowUpRight size={15} />
+                          </a>
+                        ) : (
+                          <p>Client work under a private codebase.</p>
+                        )}
                         {project.githubUrl && (
                           <a href={project.githubUrl} {...external}>
                             Source code <Github size={15} />
@@ -283,7 +311,7 @@ export default function Home() {
               </h2>
               <div className="about-location">
                 <MapPin size={17} />
-                <span>Barcelona, Spain · Open to remote teams</span>
+                <span>Barcelona, Spain</span>
               </div>
             </div>
             <div className="about-copy">
@@ -294,8 +322,9 @@ export default function Home() {
               <p>{personalInfo.about}</p>
               <p>
                 My work connects thoughtful interfaces with the systems that
-                power them. I’m looking for a team where I can contribute, keep
-                learning, and take ownership of meaningful work.
+                power them. Today I do that at The Etailers, building data and
+                automation tooling for e-commerce brands, while I keep learning
+                and taking ownership of meaningful work.
               </p>
               <div className="education-card">
                 <span className="small-label">Education</span>
@@ -392,8 +421,7 @@ export default function Home() {
             <div className="contact-top">
               <p className="eyebrow">What’s next?</p>
               <span className="availability">
-                <span className="status-dot" /> Available for frontend &
-                full-stack roles
+                <span className="status-dot" /> Open to new conversations
               </span>
             </div>
             <div className="contact-main">

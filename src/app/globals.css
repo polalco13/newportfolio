@@ -201,6 +201,12 @@ h2 { font-size: clamp(55px, 6.2vw, 86px); line-height: 0.98; letter-spacing: -0.
 .project-visual.fib-hub { aspect-ratio: 1.1; background: var(--background); padding: 40px 22px; }
 .project-visual.mon-dj { aspect-ratio: 1.13; background: var(--foreground); padding: 28px 20px; }
 .project-visual.bus-schedule { aspect-ratio: 1.5; background: var(--accent); border-color: var(--accent-ink); padding: 30px; }
+.project-card.project-opsmonitor { grid-column: 1 / -1; }
+.project-confidential { aspect-ratio: auto; min-height: 300px; align-content: space-between; gap: 48px; padding: 44px 40px; background: var(--accent-ink); border-color: var(--line); color: #f2f3ea; }
+.confidential-headline { max-width: 780px; font-family: var(--font-display), Impact, sans-serif; font-size: clamp(36px, 4.4vw, 60px); font-weight: 600; line-height: 1; text-transform: uppercase; text-wrap: balance; }
+.confidential-facts { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; padding: 0; }
+.confidential-facts li { font-family: var(--font-mono), monospace; font-size: 11px; padding: 6px 10px; border: 1px solid #f2f3ea40; }
+.confidential-facts li:first-child { background: var(--accent); border-color: var(--accent); color: #20211f; }
 .project-image { display: block; width: 100%; height: auto; border: 1px solid #20211f30; box-shadow: 7px 9px 0 #20211f18; transition: transform 450ms cubic-bezier(0.16, 1, 0.3, 1); }
 .project-visual:hover .project-image { transform: scale(1.045) rotate(-1deg); }
 .project-title-row { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-top: 20px; }
@@ -364,6 +370,7 @@ h2 { font-size: clamp(55px, 6.2vw, 86px); line-height: 0.98; letter-spacing: -0.
   .project-grid { grid-template-columns: minmax(0, 1fr); gap: 42px; }
   .project-card, .project-card:nth-child(2), .project-card:nth-child(3), .project-card:nth-child(4) { grid-column: 1; margin-top: 0; }
   .project-visual, .project-visual.fib-hub, .project-visual.mon-dj, .project-visual.bus-schedule { aspect-ratio: 1.4; padding: 28px 22px; }
+  .project-confidential { aspect-ratio: auto; min-height: 260px; gap: 32px; }
   .project-title-row h3 { font-size: 39px; }
   .project-description { font-size: 14px; }
   .case-study-content p { font-size: 14px; }
