@@ -1,0 +1,42 @@
+---
+import Base from '../layouts/Base.astro';
+import { COPY } from '../content/copy';
+
+const t = COPY.es;
+---
+
+<Base
+  lang="es"
+  title={`${t.notFound.title} · polalco.com`}
+  description={t.notFound.body}
+  canonical="/404"
+  alternates={[]}
+  ogImage="/og/home.png"
+  ogLocale={t.ogLocale}
+  noindex
+>
+  <main class="doc">
+    <h1>{t.notFound.title}</h1>
+    <p>{t.notFound.body}</p>
+    <p>
+      <a href="/">{t.notFound.back}</a> · <a href="/ca" lang="ca">{COPY.ca.notFound.back}</a> ·
+      <a href="/en" lang="en">{COPY.en.notFound.back}</a>
+    </p>
+  </main>
+</Base>
+
+<style>
+  .doc {
+    max-width: 60ch;
+    margin: 0 auto;
+    padding: max(48px, 14vh) max(24px, env(safe-area-inset-right)) 64px max(24px, env(safe-area-inset-left));
+  }
+  h1 {
+    margin: 0 0 16px;
+    font-size: 2rem;
+    font-weight: 500;
+  }
+  a {
+    color: var(--beam);
+  }
+</style>

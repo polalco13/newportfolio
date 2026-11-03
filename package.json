@@ -1,29 +1,29 @@
 {
-  "name": "web",
-  "version": "0.1.0",
+  "name": "polalco",
   "private": true,
+  "version": "0.1.0",
+  "type": "module",
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "eslint"
-  },
-  "dependencies": {
-    "lucide-react": "^0.563.0",
-    "motion": "^12.29.2",
-    "next": "16.3.5",
-    "react": "19.2.3",
-    "react-dom": "19.2.3"
+    "dev": "astro dev --port 4330",
+    "build": "astro build",
+    "preview": "astro build && wrangler dev --port 8790 --ip 127.0.0.1",
+    "preview:lan": "astro build && wrangler dev --port 8790 --ip 0.0.0.0",
+    "og": "node scripts/og.mjs",
+    "test": "node scripts/test-worker.mjs",
+    "types": "wrangler types"
   },
   "devDependencies": {
-    "@tailwindcss/postcss": "^4",
-    "@types/node": "^20",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
-    "babel-plugin-react-compiler": "1.0.0",
-    "eslint": "^9",
-    "eslint-config-next": "16.3.5",
-    "tailwindcss": "^4",
-    "typescript": "^5"
+    "@fontsource-variable/hanken-grotesk": "5.3.0",
+    "@lucide/astro": "1.59.0",
+    "@types/three": "0.170.0",
+    "astro": "7.4.0",
+    "wrangler": "4.151.2"
+  },
+  "dependencies": {
+    "@vercel/functions": "3.10.1",
+    "three": "0.170.0"
+  },
+  "engines": {
+    "node": "24.x"
   }
 }

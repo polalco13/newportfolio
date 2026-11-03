@@ -1,0 +1,480 @@
+---
+import Download from '@lucide/astro/icons/download';
+import Mail from '@lucide/astro/icons/mail';
+import Base from '../layouts/Base.astro';
+import AlcoTrace from './AlcoTrace.astro';
+import Brand from './Brand.astro';
+import Haze from './Haze.astro';
+import { COPY, CREDITS, LINKS, type Focus } from '../content/copy';
+import { docSize } from '../content/files';
+import { DOCS, LANGS, type DocId, type Lang } from '../../shared/site';
+
+interface Props {
+  lang: Lang;
+  /** Qué puerta destaca: las dos (home), la del DJ (/alco) o la del CV (/cv). */
+  focus: Focus;
+  /** Las rutas sin idioma (/, /alco, /cv) las sirve el Worker en el idioma del navegador. */
+  negotiated: boolean;
+}
+
+const { lang, focus, negotiated } = Astro.props;
+const t = COPY[lang];
+const tail = focus === 'home' ? '' : `/${focus}`;
+const own = negotiated ? tail || '/' : `/${lang}${tail}`;
+const alternates = [
+  ...LANGS.map((l) => ({ lang: l, href: `/${l}${tail}` })),
+  { lang: 'x-default', href: tail || '/' },
+];
+const ids: DocId[] = ['alco', 'cv'];
+// Origen de la descarga para el contador: la landing general o el enlace de cada público.
+const src = focus === 'home' ? 'web' : `web-${focus}`;
+const NAME = 'Pol Alcoverro';
+// La portada no lleva frase; /alco y /cv, una línea que dice qué hay detrás de su puerta.
+const words = focus === 'home' ? [] : t.line[focus].split(' ');
+---
+
+<Base
+  lang={lang}
+  title={t.title[focus]}
+  description={t.description[focus]}
+  canonical={own}
+  alternates={alternates}
+  ogImage={`/og/${focus}.png`}
+  ogLocale={t.ogLocale}
+>
+  <Haze />
+  <div class="page" data-focus={focus}>
+    <header class="top">
+      <nav class="langs" aria-label={t.language}>
+        {
+          LANGS.map((l) => (
+            <a href={`/${l}${tail}`} hreflang={l} lang={l} aria-current={l === lang ? 'true' : undefined}>
+              {COPY[l].name}
+            </a>
+          ))
+        }
+      </nav>
+    </header>
+
+    <main class="stage">
+      <div class="ident">
+        <AlcoTrace label="ALCO" />
+        <h1 class="name">
+          <span class="sr-only">{NAME}</span>
+          <span aria-hidden="true">
+            {[...NAME].map((ch, i) => <span class="l" style={`--i: ${i}`}>{ch === ' ' ? ' ' : ch}</span>)}
+          </span>
+        </h1>
+        {
+          words.length > 0 && (
+            <p class="line">
+              {words.map((word, i) => (
+                <Fragment>
+                  <span class="w">
+                    <span style={`--i: ${i}`}>{word}</span>
+                  </span>
+                  {i < words.length - 1 ? ' ' : ''}
+                </Fragment>
+              ))}
+            </p>
+          )
+        }
+      </div>
+
+      <div class="doors">
+        <div class="actions">
+          {
+            ids.map((id, i) => (
+              <div class="door" style={`--i: ${i}`}>
+                <a
+                  class:list={['btn', `btn-${id}`, { quiet: focus !== 'home' && focus !== id }]}
+                  href={`${DOCS[id].path}?src=${src}`}
+                  download={DOCS[id].filename}
+                  data-doc={id}
+                >
+                  <span class="row">
+                    <span class="ch">{DOCS[id].channel}</span>
+                    <span>{t.doc[id].label}</span>
+                    <Download size={20} stroke-width={1.5} aria-hidden="true" />
+                  </span>
+                  <small>{t.doc[id].meta(DOCS[id].pages, docSize(id, lang))}</small>
+                </a>
+                <p class="credits">{CREDITS[id].join(' · ')}</p>
+              </div>
+            ))
+          }
+        </div>
+        <p class="inapp" hidden>
+          {t.inApp}
+          <button type="button" data-copied={t.copied}>{t.copyLink}</button>
+        </p>
+      </div>
+    </main>
+
+    <footer class="foot">
+      <ul class="social">
+        <li>
+          <a href={`mailto:${LINKS.email}`} aria-label={`${t.writeMe}: ${LINKS.email}`} title={LINKS.email}>
+            <Mail size={20} stroke-width={1.5} aria-hidden="true" />
+          </a>
+        </li>
+        <li><a href={LINKS.instagram} aria-label="Instagram" title="Instagram"><Brand name="instagram" /></a></li>
+        <li><a href={LINKS.linkedin} aria-label="LinkedIn" title="LinkedIn"><Brand name="linkedin" /></a></li>
+        <li><a href={LINKS.github} aria-label="GitHub" title="GitHub"><Brand name="github" /></a></li>
+      </ul>
+      <p>{t.noCookies} · <a href={t.privacyPath}>{t.privacy}</a></p>
+    </footer>
+  </div>
+</Base>
+
+<script is:inline>
+  (() => {
+    // En el móvil el PDF se abre en el visor del navegador (compartir, guardar) en vez de descargarse.
+    if (matchMedia('(pointer: coarse)').matches) {
+      document.querySelectorAll('.btn[download]').forEach((a) => a.removeAttribute('download'));
+    }
+    // Dentro de Instagram, Facebook o LinkedIn, si el PDF no se ve, se puede abrir la web fuera.
+    if (/Instagram|FBAN|FBAV|LinkedInApp/i.test(navigator.userAgent)) {
+      const hint = document.querySelector('.inapp');
+      const button = hint && hint.querySelector('button');
+      if (hint && button) {
+        hint.hidden = false;
+        button.addEventListener('click', async () => {
+          try {
+            await navigator.clipboard.writeText(location.origin + location.pathname);
+            button.textContent = button.dataset.copied || button.textContent;
+          } catch {
+            // Sin portapapeles: la dirección sigue en la barra para copiarla a mano.
+          }
+        });
+      }
+    }
+  })();
+</script>
+
+<style>
+  .page {
+    position: relative;
+    z-index: 1;
+    min-height: 100svh;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+  }
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .top {
+    display: flex;
+    padding: max(14px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) 0
+      max(16px, env(safe-area-inset-left));
+  }
+  .langs {
+    display: flex;
+    gap: 2px;
+  }
+  .langs a {
+    padding: 8px;
+    font-size: 0.9375rem;
+    color: var(--dim);
+    text-decoration: none;
+  }
+  .langs a:hover {
+    color: var(--silver);
+  }
+  .langs a[aria-current='true'] {
+    color: var(--silver);
+    text-decoration: underline;
+    text-underline-offset: 6px;
+    text-decoration-thickness: 1px;
+  }
+
+  .stage {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(36px, 7vh, 72px);
+    padding: 24px max(24px, env(safe-area-inset-right)) 32px max(24px, env(safe-area-inset-left));
+    text-align: center;
+  }
+  .ident {
+    display: grid;
+    justify-items: center;
+    gap: 14px;
+    width: 100%;
+  }
+  .ident :global(.trace) {
+    width: min(64vw, 980px);
+    margin-bottom: clamp(20px, 5vh, 52px);
+  }
+  .name {
+    margin: 0;
+    font-weight: 500;
+    font-size: clamp(1.125rem, 0.85rem + 1vw, 1.75rem);
+    line-height: 1.2;
+    letter-spacing: 0.6em;
+    text-indent: 0.6em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  /* Cada letra es un inline-block para el reveal; sin esto heredaría la sangría del h1. */
+  .name .l {
+    display: inline-block;
+    text-indent: 0;
+  }
+  .line {
+    margin: 0;
+    max-width: 36ch;
+    color: var(--dim);
+    font-size: clamp(1rem, 0.94rem + 0.3vw, 1.1875rem);
+    text-wrap: balance;
+  }
+  /* Cada palabra sube desde detrás de su propia máscara. */
+  .line .w {
+    display: inline-block;
+    overflow: hidden;
+    vertical-align: top;
+    padding-bottom: 0.14em;
+    margin-bottom: -0.14em;
+  }
+  .line .w > span {
+    display: inline-block;
+  }
+
+  .doors {
+    display: grid;
+    justify-items: center;
+    gap: 16px;
+  }
+  .actions {
+    display: flex;
+    gap: 16px;
+  }
+  .door {
+    display: grid;
+    gap: 10px;
+    width: 18.5rem;
+  }
+  /* Quién ha confiado en cada puerta: nombres reales, sin adornos. */
+  .credits {
+    margin: 0;
+    padding-left: 2px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    line-height: 1.45;
+    color: var(--silver);
+    opacity: 0.82;
+    text-align: left;
+  }
+  .btn {
+    --fill: var(--lavender);
+    display: grid;
+    gap: 6px;
+    min-width: 16rem;
+    padding: 14px 18px 15px;
+    background: var(--fill);
+    color: var(--ink-dark);
+    text-align: left;
+    text-decoration: none;
+    transition:
+      background-color 0.25s ease,
+      transform 0.2s var(--ease);
+  }
+  .btn-alco {
+    --fill: var(--peach);
+  }
+  .btn:hover {
+    background: color-mix(in oklab, var(--fill), white 25%);
+  }
+  .btn:active {
+    transform: scale(0.98);
+  }
+  .row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.0625rem;
+    font-weight: 600;
+    line-height: 1.2;
+  }
+  .row :global(svg) {
+    margin-left: auto;
+  }
+  .ch {
+    display: inline-grid;
+    place-items: center;
+    width: 24px;
+    height: 24px;
+    background: var(--ink-dark);
+    color: var(--fill);
+    font-size: 0.8125rem;
+    font-weight: 600;
+  }
+  .btn small {
+    font-size: 0.875rem;
+    color: color-mix(in oklab, var(--ink-dark) 78%, var(--fill));
+  }
+  /* En /alco y /cv, la otra puerta sigue ahí, más callada. */
+  .btn.quiet {
+    background: rgb(245 242 250 / 0.08);
+    color: var(--silver);
+  }
+  .btn.quiet:hover {
+    background: rgb(245 242 250 / 0.14);
+  }
+  .btn.quiet .ch {
+    background: rgb(245 242 250 / 0.1);
+  }
+  .btn.quiet small {
+    color: var(--dim);
+  }
+  .inapp {
+    margin: 0;
+    font-size: 0.9375rem;
+    color: var(--dim);
+  }
+  .inapp button {
+    margin-left: 8px;
+    padding: 6px 10px;
+    border: 0;
+    background: rgb(245 242 250 / 0.1);
+    color: var(--silver);
+    font: inherit;
+    cursor: pointer;
+  }
+
+  .foot {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px 24px;
+    padding: 0 max(24px, env(safe-area-inset-right)) max(18px, env(safe-area-inset-bottom))
+      max(24px, env(safe-area-inset-left));
+    font-size: 0.875rem;
+    color: var(--dim);
+  }
+  .foot ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 18px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .foot p {
+    margin: 0;
+  }
+  /* Iconos de contacto: zona táctil de 44 px; el margen negativo alinea el primero con el texto. */
+  .foot .social {
+    gap: 4px;
+    margin-left: -12px;
+  }
+  .social a {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    transition: color 150ms ease;
+  }
+  .social a:hover {
+    text-decoration: none;
+  }
+  .foot a {
+    text-decoration: none;
+  }
+  .foot a:hover {
+    color: var(--silver);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+
+  /* Reveals: mientras el haz dibuja el logo, el nombre sale del desenfoque letra a letra, la frase
+     sube palabra a palabra y después llegan las dos puertas. «backwards» solo cubre la espera:
+     al acabar, cada elemento vuelve a sus propios estilos (hover, pulsado). */
+  @media (prefers-reduced-motion: no-preference) {
+    .name .l {
+      animation: letter 1s var(--ease) backwards;
+      animation-delay: calc(1.15s + var(--i) * 40ms);
+    }
+    .line .w > span {
+      animation: rise 0.9s var(--ease) backwards;
+      animation-delay: calc(1.45s + var(--i) * 50ms);
+    }
+    .btn {
+      animation: door 0.9s var(--ease) backwards;
+      animation-delay: calc(1.75s + var(--i) * 120ms);
+    }
+    .credits {
+      animation: fade 1s ease backwards;
+      animation-delay: calc(2.05s + var(--i) * 120ms);
+    }
+    .top,
+    .foot {
+      animation: fade 1s ease 2.2s backwards;
+    }
+  }
+  @keyframes letter {
+    from {
+      opacity: 0;
+      filter: blur(12px);
+      transform: translateY(0.4em);
+    }
+  }
+  @keyframes rise {
+    from {
+      transform: translateY(110%);
+    }
+  }
+  @keyframes door {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+  }
+  @keyframes fade {
+    from {
+      opacity: 0;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .stage {
+      justify-content: space-between;
+      gap: 32px;
+      padding-top: 9vh;
+    }
+    .ident :global(.trace) {
+      width: 86vw;
+    }
+    .doors,
+    .actions,
+    .door {
+      width: 100%;
+    }
+    .actions {
+      flex-direction: column;
+      gap: 14px;
+    }
+    .btn {
+      min-width: 0;
+      width: 100%;
+    }
+    .foot {
+      justify-content: flex-start;
+    }
+  }
+  @media (max-width: 380px) {
+    .name {
+      letter-spacing: 0.42em;
+      text-indent: 0.42em;
+    }
+  }
+</style>

@@ -1,0 +1,121 @@
+---
+// El logo de ALCO como un rótulo de luz: letras macizas en blanco cálido con halo.
+// En el navegador lo pinta un canvas (src/scripts/beam.ts), que lo enciende al entrar y lo ilumina
+// con los focos. Este SVG es la versión quieta: sin JavaScript, con «reducir movimiento» o si el
+// canvas falla. El canvas lee de aquí los trazados del logo.
+interface Props {
+  label: string;
+}
+
+const { label } = Astro.props;
+
+// Contornos del logo vectorial oficial (~/Desktop/Disseny/alco-logo/alco-logo-blanco.svg).
+const LETTERS = [
+  'M497.8 452 L497.8 46 L453.85 46 C341.85 46 304.62 59.68 252.34 137.19 L40 452 L158.21 452 L333.49 192.13 C362.43 149.23 397.8 126.79 397.8 156.79 L397.8 277 L305.2 277 L241.79 371 L397.8 371 L397.8 452 Z',
+  'M570.3 46 L670.3 46 L670.3 233 C670.3 305.5 722.8 358 795.3 358 L914.3 358 L914.3 452 L795.3 452 C664.8 452 570.3 360.02 570.3 233 Z',
+  'M1291.24 93.28 C1252.61 59.99 1201.02 40 1143.5 40 C1020.42 40 924.5 131.54 924.5 249 C924.5 366.46 1020.42 458 1143.5 458 C1201.02 458 1252.61 438.01 1291.24 404.72 L1235.03 321.39 C1214.83 346.93 1182.76 362 1143.5 362 C1075.08 362 1028.5 316.24 1028.5 249 C1028.5 181.76 1075.08 136 1143.5 136 C1182.76 136 1214.83 151.07 1235.03 176.61 Z',
+  'M1291.5 249 C1291.5 131.54 1387.42 40 1510.5 40 C1633.58 40 1729.5 131.54 1729.5 249 C1729.5 366.46 1633.58 458 1510.5 458 C1387.42 458 1291.5 366.46 1291.5 249 Z M1510.5 136 C1442.08 136 1395.5 181.76 1395.5 249 C1395.5 316.24 1442.08 362 1510.5 362 C1578.92 362 1625.5 316.24 1625.5 249 C1625.5 181.76 1578.92 136 1510.5 136 Z',
+];
+const VIEWBOX = '-70 -70 1909.5 638';
+---
+
+<div class="trace" role="img" aria-label={label}>
+  <svg class="persist" viewBox={VIEWBOX} aria-hidden="true">
+    <defs>
+      <filter
+        id="halo"
+        filterUnits="userSpaceOnUse"
+        x="-150"
+        y="-150"
+        width="2070"
+        height="800"
+        color-interpolation-filters="sRGB"
+      >
+        <feGaussianBlur in="SourceGraphic" stdDeviation="26" result="wide"></feGaussianBlur>
+        <feColorMatrix in="wide" type="matrix" values="0.84 0 0 0 0  0 0.8 0 0 0  0 0 1 0 0  0 0 0 0.55 0" result="tinted"></feColorMatrix>
+        <feMerge>
+          <feMergeNode in="tinted"></feMergeNode>
+          <feMergeNode in="SourceGraphic"></feMergeNode>
+        </feMerge>
+      </filter>
+      <linearGradient id="fill" x1="0" y1="40" x2="0" y2="458" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#fffaf5"></stop>
+        <stop offset="1" stop-color="#f0e9ff"></stop>
+      </linearGradient>
+    </defs>
+    <g filter="url(#halo)">{LETTERS.map((d) => <path d={d} />)}</g>
+  </svg>
+  <canvas class="beam-canvas" aria-hidden="true"></canvas>
+</div>
+
+<script>
+  import { startLogo } from '../scripts/beam';
+
+  startLogo();
+
+  // El peluche (three.js y el modelo, ~0,8 MB) llega cuando el logo ya está encendido y la página
+  // ha cargado; con «ahorro de datos» no se carga. Si falla, el logo sigue igual.
+  const saveData = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData;
+  const trace = document.querySelector<HTMLElement>('.trace');
+  if (trace && !saveData) {
+    const launch = () =>
+      setTimeout(
+        () =>
+          import('../scripts/peluche')
+            .then(({ startPeluche }) => startPeluche(trace))
+            .catch((error) => console.warn('El peluche no ha arrancado.', error)),
+        Math.max(0, 2400 - performance.now()),
+      );
+    if (document.readyState === 'complete') launch();
+    else addEventListener('load', launch, { once: true });
+  }
+</script>
+
+<style>
+  .trace {
+    position: relative;
+    aspect-ratio: 1909.5 / 638;
+  }
+  .trace svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+  .persist path {
+    fill: url(#fill);
+    fill-opacity: 0.95;
+    stroke: var(--beam-core);
+    stroke-width: 3;
+    stroke-linejoin: round;
+  }
+  /* El canvas sobresale un 14 % del ancho por cada lado para que quepa el halo.
+     Los márgenes en % siempre se miden sobre el ancho, también arriba. */
+  .beam-canvas {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 128%;
+    aspect-ratio: 1.28 / 0.6141;
+    margin: -14% 0 0 -14%;
+    pointer-events: none;
+  }
+  /* Con el canvas en marcha (clase puesta en el <head>), el SVG quieto se aparta. */
+  :global(.beam) .trace svg {
+    opacity: 0;
+  }
+  .trace.live {
+    touch-action: none;
+  }
+  /* El peluche vive encima de las letras; peluche.ts le da tamaño y posición. */
+  .trace :global(canvas.peluche) {
+    position: absolute;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 300ms cubic-bezier(0.23, 1, 0.32, 1);
+  }
+  .trace :global(canvas.peluche.on) {
+    opacity: 1;
+  }
+</style>

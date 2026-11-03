@@ -1,0 +1,27 @@
+---
+// Doce páginas de la misma landing: /, /alco y /cv (el Worker elige el idioma) y las mismas
+// tres con el idioma fijo en /es, /ca y /en.
+import Landing from '../components/Landing.astro';
+import type { Focus } from '../content/copy';
+import { DEFAULT_LANG, LANGS } from '../../shared/site';
+
+export function getStaticPaths() {
+  const focuses: Focus[] = ['home', 'alco', 'cv'];
+  const tail = (focus: Focus) => (focus === 'home' ? '' : focus);
+  const negotiated = focuses.map((focus) => ({
+    params: { slug: tail(focus) || undefined },
+    props: { lang: DEFAULT_LANG, focus, negotiated: true },
+  }));
+  const explicit = LANGS.flatMap((lang) =>
+    focuses.map((focus) => ({
+      params: { slug: [lang, tail(focus)].filter(Boolean).join('/') },
+      props: { lang, focus, negotiated: false },
+    })),
+  );
+  return [...negotiated, ...explicit];
+}
+
+const { lang, focus, negotiated } = Astro.props;
+---
+
+<Landing lang={lang} focus={focus} negotiated={negotiated} />

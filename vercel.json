@@ -1,0 +1,32 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "astro",
+  "installCommand": "pnpm install --frozen-lockfile",
+  "buildCommand": "pnpm build",
+  "outputDirectory": "dist",
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "redirects": [{ "source": "/Pol-Alcoverro-CV.pdf", "destination": "/cv.pdf", "permanent": true }],
+  "rewrites": [
+    { "source": "/alco.pdf", "destination": "/files/ALCO-Portfolio-DJ-2026.pdf" },
+    { "source": "/cv.pdf", "destination": "/files/Pol-Alcoverro-CV.pdf" }
+  ],
+  "headers": [
+    {
+      "source": "/alco.pdf",
+      "headers": [
+        { "key": "Content-Type", "value": "application/pdf" },
+        { "key": "Content-Disposition", "value": "inline; filename=\"ALCO-Portfolio-DJ-2026.pdf\"" },
+        { "key": "Cache-Control", "value": "public, max-age=300, must-revalidate" }
+      ]
+    },
+    {
+      "source": "/cv.pdf",
+      "headers": [
+        { "key": "Content-Type", "value": "application/pdf" },
+        { "key": "Content-Disposition", "value": "inline; filename=\"Pol-Alcoverro-CV.pdf\"" },
+        { "key": "Cache-Control", "value": "public, max-age=300, must-revalidate" }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+---
+// Humo con luces pastel detrás de todo (src/scripts/haze.ts). Mientras arranca, o sin WebGL,
+// se ve la versión quieta en CSS con las mismas luces.
+---
+
+<div class="haze-wrap" aria-hidden="true">
+  <canvas class="haze"></canvas>
+</div>
+
+<script>
+  import { startHaze } from '../scripts/haze';
+
+  startHaze();
+</script>
+
+<style>
+  .haze-wrap {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    /* Manchas pastel pedidas por Pol: la versión quieta del humo, sin WebGL. */
+    background:
+      radial-gradient(38% 45% at 18% 26%, rgb(201 182 255 / 0.2), transparent 70%), /* taste-skill-ignore */
+      radial-gradient(40% 48% at 84% 30%, rgb(255 196 163 / 0.18), transparent 70%), /* taste-skill-ignore */
+      radial-gradient(42% 50% at 26% 82%, rgb(169 236 208 / 0.14), transparent 70%), /* taste-skill-ignore */
+      radial-gradient(40% 46% at 78% 78%, rgb(168 210 255 / 0.14), transparent 70%), /* taste-skill-ignore */
+      var(--night);
+  }
+  .haze {
+    display: block;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 1.2s ease;
+  }
+  .haze.on {
+    opacity: 1;
+  }
+</style>

@@ -1,0 +1,48 @@
+---
+import Base from '../layouts/Base.astro';
+import { COPY } from '../content/copy';
+import { LANGS, type Lang } from '../../shared/site';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = COPY[lang];
+const alternates = LANGS.map((l) => ({ lang: l, href: COPY[l].privacyPath }));
+---
+
+<Base
+  lang={lang}
+  title={`${t.privacyPage.title} · polalco.com`}
+  description={t.privacyPage.paragraphs[0]}
+  canonical={t.privacyPath}
+  alternates={alternates}
+  ogImage="/og/home.png"
+  ogLocale={t.ogLocale}
+>
+  <main class="doc">
+    <h1>{t.privacyPage.title}</h1>
+    {t.privacyPage.paragraphs.map((p) => <p>{p}</p>)}
+    <p><a href={`/${lang}`}>{t.privacyPage.back}</a></p>
+  </main>
+</Base>
+
+<style>
+  .doc {
+    max-width: 60ch;
+    margin: 0 auto;
+    padding: max(48px, 10vh) max(24px, env(safe-area-inset-right)) 64px max(24px, env(safe-area-inset-left));
+  }
+  h1 {
+    margin: 0 0 24px;
+    font-size: 2rem;
+    font-weight: 500;
+  }
+  p {
+    line-height: 1.6;
+  }
+  a {
+    color: var(--beam);
+  }
+</style>

@@ -1,40 +1,40 @@
-# Pol Alcoverro — Portfolio
+# polalco.com
 
-A new editorial portfolio for recruiters, engineering teams, and collaborators. Built with Next.js App Router, React, TypeScript, and Lucide icons. Content is rendered on the server; only navigation and the clipboard interaction require client JavaScript.
+Landing de una pantalla con un solo trabajo: que quien llegue descargue el portfolio de DJ (ALCO) o el CV de ingeniero. Dirección «Señal»: el logo de ALCO dibujado como una señal de dos canales; el canal L es el DJ y el R, el ingeniero.
 
-## Run locally
-
-```bash
-npm ci
-npm run dev
-```
-
-Open [localhost:3000](http://localhost:3000).
+## En local
 
 ```bash
-npm run lint
-npm run build
-npm start
+pnpm install
+pnpm preview       # compila con Astro y lo sirve con el Worker en http://127.0.0.1:8790
+pnpm preview:lan   # lo mismo, visible en la wifi para probarlo en el móvil
+pnpm dev           # solo Astro, con recarga en caliente (sin Worker: los PDFs están en /files/)
+pnpm test          # prueba el Worker (idiomas, cabeceras de los PDFs y el contador)
+pnpm og            # regenera las imágenes para compartir (necesita Google Chrome)
 ```
 
-## Editing the portfolio
+## Cómo está hecha
 
-- `src/app/page.tsx`: page sections and semantic markup.
-- `src/app/globals.css`: design tokens, layouts, responsive rules, and reduced-motion support.
-- `src/components/PortfolioControls.tsx`: mobile navigation, current-section indicator, and email copy interaction.
-- `src/data/index.ts`: personal details, experience, education, skills, and links.
-- `src/data/case-studies.ts`: project descriptions, roles, approaches, outcomes, screenshots, and destinations.
-- `public/projects/`: optimized screenshots of the live projects. Grade Tracker uses the supplied screenshot at `public/gt.png`.
-- `public/Pol-Alcoverro-CV.pdf`: existing supplied CV. This document predates the newest roles shown on the site and should be replaced with an updated CV when available.
+- `src/` Astro estático. Todo el texto, en `src/content/copy.ts`; el tamaño de cada PDF se lee al compilar.
+- `src/scripts/beam.ts` el logo: un rótulo de luz relleno en un canvas, que se enciende al entrar y toma el color del foco que lo apunta. Sin JavaScript o con «reducir movimiento» se ve el SVG de `src/components/AlcoTrace.astro`.
+- `src/scripts/haze.ts` el fondo: humo y tres focos con su programa, en un shader WebGL. Sin WebGL quedan las manchas en CSS de `src/components/Haze.astro`.
+- `src/scripts/stage.ts` hacia dónde apuntan los focos, compartido entre el fondo y el logo.
+- `shared/site.ts` idiomas, documentos y la elección de idioma, compartidos con el Worker y el middleware.
+- `worker/index.ts` elige el idioma de /, /alco y /cv con `Accept-Language` (sin redirigir) y sirve y cuenta /alco.pdf y /cv.pdf en Workers Analytics Engine: documento, origen, ref, país e idioma, sin IP ni cookies.
+- `src/scripts/peluche.ts` el peluche 3D que vigila desde la O (three.js, se carga después de la entrada). Modelo en `public/models/peluche.glb`.
+- `public/files/` los PDFs.
 
-Project outcomes are qualitative; no unverified usage or business metrics have been added. Project screenshots were captured on 21 September 2026. The Bus Schedule description reflects its current implementation using local timetable data.
+## Rutas
 
-## Deployment
+| URL | Qué es |
+| --- | --- |
+| `/`, `/alco`, `/cv` | La landing: general, centrada en el DJ o centrada en el CV, en el idioma del navegador |
+| `/es/…`, `/ca/…`, `/en/…` | Lo mismo con el idioma fijo (el selector lleva aquí) |
+| `/alco.pdf`, `/cv.pdf` | Los documentos; `?src=` (ig, li, qr, mail…) y `?ref=` dicen de dónde viene la descarga |
+| `/privacidad`, `/ca/privacitat`, `/en/privacy` | Privacidad |
 
-Deploy using a Next.js-compatible host. The homepage, robots.txt, and sitemap.xml are statically generated. Next.js optimizes and serves the images. The existing Open Graph image route is retained.
+## Publicación
 
-The canonical URL, robots sitemap URL, sitemap entry, and Person structured data currently use `https://polalcoverro.com`. Update them if the production domain changes.
+polalco.com se publica en **Vercel** desde `main`: `vercel.json` (Astro estático, URLs sin `.html` y las rutas de los PDFs) y `middleware.ts`, que hace lo mismo que el Worker con /, /alco y /cv. En Vercel no hay contador de descargas.
 
-## Accessibility
-
-Includes a skip link, semantic sections and headings, visible keyboard focus, native keyboard-accessible project disclosures, an Escape-dismissable mobile navigation, a clipboard status announcement, reduced-motion styles, and responsive layouts down to 320px.
+El Worker de Cloudflare (`worker/`, `wrangler.jsonc`) sigue aquí para `pnpm preview` y por si la web pasa a Cloudflare; entonces habría que volver a explicar el contador en la página de privacidad.
