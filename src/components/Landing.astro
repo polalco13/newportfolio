@@ -5,7 +5,7 @@ import Base from '../layouts/Base.astro';
 import AlcoTrace from './AlcoTrace.astro';
 import Brand from './Brand.astro';
 import Haze from './Haze.astro';
-import { COPY, CREDITS, LINKS, type Focus } from '../content/copy';
+import { COPY, LINKS, type Focus } from '../content/copy';
 import { docSize } from '../content/files';
 import { DOCS, LANGS, type DocId, type Lang } from '../../shared/site';
 
@@ -99,7 +99,6 @@ const words = focus === 'home' ? [] : t.line[focus].split(' ');
                   </span>
                   <small>{t.doc[id].meta(DOCS[id].pages, docSize(id, lang))}</small>
                 </a>
-                <p class="credits">{CREDITS[id].join(' · ')}</p>
               </div>
             ))
           }
@@ -262,17 +261,6 @@ const words = focus === 'home' ? [] : t.line[focus].split(' ');
     gap: 10px;
     width: 18.5rem;
   }
-  /* Quién ha confiado en cada puerta: nombres reales, sin adornos. */
-  .credits {
-    margin: 0;
-    padding-left: 2px;
-    font-size: 0.875rem;
-    font-weight: 500;
-    line-height: 1.45;
-    color: var(--silver);
-    opacity: 0.82;
-    text-align: left;
-  }
   .btn {
     --fill: var(--lavender);
     display: grid;
@@ -411,10 +399,6 @@ const words = focus === 'home' ? [] : t.line[focus].split(' ');
     .btn {
       animation: door 0.9s var(--ease) backwards;
       animation-delay: calc(1.75s + var(--i) * 120ms);
-    }
-    .credits {
-      animation: fade 1s ease backwards;
-      animation-delay: calc(2.05s + var(--i) * 120ms);
     }
     .top,
     .foot {

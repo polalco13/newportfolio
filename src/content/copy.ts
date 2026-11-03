@@ -160,12 +160,6 @@ export const COPY: Record<Lang, Copy> = {
   },
 };
 
-/** Prueba real bajo cada puerta: clientes del presskit y empresas del CV. Nombres propios, iguales en todos los idiomas. */
-export const CREDITS: Record<DocId, string[]> = {
-  alco: ['PUMA', 'DAZN', 'Girona FC', 'Estadi Olímpic'],
-  cv: ['The Etailers', 'Mafrica', 'Opsmonitor', 'FIB UPC'],
-};
-
 export const LINKS = {
   email: 'polalcoverros@gmail.com',
   instagram: 'https://www.instagram.com/pol.alco/',
