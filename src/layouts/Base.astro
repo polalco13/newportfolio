@@ -17,7 +17,7 @@ interface Props {
 }
 
 const { lang, title, description, canonical, alternates, ogImage, ogLocale, noindex = false } = Astro.props;
-const site = Astro.site ?? new URL('https://polalco.com');
+const site = Astro.site ?? new URL('https://www.polalco.com');
 const abs = (path: string) => new URL(path, site).href;
 
 const person = {

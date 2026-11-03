@@ -2,7 +2,7 @@
 import { defineConfig } from 'astro/config';
 
 export default defineConfig({
-  site: 'https://polalco.com',
+  site: 'https://www.polalco.com',
   // URLs sin barra final (/alco, /en/cv): cada página sale como un .html propio.
   trailingSlash: 'never',
   build: { format: 'file', inlineStylesheets: 'always' },
