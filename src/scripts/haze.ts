@@ -21,6 +21,7 @@ uniform vec2 uRes;
 uniform float uTime;
 uniform vec2 uPointer;
 uniform float uStir;
+uniform vec2 uVel;
 uniform float uReveal;
 uniform vec3 uGround;
 uniform vec3 uAngle;
@@ -64,7 +65,7 @@ vec3 beam(vec2 uv, vec2 origin, float angle, vec3 color, float aspect, float den
   float cone = (1.0 - smoothstep(width * 0.6, width * 1.6, across)) * step(0.0, along);
   vec2 pool = d - dir * 0.95;
   float puddle = exp(-dot(pool, pool) / 0.06);
-  return lin(color) * (cone * exp(-along * 0.8) * (0.25 + 0.75 * density) * 0.62
+  return lin(color) * (cone * exp(-along * 0.8) * (0.1 + 1.05 * density) * 0.62
                        + puddle * (0.3 + 0.7 * density) * 0.26);
 }
 
@@ -74,24 +75,34 @@ void main() {
   float t = uTime;
   vec2 p = vec2(uv.x * aspect, uv.y) * 1.7;
 
-  // El puntero remueve el humo: un remolino que se apaga con la distancia.
+  // El puntero atraviesa el humo como una mano: lo arrastra en la dirección en que se mueve, lo
+  // agita y abre un poco de claro. Nada de girar las coordenadas (eso hacía de lupa).
   vec2 d = p - vec2(uPointer.x * aspect, uPointer.y) * 1.7;
-  float near = exp(-dot(d, d) * 3.0) * uStir;
-  p += near * vec2(-d.y, d.x) * 1.4;
+  float near = exp(-dot(d, d) * 2.2);
+  p -= vec2(uVel.x * aspect, uVel.y) * 1.7 * near * 1.1;
+  p += (vec2(noise(p * 2.3 + t * 0.6), noise(p * 2.3 + 7.1 - t * 0.6)) - 0.5) * near * uStir * 0.9;
 
-  // Humo: fBm con domain warping en dos pasos, que sube despacio.
-  vec2 q = vec2(fbm(p + vec2(0.0, t * 0.04)), fbm(p + vec2(5.2, 1.3) - t * 0.03));
-  vec2 r = vec2(fbm(p + 3.0 * q + vec2(1.7, 9.2) + t * 0.025), fbm(p + 3.0 * q + vec2(8.3, 2.8) - t * 0.02));
-  float density = smoothstep(0.28, 0.92, fbm(p + 2.6 * r + vec2(0.0, -t * 0.03)));
+  // Humo que sube y deriva: el aire (q, r) avanza en el mismo sentido que el humo, así fluye en
+  // vez de hervir en el sitio.
+  vec2 rise = vec2(0.012, 0.05) * t;
+  vec2 q = vec2(fbm(p - rise * 0.6), fbm(p + vec2(5.2, 1.3) - rise * 0.5));
+  vec2 r = vec2(fbm(p + 2.4 * q + vec2(1.7, 9.2) - rise * 0.8), fbm(p + 2.4 * q + vec2(8.3, 2.8) - rise * 0.7));
+  // Dos capas: la cercana, con volutas, y la del fondo, más ancha y lenta (paralaje de profundidad).
+  float wisps = smoothstep(0.3, 0.86, fbm(p + 2.2 * r - rise));
+  float banks = smoothstep(0.22, 0.8, fbm(p * 0.55 + 1.2 * q + vec2(3.1, 0.0) - rise * 0.45));
+  // Más espeso abajo, donde se acumula la máquina de humo; el puntero abre un claro.
+  float floorHaze = 0.75 + 0.45 * (1.0 - uv.y);
+  float density = clamp((wisps * 0.75 + banks * 0.5) * floorHaze, 0.0, 1.0) * (1.0 - 0.4 * near * uStir);
 
   float on = smoothstep(0.25, 1.0, uReveal);
   vec3 col = lin(uGround);
-  col += vec3(0.85, 0.83, 0.95) * density * 0.02;
+  // El humo se ve en toda la sala, no solo dentro de los focos.
+  col += vec3(0.62, 0.6, 0.72) * (banks * 0.035 + wisps * 0.03) * floorHaze;
   col += (beam(uv, vec2(0.16, 1.04), uAngle.x, uL0, aspect, density)
         + beam(uv, vec2(0.5, 1.08), uAngle.y, uL1, aspect, density)
         + beam(uv, vec2(0.84, 1.04), uAngle.z, uL2, aspect, density)) * on;
-  // Luz rebotada: el humo de toda la sala toma un poco del color de los focos.
-  col += lin(uAmbient) * (0.02 + 0.045 * density) * on;
+  // Luz rebotada: el humo de toda la sala toma el color de los focos.
+  col += lin(uAmbient) * (0.015 + 0.1 * density) * on;
   // Entrada: el humo empieza denso y claro y se asienta.
   col += vec3(0.8, 0.76, 0.9) * density * (1.0 - uReveal) * 0.22;
   // Zona más tranquila detrás del nombre, las puertas y los nombres de debajo, para que se lean.
@@ -101,7 +112,7 @@ void main() {
   col *= 1.0 - 0.72 * dot(v, v);
   col = sqrt(max(col, 0.0));
   // Grano: rompe las franjas de los degradados suaves.
-  col += (hash(gl_FragCoord.xy + fract(t * 7.3) * 113.0) - 0.5) * 0.03;
+  col += (hash(gl_FragCoord.xy + fract(t * 7.3) * 113.0) - 0.5) * 0.014;
   gl_FragColor = vec4(col, 1.0);
 }
 `;
@@ -150,6 +161,8 @@ class Haze {
   private stirTarget = 0;
   private lastMove = -1e9;
   private readonly pointer = { x: 0.5, y: 0.5, px: Number.NaN, py: Number.NaN };
+  /** Hacia dónde arrastra el humo el puntero, en fracción de pantalla; se apaga solo. */
+  private readonly vel = { x: 0, y: 0, tx: 0, ty: 0 };
   /** Ángulos que apuntan al centro del logo, uno por foco. */
   private toLogo = [0, 0, 0];
   /** 0: los focos siguen su programa; 1: apuntan al logo con el color de la puerta señalada. */
@@ -181,7 +194,7 @@ class Haze {
     const a = gl.getAttribLocation(program, 'a');
     gl.enableVertexAttribArray(a);
     gl.vertexAttribPointer(a, 2, gl.FLOAT, false, 0, 0);
-    for (const name of ['uRes', 'uTime', 'uPointer', 'uStir', 'uReveal', 'uGround', 'uAngle', 'uL0', 'uL1', 'uL2', 'uAmbient']) {
+    for (const name of ['uRes', 'uTime', 'uPointer', 'uStir', 'uVel', 'uReveal', 'uGround', 'uAngle', 'uL0', 'uL1', 'uL2', 'uAmbient']) {
       this.u[name] = gl.getUniformLocation(program, name);
     }
     gl.uniform3fv(this.u.uGround, GROUND);
@@ -247,11 +260,17 @@ class Haze {
     // 30 fps de base; 60 mientras los focos cambian de figura, el puntero remueve el humo o entra la página.
     const phase = this.clock % LOOK_MS;
     const busy =
-      phase > LOOK_MS - MOVE_MS || this.stir > 0.02 || Math.abs(this.focus - this.focusTarget) > 0.01 || this.clock < REVEAL_MS;
+      phase > LOOK_MS - MOVE_MS || this.stir > 0.02 || Math.hypot(this.vel.x, this.vel.y) > 0.002 || Math.abs(this.focus - this.focusTarget) > 0.01 || this.clock < REVEAL_MS;
     if (this.sinceDraw < (busy ? 14 : 30)) return;
     this.sinceDraw = 0;
-    if (this.clock - this.lastMove > 160) this.stirTarget *= 0.9;
-    this.stir += (this.stirTarget - this.stir) * 0.12;
+    // Al parar, el humo se calma poco a poco (cerca de un segundo), sin rebote.
+    if (this.clock - this.lastMove > 120) this.stirTarget *= 0.93;
+    this.stir += (this.stirTarget - this.stir) * 0.08;
+    const { vel } = this;
+    vel.tx *= 0.9;
+    vel.ty *= 0.9;
+    vel.x += (vel.tx - vel.x) * 0.1;
+    vel.y += (vel.ty - vel.y) * 0.1;
     this.focus += (this.focusTarget - this.focus) * 0.07;
     this.frame(this.clock, ease(Math.min(1, this.clock / REVEAL_MS)));
   };
@@ -298,7 +317,15 @@ class Haze {
     const { pointer } = this;
     if (!Number.isNaN(pointer.px)) {
       const speed = Math.hypot(event.clientX - pointer.px, event.clientY - pointer.py);
-      this.stirTarget = Math.min(1, this.stirTarget + speed / 160);
+      this.stirTarget = Math.min(1, this.stirTarget + speed / 220);
+      const { vel } = this;
+      vel.tx += (event.clientX - pointer.px) / innerWidth;
+      vel.ty -= (event.clientY - pointer.py) / innerHeight;
+      const len = Math.hypot(vel.tx, vel.ty);
+      if (len > 0.18) {
+        vel.tx *= 0.18 / len;
+        vel.ty *= 0.18 / len;
+      }
       this.lastMove = this.clock;
     }
     pointer.px = event.clientX;
@@ -330,6 +357,7 @@ class Haze {
     gl.uniform1f(u.uTime, timeMs / 1000);
     gl.uniform2f(u.uPointer, this.pointer.x, this.pointer.y);
     gl.uniform1f(u.uStir, this.stir);
+    gl.uniform2f(u.uVel, this.vel.x, this.vel.y);
     gl.uniform1f(u.uReveal, reveal);
     gl.uniform3f(u.uAngle, this.angles[0], this.angles[1], this.angles[2]);
     gl.uniform3fv(u.uL0, colors[0]);
