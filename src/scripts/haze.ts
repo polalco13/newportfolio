@@ -6,6 +6,7 @@
 // Se pinta a menos resolución y a 30 fps cuando nada se mueve deprisa (el degradado de Stripe, hecho
 // parecido, gasta mucha batería si no se limita). Sin WebGL queda el fondo CSS; con «reducir
 // movimiento», un fotograma quieto.
+import { lightDoors } from './doors';
 import { stage, type RGB } from './stage';
 
 const VERT = 'attribute vec2 a; void main() { gl_Position = vec4(a, 0.0, 1.0); }';
@@ -290,6 +291,7 @@ class Haze {
     stage.aspect = this.canvas.width / this.canvas.height;
     stage.lights = ORIGINS.map(([x, y], i) => ({ x, y, angle: this.angles[i], color: colors[i] }));
     this.render(time, reveal, colors, ambient);
+    lightDoors();
   }
 
   private onPointer(event: PointerEvent): void {
