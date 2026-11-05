@@ -1,6 +1,6 @@
 // Fondo de «Señal»: humo de club iluminado por tres focos móviles, en WebGL.
 // El humo es fBm con domain warping (Inigo Quilez). Los focos siguen un programa, como en una sala:
-// cada 8 s pasan a otra figura (abanico, cruce, los tres al logo, barrido en paralelo). Su luz solo
+// cada 8 s pasan a otra figura (abanico, cruce, los tres al logo, barrido, ola, tijeras). Su luz solo
 // se ve donde hay humo y deja un charco de color donde llega, así que el color del fondo va donde
 // apuntan. Al señalar una puerta, los tres se giran hacia el logo con el color de esa puerta.
 // Se pinta a menos resolución y a 30 fps cuando nada se mueve deprisa (el degradado de Stripe, hecho
@@ -54,19 +54,50 @@ float fbm(vec2 p) {
 }
 vec3 lin(vec3 c) { return c * c; }
 
-// Un foco: el cono se abre con la distancia, solo se ve donde hay humo y deja un charco de luz
-// donde llega. Mismo cálculo que lightAt() en stage.ts, para que el logo se ilumine igual.
-vec3 beam(vec2 uv, vec2 origin, float angle, vec3 color, float aspect, float density) {
+// Un haz de cabeza móvil, en cuatro partes: x el cono (mismo cálculo que lightAt() en stage.ts,
+// para que el logo se ilumine igual), y el núcleo más brillante, z el halo de luz dispersada por el
+// humo alrededor y w el charco donde llega. Todo ya atenuado con la distancia.
+vec4 beam(vec2 uv, vec2 origin, float angle, float aspect) {
   vec2 d = (uv - origin) * vec2(aspect, 1.0);
   vec2 dir = vec2(sin(angle), -cos(angle));
   float along = dot(d, dir);
   float across = abs(d.x * dir.y - d.y * dir.x);
-  float width = 0.025 + along * 0.11;
-  float cone = (1.0 - smoothstep(width * 0.6, width * 1.6, across)) * step(0.0, along);
+  // Detrás del aparato (along < 0) el ancho saldría negativo y daría NaN, que ni multiplicado por
+  // cero desaparece (eran bandas negras): se limita al ancho de la lente.
+  float width = 0.025 + max(along, 0.0) * 0.11;
+  float ahead = step(0.0, along);
+  float fall = exp(-max(along, 0.0) * 0.8);
+  float cone = (1.0 - smoothstep(width * 0.6, width * 1.6, across)) * ahead;
+  float k = across / (width * 0.45);
+  float core = exp(-k * k) * ahead;
+  float halo = exp(-across / (width * 1.1)) * ahead;
   vec2 pool = d - dir * 0.95;
-  float puddle = exp(-dot(pool, pool) / 0.06);
-  return lin(color) * (cone * exp(-along * 0.8) * (0.1 + 1.05 * density) * 0.62
-                       + puddle * (0.3 + 0.7 * density) * 0.26);
+  return vec4(cone * fall, core * fall, halo * fall, exp(-dot(pool, pool) / 0.06));
+}
+
+// Cuánta luz devuelve un haz: casi nada sin humo; en el humo, las volutas finas se encienden.
+float lit(vec4 b, float density, float curls) {
+  return b.x * (0.05 + 1.3 * density * curls) * 0.55
+       + b.y * density * curls * 0.4
+       + b.z * (0.015 + 0.07 * density)
+       + b.w * (0.3 + 0.7 * density) * 0.22;
+}
+
+// El aparato: el punto caliente de la lente, justo encima del borde, y su resplandor en el humo.
+float lens(vec2 uv, vec2 origin, float aspect) {
+  float r = length((uv - origin) * vec2(aspect, 1.0));
+  return exp(-r * 14.0) * 0.9 + exp(-r * 3.5) * 0.06;
+}
+
+// Motas de polvo que solo brillan dentro de la luz: dos capas a distinta profundidad que suben.
+float dust(vec2 uv, float aspect, float t, float scale, float speed) {
+  vec2 g = vec2(uv.x * aspect, uv.y) * scale - vec2(0.15, 1.0) * t * speed;
+  vec2 id = floor(g);
+  float h = hash(id);
+  vec2 o = vec2(hash(id + 3.1), hash(id + 7.7)) - 0.5;
+  float r = length(fract(g) - 0.5 - o * 0.6);
+  float twinkle = 0.5 + 0.5 * sin(t * (1.5 + 2.0 * h) + h * 40.0);
+  return step(0.86, h) * smoothstep(0.11, 0.0, r) * twinkle;
 }
 
 void main() {
@@ -90,19 +121,30 @@ void main() {
   // Dos capas: la cercana, con volutas, y la del fondo, más ancha y lenta (paralaje de profundidad).
   float wisps = smoothstep(0.3, 0.86, fbm(p + 2.2 * r - rise));
   float banks = smoothstep(0.22, 0.8, fbm(p * 0.55 + 1.2 * q + vec2(3.1, 0.0) - rise * 0.45));
+  // Rizos finos y más rápidos, que solo se ven a contraluz, dentro de los haces.
+  float curls = 0.45 + 1.1 * smoothstep(0.25, 0.8, fbm(p * 2.7 + 1.6 * r - rise * 1.8));
   // Más espeso abajo, donde se acumula la máquina de humo; el puntero abre un claro.
   float floorHaze = 0.75 + 0.45 * (1.0 - uv.y);
   float density = clamp((wisps * 0.75 + banks * 0.5) * floorHaze, 0.0, 1.0) * (1.0 - 0.4 * near * uStir);
 
   float on = smoothstep(0.25, 1.0, uReveal);
+  vec2 o0 = vec2(0.16, 1.04);
+  vec2 o1 = vec2(0.5, 1.08);
+  vec2 o2 = vec2(0.84, 1.04);
+  vec4 b0 = beam(uv, o0, uAngle.x, aspect);
+  vec4 b1 = beam(uv, o1, uAngle.y, aspect);
+  vec4 b2 = beam(uv, o2, uAngle.z, aspect);
   vec3 col = lin(uGround);
-  // El humo se ve en toda la sala, no solo dentro de los focos.
-  col += vec3(0.62, 0.6, 0.72) * (banks * 0.035 + wisps * 0.03) * floorHaze;
-  col += (beam(uv, vec2(0.16, 1.04), uAngle.x, uL0, aspect, density)
-        + beam(uv, vec2(0.5, 1.08), uAngle.y, uL1, aspect, density)
-        + beam(uv, vec2(0.84, 1.04), uAngle.z, uL2, aspect, density)) * on;
+  // Sala a oscuras: el humo apenas se ve donde no llega la luz.
+  col += vec3(0.62, 0.6, 0.72) * (banks * 0.016 + wisps * 0.014) * floorHaze;
+  col += (lin(uL0) * (lit(b0, density, curls) + lens(uv, o0, aspect))
+        + lin(uL1) * (lit(b1, density, curls) + lens(uv, o1, aspect))
+        + lin(uL2) * (lit(b2, density, curls) + lens(uv, o2, aspect))) * on;
+  // Polvo en suspensión, que brilla con el color del haz que lo cruza.
+  float specks = dust(uv, aspect, t, 46.0, 0.9) + dust(uv, aspect, t + 17.0, 78.0, 0.5) * 0.6;
+  col += (lin(uL0) * b0.x + lin(uL1) * b1.x + lin(uL2) * b2.x) * specks * 0.5 * on;
   // Luz rebotada: el humo de toda la sala toma el color de los focos.
-  col += lin(uAmbient) * (0.015 + 0.1 * density) * on;
+  col += lin(uAmbient) * (0.008 + 0.05 * density) * on;
   // Entrada: el humo empieza denso y claro y se asienta.
   col += vec3(0.8, 0.76, 0.9) * density * (1.0 - uReveal) * 0.22;
   // Zona más tranquila detrás del nombre, las puertas y los nombres de debajo, para que se lean.
@@ -257,10 +299,10 @@ class Haze {
     this.last = now;
     this.clock += dt;
     this.sinceDraw += dt;
-    // 30 fps de base; 60 mientras los focos cambian de figura, el puntero remueve el humo o entra la página.
+    // 30 fps de base; 60 mientras los focos cambian de figura o hacen una figura con movimiento (barrido, ola, tijeras), el puntero remueve el humo o entra la página.
     const phase = this.clock % LOOK_MS;
     const busy =
-      phase > LOOK_MS - MOVE_MS || this.stir > 0.02 || Math.hypot(this.vel.x, this.vel.y) > 0.002 || Math.abs(this.focus - this.focusTarget) > 0.01 || this.clock < REVEAL_MS;
+      phase > LOOK_MS - MOVE_MS || Math.floor(this.clock / LOOK_MS) % 6 >= 3 || this.stir > 0.02 || Math.hypot(this.vel.x, this.vel.y) > 0.002 || Math.abs(this.focus - this.focusTarget) > 0.01 || this.clock < REVEAL_MS;
     if (this.sinceDraw < (busy ? 14 : 30)) return;
     this.sinceDraw = 0;
     // Al parar, el humo se calma poco a poco (cerca de un segundo), sin rebote.
@@ -275,19 +317,32 @@ class Haze {
     this.frame(this.clock, ease(Math.min(1, this.clock / REVEAL_MS)));
   };
 
-  /** Una figura del programa: el ángulo de cada foco. */
-  private look(index: number, time: number): number[] {
-    switch (index % 4) {
+  /** Una figura del programa: el ángulo y la intensidad de cada foco. */
+  private look(index: number, time: number): { angle: number[]; level: number[] } {
+    const full = [1, 1, 1];
+    switch (index % 6) {
       case 0: // abanico: se abren hacia los lados
-        return [-0.32, 0, 0.32];
+        return { angle: [-0.32, 0, 0.32], level: full };
       case 1: // cruce: izquierda y derecha se cruzan en el centro
-        return [0.55, 0, -0.55];
+        return { angle: [0.55, 0, -0.55], level: full };
       case 2: // los tres al logo
-        return this.toLogo;
-      default: {
+        return { angle: this.toLogo, level: full };
+      case 3: {
         // barrido: los tres en paralelo, de lado a lado
         const sweep = 0.42 * Math.sin(time * 0.0006);
-        return [sweep, sweep, sweep];
+        return { angle: [sweep, sweep, sweep], level: full };
+      }
+      case 4: {
+        // ola: cada foco va un tercio de vuelta detrás del anterior y se enciende al pasar (persecución
+        // con fundidos, nunca destellos)
+        const angle = [0, 1, 2].map((i) => 0.34 * Math.sin(time * 0.0014 - i * 2.09));
+        const level = [0, 1, 2].map((i) => 0.45 + 0.55 * (0.5 + 0.5 * Math.sin(time * 0.0028 - i * 2.09)));
+        return { angle, level };
+      }
+      default: {
+        // tijeras: los de los lados se abren y se cierran; el del centro respira
+        const open = 0.48 * Math.sin(time * 0.0011);
+        return { angle: [open, 0.08 * Math.sin(time * 0.0022), -open], level: [1, 0.6 + 0.4 * Math.abs(Math.sin(time * 0.0011)), 1] };
       }
     }
   }
@@ -300,10 +355,11 @@ class Haze {
     const to = this.look(index + 1, time);
     const colors: RGB[] = [];
     for (let i = 0; i < 3; i++) {
-      const program = from[i] + (to[i] - from[i]) * move + 0.04 * Math.sin(time * 0.0007 + i * 2.1);
+      const program = from.angle[i] + (to.angle[i] - from.angle[i]) * move + 0.04 * Math.sin(time * 0.0007 + i * 2.1);
       this.angles[i] = program + (this.toLogo[i] - program) * this.focus;
+      const level = from.level[i] + (to.level[i] - from.level[i]) * move;
       // Al juntarse los tres sobre el logo se atenúan un poco, para no deslumbrar el texto.
-      const dim = 1 - 0.3 * this.focus;
+      const dim = (level + (1 - level) * this.focus) * (1 - 0.3 * this.focus);
       colors.push(mix(COLORS[i], this.tint, this.focus * 0.8).map((v) => v * dim) as RGB);
     }
     const ambient: RGB = [0, 1, 2].map((c) => (colors[0][c] + colors[1][c] + colors[2][c]) / 3) as RGB;
