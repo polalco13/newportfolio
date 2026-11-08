@@ -44,7 +44,7 @@ export const COPY: Record<Lang, Copy> = {
       cv: 'Ingeniero de software en Barcelona, de la interfaz al pipeline de datos.',
     },
     doc: {
-      alco: { label: 'Portfolio DJ', meta: (p, s) => `PDF · ${p} ${p === 1 ? 'pág' : 'págs'} · ${s}` },
+      alco: { label: 'Portfolio DJ', meta: (p, s) => `PDF en inglés · ${p} ${p === 1 ? 'pág' : 'págs'} · ${s}` },
       cv: { label: 'CV', meta: (p, s) => `PDF en inglés · ${p} ${p === 1 ? 'pág' : 'págs'} · ${s}` },
     },
     inApp: '¿No se abre? Ábrelo en el navegador.',
@@ -88,7 +88,7 @@ export const COPY: Record<Lang, Copy> = {
       cv: 'Enginyer de programari a Barcelona, de la interfície al pipeline de dades.',
     },
     doc: {
-      alco: { label: 'Portfolio DJ', meta: (p, s) => `PDF en castellà · ${p} pàg. · ${s}` },
+      alco: { label: 'Portfolio DJ', meta: (p, s) => `PDF en anglès · ${p} pàg. · ${s}` },
       cv: { label: 'CV', meta: (p, s) => `PDF en anglès · ${p} pàg. · ${s}` },
     },
     inApp: "No s'obre? Obre'l al navegador.",
@@ -132,7 +132,7 @@ export const COPY: Record<Lang, Copy> = {
       cv: 'Software engineer in Barcelona, from the interface to the data pipeline.',
     },
     doc: {
-      alco: { label: 'DJ portfolio', meta: (p, s) => `PDF in Spanish · ${p} ${p === 1 ? 'page' : 'pages'} · ${s}` },
+      alco: { label: 'DJ portfolio', meta: (p, s) => `PDF · ${p} ${p === 1 ? 'page' : 'pages'} · ${s}` },
       cv: { label: 'CV', meta: (p, s) => `PDF · ${p} ${p === 1 ? 'page' : 'pages'} · ${s}` },
     },
     inApp: 'Not opening? Open it in your browser.',
