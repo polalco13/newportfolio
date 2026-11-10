@@ -1,0 +1,59 @@
+# GooApps y la versión de móvil de BusosPenedès.
+order: 4
+color: peach
+title:
+  es: Móvil
+  ca: Mòbil
+  en: Mobile
+line:
+  es: Interfaces que aguantan en un móvil, con el pulgar y con prisa.
+  ca: Interfícies que aguanten en un mòbil, amb el polze i amb pressa.
+  en: Interfaces that hold up on a phone, with one thumb and in a hurry.
+source:
+  es: GooApps y proyectos propios
+  ca: GooApps i projectes propis
+  en: GooApps and my own projects
+sourceNote:
+  es: 2025–2026
+  ca: 2025–2026
+  en: 2025–2026
+items:
+  - name:
+      es: BusosPenedès en el móvil
+      ca: BusosPenedès al mòbil
+      en: BusosPenedès on a phone
+    meta:
+      es: para el trayecto
+      ca: per al trajecte
+      en: for the commute
+    image: ../shots/busos-mobile.jpg
+    summary:
+      es: Pensada para consultarla esperando el autobús, con origen, destino y día, sin abrir un PDF.
+      ca: Pensada per consultar-la esperant l'autobús, amb origen, destinació i dia, sense obrir un PDF.
+      en: Made to be checked while waiting for the bus, with origin, destination and day, and no PDF to open.
+    role:
+      es: Diseño y desarrollo
+      ca: Disseny i desenvolupament
+      en: Design and development
+    stack: [Next.js, TypeScript]
+    url: https://busos-alco.vercel.app/
+  - name:
+      es: Apps de GooApps
+      ca: Apps de GooApps
+      en: GooApps apps
+    meta: '2025'
+    card:
+      big: GooApps
+      small:
+        es: Apps móviles en React y un CRM en Angular
+        ca: Apps mòbils en React i un CRM en Angular
+        en: Mobile apps in React and a CRM in Angular
+    summary:
+      es: Construí y mantuve apps móviles en React y colaboré en un CRM en Angular, con interfaces, pantallas, corrección de errores y mejoras en producción.
+      ca: Vaig construir i mantenir apps mòbils en React i vaig col·laborar en un CRM en Angular, amb interfícies, pantalles, correcció d'errors i millores en producció.
+      en: I built and maintained mobile apps in React and worked on a CRM in Angular, covering interfaces, screens, bug fixes and improvements in production.
+    role:
+      es: Desarrollador full stack en prácticas
+      ca: Desenvolupador full stack en pràctiques
+      en: Intern Full Stack Developer
+    stack: [React, Angular]

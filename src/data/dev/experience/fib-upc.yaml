@@ -1,0 +1,13 @@
+kind: education
+role:
+  es: Grado en Ingeniería Informática, especialidad en Ingeniería del Software
+  ca: Grau en Enginyeria Informàtica, especialitat en Enginyeria del Programari
+  en: BSc in Computer Engineering, Software Engineering major
+org: FIB, Universitat Politècnica de Catalunya
+place: { es: Barcelona, ca: Barcelona, en: Barcelona }
+start: 2021-09
+end: 2026-01
+summary:
+  es: TFG «Adaptación y extensión de la herramienta Taiga para el seguimiento de proyectos en asignaturas de ingeniería del software», con un 9,3 (excelente).
+  ca: TFG «Adaptació i extensió de l'eina Taiga per al seguiment de projectes en assignatures d'enginyeria del programari», amb un 9,3 (excel·lent).
+  en: Thesis «Adaptation and Extension of the Taiga Tool for Project Tracking in Software Engineering Courses», graded 9.3/10, Excellent.

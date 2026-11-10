@@ -1,0 +1,239 @@
+---
+// La barra de las dos subwebs: la marca (que vuelve al vestíbulo), tres enlaces a secciones, la hora de
+// Barcelona, el conmutador de canal (DJ | Ingeniero) y la acción principal. Fija arriba; se esconde al
+// bajar y vuelve al subir (src/scripts/subweb.ts). El conmutador es la idea de la web hecha control:
+// la misma página en su versión de noche o de día.
+import { LETTERS, VIEWBOX } from '../alco-logo';
+import { COPY } from '../../content/copy';
+import { SUBWEBS, pagePath, type Lang, type SubwebId } from '../../../shared/site';
+
+interface Props {
+  lang: Lang;
+  page: SubwebId;
+  negotiated: boolean;
+  links: { label: string; href: string }[];
+  cta: { label: string; href: string };
+}
+
+const { lang, page, negotiated, links, cta } = Astro.props;
+const t = COPY[lang];
+const to = (id: 'home' | SubwebId) => (negotiated ? pagePath(id) : pagePath(id, lang));
+---
+
+<header class="top" data-top>
+  <div class="bar pad">
+    <a class="mark" href={to('home')} aria-label={t.backHome} data-mark={page}>
+      {
+        page === 'alco' ? (
+          <svg viewBox={VIEWBOX} aria-hidden="true">
+            {LETTERS.map((d) => (
+              <path d={d} />
+            ))}
+          </svg>
+        ) : (
+          <span>Pol Alcoverro</span>
+        )
+      }
+    </a>
+    <nav class="nav" aria-label={t.home}>
+      {links.map((l) => <a href={l.href}>{l.label}</a>)}
+    </nav>
+    <div class="right">
+      <p class="clock" data-clock hidden>Barcelona <time></time></p>
+      <div class="switch" role="group" aria-label={t.channels}>
+        {
+          SUBWEBS.map((id) => (
+            <a href={to(id)} aria-current={id === page ? 'page' : undefined}>
+              {t.door[id].label}
+            </a>
+          ))
+        }
+      </div>
+      <a class="cta" href={cta.href}>{cta.label}</a>
+    </div>
+  </div>
+</header>
+
+<style>
+  .top {
+    position: fixed;
+    inset: 0 0 auto 0;
+    z-index: 40;
+    background: var(--ground);
+    color: var(--fg);
+    transition:
+      transform 420ms var(--ease),
+      background-color 240ms ease;
+  }
+  /* Arriba del todo la barra no tiene fondo: en /alco la foto de portada llega hasta el borde. */
+  :global(.js) .top.is-top {
+    background: transparent;
+  }
+  .top.is-away {
+    transform: translateY(-100%);
+  }
+  .top:focus-within {
+    transform: none;
+  }
+  .bar {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 24px;
+    height: var(--bar);
+  }
+  .mark {
+    justify-self: start;
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+    color: inherit;
+    text-decoration: none;
+  }
+  .mark svg {
+    display: block;
+    width: 92px;
+    height: auto;
+    fill: currentColor;
+  }
+  .mark span {
+    font-size: 19px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    white-space: nowrap;
+  }
+  .mark[data-mark='alco'] {
+    view-transition-name: mark-alco;
+  }
+  .mark[data-mark='dev'] {
+    view-transition-name: mark-dev;
+  }
+  .nav {
+    display: flex;
+    gap: 28px;
+  }
+  .nav a {
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+    font-size: 15px;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 160ms ease;
+  }
+  .nav a:hover {
+    color: var(--fg);
+  }
+  .right {
+    justify-self: end;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .clock {
+    margin: 0 8px 0 0;
+    font-size: 15px;
+    font-variant-numeric: tabular-nums;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+  .clock[hidden] {
+    display: none;
+  }
+  .switch {
+    display: flex;
+    padding: 3px;
+    background: color-mix(in oklab, var(--fg) 14%, transparent);
+  }
+  .switch a {
+    display: flex;
+    align-items: center;
+    height: 34px;
+    padding: 0 14px;
+    font-size: 15px;
+    font-weight: 600;
+    color: inherit;
+    text-decoration: none;
+    white-space: nowrap;
+    transition:
+      background-color 180ms ease,
+      color 180ms ease;
+  }
+  .switch a:not([aria-current]):hover {
+    background: color-mix(in oklab, var(--fg) 16%, transparent);
+  }
+  .switch a[aria-current] {
+    background: var(--fg);
+    color: var(--ground);
+  }
+  .cta {
+    display: flex;
+    align-items: center;
+    height: 40px;
+    padding: 0 18px;
+    background: var(--fg);
+    color: var(--ground);
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: transform 140ms var(--ease);
+  }
+  .cta:active {
+    transform: scale(0.96);
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .cta:hover {
+      background: color-mix(in oklab, var(--fg) 86%, var(--ground));
+    }
+  }
+  @media (max-width: 1180px) {
+    .clock {
+      display: none;
+    }
+  }
+  @media (max-width: 1024px) {
+    .bar {
+      grid-template-columns: 1fr auto;
+    }
+    .nav {
+      display: none;
+    }
+  }
+  @media (max-width: 760px) {
+    .bar {
+      gap: 8px;
+    }
+    .right {
+      gap: 8px;
+    }
+    .mark svg {
+      width: 76px;
+    }
+    .mark span {
+      font-size: 17px;
+    }
+    .switch a {
+      height: 32px;
+      padding: 0 10px;
+      font-size: 14px;
+    }
+    .cta {
+      height: 38px;
+      padding: 0 12px;
+      font-size: 14px;
+    }
+  }
+  /* En un móvil estrecho, todo un punto más apretado para que quepan la marca, el conmutador y el botón. */
+  @media (max-width: 400px) {
+    .mark span {
+      font-size: 15px;
+    }
+    .switch a {
+      padding: 0 8px;
+    }
+    .cta {
+      padding: 0 10px;
+    }
+  }
+</style>

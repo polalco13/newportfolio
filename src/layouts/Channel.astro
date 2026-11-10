@@ -1,0 +1,52 @@
+---
+// Marco de las subwebs a partir de la F2: metadatos, tokens comunes y entradas. Cada subweb pone su
+// propia cabecera y su pie. `theme` decide el fondo: noche para ALCO (canal L), día para el ingeniero (R).
+import '../styles/subweb.css';
+import Base from './Base.astro';
+import { COPY } from '../content/copy';
+import { LANGS, pagePath, type Lang, type SubwebId } from '../../shared/site';
+
+interface Props {
+  lang: Lang;
+  page: SubwebId;
+  /** Las rutas sin idioma (/alco, /dev) se sirven en el idioma del navegador. */
+  negotiated: boolean;
+  theme: 'night' | 'day';
+}
+
+const { lang, page, negotiated, theme } = Astro.props;
+const t = COPY[lang];
+const alternates = [
+  ...LANGS.map((l) => ({ lang: l, href: pagePath(page, l) })),
+  { lang: 'x-default', href: pagePath(page) },
+];
+// Las imágenes para compartir se rehacen en la F6; hasta entonces /dev usa la del CV.
+const og = page === 'alco' ? '/og/alco.png' : '/og/cv.png';
+---
+
+<Base
+  lang={lang}
+  title={t.title[page]}
+  description={t.description[page]}
+  canonical={negotiated ? pagePath(page) : pagePath(page, lang)}
+  alternates={alternates}
+  ogImage={og}
+  ogLocale={t.ogLocale}
+  theme={theme}
+>
+  <script is:inline>document.documentElement.classList.add('js');</script>
+  <div class="ch" data-theme-ground={theme} data-channel={page === 'alco' ? 'L' : 'R'}>
+    <slot />
+  </div>
+</Base>
+
+<script>
+  import '../scripts/subweb';
+</script>
+
+<style is:global>
+  /* En la página de día, también el fondo de detrás (rebote del scroll, transición entre páginas). */
+  body:has([data-theme-ground='day']) {
+    background: var(--day);
+  }
+</style>

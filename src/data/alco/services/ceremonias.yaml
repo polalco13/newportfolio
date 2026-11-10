@@ -1,0 +1,144 @@
+# Momentos reales: la carpeta de pies del bolo Paraswimming 2026 (~/Documents/ALCO/12 BOLOS).
+# TODO(pol): confirmar que se puede nombrar Paraswimming.
+order: 3
+color: mint
+real: true
+photo: escenario-recodo
+title:
+  es: Ceremonias
+  ca: Cerimònies
+  en: Ceremonies
+line:
+  es: Entregas, desfiles y presentaciones; un pie musical para cada momento del guion.
+  ca: Lliuraments, desfilades i presentacions; un peu musical per a cada moment del guió.
+  en: Award ceremonies, parades and introductions, with a music cue for every moment of the script.
+cta:
+  es: Pedir fecha para una ceremonia
+  ca: Demana data per a una cerimònia
+  en: Check a date for a ceremony
+source:
+  es: Paraswimming 2026
+  ca: Paraswimming 2026
+  en: Paraswimming 2026
+sourceNote:
+  es: un pie musical para cada momento del guion
+  ca: un peu musical per a cada moment del guió
+  en: a music cue for every moment of the script
+moments:
+  - photo: escenario-recodo
+    name:
+      es: Intro
+      ca: Intro
+      en: Intro
+    meta:
+      es: apertura
+      ca: obertura
+      en: opening
+    text:
+      es: Para abrir, antes de que hable nadie.
+      ca: Per obrir, abans que parli ningú.
+      en: To open, before anyone speaks.
+  - photo: recodo-publico
+    name:
+      es: Bienvenida
+      ca: Benvinguda
+      en: Welcome
+    meta:
+      es: con el speaker
+      ca: amb el speaker
+      en: under the host
+    text:
+      es: Debajo de la bienvenida del speaker.
+      ca: Per sota de la benvinguda del speaker.
+      en: Under the host's welcome.
+  - photo: sala-bola
+    name:
+      es: Desfile de árbitros
+      ca: Desfilada d'àrbitres
+      en: Referees' parade
+    meta:
+      es: desfile
+      ca: desfilada
+      en: parade
+    text:
+      es: Música que dura lo que dure el desfile.
+      ca: Música que dura el que duri la desfilada.
+      en: Music that lasts as long as the parade does.
+  - photo: crowd-bengalas
+    name:
+      es: Desfile de nadadores
+      ca: Desfilada de nedadors
+      en: Swimmers' parade
+    meta:
+      es: desfile
+      ca: desfilada
+      en: parade
+    text:
+      es: El momento largo; hay música de sobra por si se alarga.
+      ca: El moment llarg; hi ha música de sobres per si s'allarga.
+      en: The long one, with music to spare in case it runs over.
+  - photo: sala-laser
+    name:
+      es: Presentación de atletas
+      ca: Presentació d'atletes
+      en: Athlete introductions
+    meta:
+      es: una entrada por atleta
+      ca: una entrada per atleta
+      en: one entrance each
+    text:
+      es: Una entrada para cada uno.
+      ca: Una entrada per a cadascú.
+      en: An entrance for each of them.
+  - photo: bn-bengalas-manos
+    name:
+      es: Récords
+      ca: Rècords
+      en: Records
+    meta:
+      es: por si acaso
+      ca: per si de cas
+      en: just in case
+    text:
+      es: Por si cae un récord, lista para lanzar al momento.
+      ca: Per si cau un rècord, a punt per llançar al moment.
+      en: In case a record falls, ready to fire at once.
+  - photo: sala-bengalas-vertical
+    name:
+      es: Medallas
+      ca: Medalles
+      en: Medals
+    meta:
+      es: entrega
+      ca: lliurament
+      en: ceremony
+    text:
+      es: Las medallas y lo que suena justo después.
+      ca: Les medalles i el que sona just després.
+      en: The medals and what plays right after.
+  - photo: cabina-publico
+    name:
+      es: Set
+      ca: Set
+      en: Set
+    meta:
+      es: después del guion
+      ca: després del guió
+      en: after the script
+    text:
+      es: Cuando acaba el guion, la fiesta.
+      ca: Quan s'acaba el guió, la festa.
+      en: When the script ends, the party starts.
+  - photo: cabina-cdj-oscuro
+    name:
+      es: Recursos
+      ca: Recursos
+      en: Extras
+    meta:
+      es: siempre a mano
+      ca: sempre a mà
+      en: always at hand
+    text:
+      es: Campanas e instrumentales para tapar cualquier silencio.
+      ca: Campanes i instrumentals per tapar qualsevol silenci.
+      en: Bells and instrumentals to cover any silence.

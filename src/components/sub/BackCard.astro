@@ -1,0 +1,199 @@
+---
+// El pie como el dorso de la tarjeta: festón arriba, un mensaje a la izquierda y las señas a la derecha,
+// con una foto pegada como un sello. Debajo, el idioma y la privacidad.
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import Langs from '../Langs.astro';
+import { COPY } from '../../content/copy';
+import type { Lang, PageId } from '../../../shared/site';
+
+interface Props {
+  lang: Lang;
+  page: PageId;
+  title: string;
+  body: string;
+  stamp: ImageMetadata;
+  imprint: string;
+}
+
+const { lang, page, title, body, stamp, imprint } = Astro.props;
+const t = COPY[lang];
+---
+
+<footer class="wrap pad">
+  <div class="back">
+    <svg class="scallop" data-scallop viewBox="0 0 1200 50" preserveAspectRatio="none" aria-hidden="true"><path d="M0 50 H1200 V50 Z"></path></svg>
+    <div>
+      <h2>{title}</h2>
+      <p>{body}</p>
+    </div>
+    <div class="addr">
+      <figure class="stamp" aria-hidden="true">
+        <Image src={stamp} alt="" width={176} format="webp" quality={70} loading="lazy" />
+      </figure>
+      <slot />
+    </div>
+    <p class="imprint">{imprint}</p>
+  </div>
+  {
+    Astro.slots.has('wordmark') && (
+      <div class="wordmark" aria-hidden="true" data-reveal>
+        <slot name="wordmark" />
+      </div>
+    )
+  }
+  <div class="after">
+    <Langs lang={lang} page={page} />
+    <p>{t.noCookies} · <a href={t.privacyPath}>{t.privacy}</a></p>
+  </div>
+</footer>
+
+<style>
+  .wrap {
+    padding-block: 140px 32px;
+  }
+  /* El nombre vuelve al final, de lado a lado. */
+  .wordmark {
+    margin-top: 110px;
+  }
+  .wordmark :global(svg) {
+    display: block;
+    width: 100%;
+    height: auto;
+    fill: currentColor;
+  }
+  /* La sangría compensa el aire de la primera letra, para que el nombre empiece en el margen. */
+  .wordmark :global(p) {
+    margin: 0;
+    text-indent: -0.065em;
+    font-size: 13vw;
+    font-weight: 700;
+    line-height: 0.8;
+    letter-spacing: -0.05em;
+    white-space: nowrap;
+  }
+  .back {
+    position: relative;
+    width: calc(100% * 10 / 12);
+    margin: 0 auto;
+    padding: 72px 56px 28px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px 56px;
+    background: var(--card-bg);
+    color: var(--card-fg);
+  }
+  :global([data-theme-ground='night']) .back {
+    --card-bg: var(--paper);
+    --card-fg: var(--ink);
+  }
+  :global([data-theme-ground='day']) .back {
+    --card-bg: var(--ink);
+    --card-fg: var(--paper);
+  }
+  .scallop {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 100%;
+    display: block;
+    width: 100%;
+    height: 50px;
+    fill: var(--card-bg);
+  }
+  h2 {
+    margin: 0 0 14px;
+    font-size: var(--s3);
+    font-weight: 300;
+    letter-spacing: -0.02em;
+  }
+  .back p {
+    margin: 0 0 10px;
+    max-width: 36ch;
+  }
+  .addr {
+    position: relative;
+    display: grid;
+    gap: 12px;
+    align-content: start;
+    padding-top: 8px;
+  }
+  .addr :global(a) {
+    width: fit-content;
+    text-decoration: none;
+  }
+  .addr :global(a:hover) {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+  .stamp {
+    position: absolute;
+    top: -40px;
+    right: 0;
+    width: 88px;
+    margin: 0;
+    padding: 6px;
+    background: var(--paper);
+    transform: rotate(3deg);
+  }
+  .stamp :global(img) {
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    object-fit: cover;
+  }
+  .back p.imprint {
+    grid-column: 1 / -1;
+    max-width: none;
+    margin: 24px 0 0;
+    text-align: center;
+    font-size: var(--s1);
+    opacity: 0.75;
+  }
+  .after {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px 24px;
+    margin: 40px 0 0;
+    font-size: var(--s1);
+  }
+  .after p {
+    margin: 0;
+  }
+  .after :global(.langs a) {
+    font-size: var(--s1);
+    color: inherit;
+    opacity: 0.7;
+  }
+  .after :global(.langs a[aria-current='true']) {
+    color: inherit;
+    opacity: 1;
+  }
+  .after :global(.langs a:hover) {
+    color: inherit;
+    opacity: 1;
+  }
+  .after a {
+    color: inherit;
+  }
+  @media (max-width: 760px) {
+    .wrap {
+      padding-block: 96px 24px;
+    }
+    .wordmark {
+      margin-top: 64px;
+    }
+    .back {
+      width: 100%;
+    }
+    .back {
+      grid-template-columns: 1fr;
+      padding: 56px 20px 24px;
+    }
+    .stamp {
+      width: 64px;
+      top: -30px;
+    }
+  }
+</style>

@@ -1,0 +1,11 @@
+kind: work
+role: { es: Desarrollador full stack en prácticas, ca: Desenvolupador full stack en pràctiques, en: Intern Full Stack Developer }
+org: GooApps
+place: { es: Barcelona, ca: Barcelona, en: Barcelona }
+start: 2025-03
+end: 2025-07
+summary:
+  es: Construí y mantuve apps móviles en React y colaboré en un CRM en Angular, con interfaces móviles, pantallas del CRM, corrección de errores y mejoras en producción.
+  ca: Vaig construir i mantenir apps mòbils en React i vaig col·laborar en un CRM en Angular, amb interfícies mòbils, pantalles del CRM, correcció d'errors i millores en producció.
+  en: Built and maintained React based mobile apps and contributed to an Angular CRM, with mobile UI, CRM screens, bug fixes and production improvements.
+stack: [React, Angular]

@@ -222,7 +222,7 @@ export async function startPeluche(trace: HTMLElement): Promise<void> {
     if (hitDoll(e.clientX, e.clientY) && !reduce.matches && !fixed) go(spot === HOME ? AWAY : HOME, clock.elapsedTime);
   }, { passive: true });
   const doors = document.querySelector('.doors');
-  for (const door of document.querySelectorAll('.btn[data-doc]')) {
+  for (const door of document.querySelectorAll('.btn[data-door]')) {
     door.addEventListener('click', () => { cheer = clock.elapsedTime; });
   }
   const gaze = { yaw: 0, pitch: 0, vy: 0, vp: 0 };

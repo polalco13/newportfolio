@@ -1,0 +1,67 @@
+order: 5
+color: rose
+real: false
+photo: sala-laser
+title:
+  es: Club
+  ca: Club
+  en: Club
+line:
+  es: Sesiones de club, b2b y electrónica. La última grabada, FESTAFIB 2026, b2b con JSOLEE.
+  ca: Sessions de club, b2b i electrònica. L'última gravada, FESTAFIB 2026, b2b amb JSOLEE.
+  en: Club sets, b2b and electronic. The latest recorded, FESTAFIB 2026, b2b with JSOLEE.
+cta:
+  es: Pedir fecha para un club
+  ca: Demana data per a un club
+  en: Check a date for a club
+source:
+  es: Una sesión de club
+  ca: Una sessió de club
+  en: A club set
+sourceNote:
+  es: dos horas
+  ca: dues hores
+  en: two hours
+moments:
+  - h: '00:00'
+    photo: sala-bola
+    name:
+      es: Warm up
+      ca: Warm up
+      en: Warm up
+    meta:
+      es: house
+      ca: house
+      en: house
+    text:
+      es: Sin prisa, que la sala se llene.
+      ca: Sense pressa, que la sala s'ompli.
+      en: No rush; let the room fill.
+  - h: '00:45'
+    photo: sala-laser
+    name:
+      es: Subida
+      ca: Pujada
+      en: Build
+    meta:
+      es: sube
+      ca: puja
+      en: building
+    text:
+      es: La energía sube poco a poco, sin saltos.
+      ca: L'energia puja a poc a poc, sense salts.
+      en: The energy rises gradually, with no jumps.
+  - h: '01:30'
+    photo: crowd-bengalas
+    name:
+      es: Pico
+      ca: Pic
+      en: Peak
+    meta:
+      es: bengalas
+      ca: bengales
+      en: sparklers
+    text:
+      es: El momento de las bengalas.
+      ca: El moment de les bengales.
+      en: Sparkler time.

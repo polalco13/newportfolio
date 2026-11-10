@@ -14,9 +14,11 @@ interface Props {
   ogImage: string;
   ogLocale: string;
   noindex?: boolean;
+  /** Las páginas de día (/dev) cambian el color de la barra del navegador y el esquema. */
+  theme?: 'night' | 'day';
 }
 
-const { lang, title, description, canonical, alternates, ogImage, ogLocale, noindex = false } = Astro.props;
+const { lang, title, description, canonical, alternates, ogImage, ogLocale, noindex = false, theme = 'night' } = Astro.props;
 const site = Astro.site ?? new URL('https://www.polalco.com');
 const abs = (path: string) => new URL(path, site).href;
 
@@ -42,8 +44,8 @@ const person = {
     {noindex && <meta name="robots" content="noindex" />}
     <link rel="canonical" href={abs(canonical)} />
     {alternates.map((a) => <link rel="alternate" hreflang={a.lang} href={abs(a.href)} />)}
-    <meta name="theme-color" content="#14111c" />
-    <meta name="color-scheme" content="dark" />
+    <meta name="theme-color" content={theme === 'day' ? '#f4f2f7' : '#14111c'} />
+    <meta name="color-scheme" content={theme === 'day' ? 'light' : 'dark'} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="preload" href={fontUrl} as="font" type="font/woff2" crossorigin />
     <meta property="og:type" content="website" />

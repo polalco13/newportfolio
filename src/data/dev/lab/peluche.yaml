@@ -1,0 +1,13 @@
+order: 3
+year: 2026
+name: { es: Peluche vigilante, ca: Peluix vigilant, en: Watchful plush }
+line:
+  es: Un peluche 3D con esqueleto que mira el puntero desde la O del logo y salta si lo tocas.
+  ca: Un peluix 3D amb esquelet que mira el punter des de la O del logo i salta si el toques.
+  en: A rigged 3D plush that watches the pointer from the O in the logo and jumps when you touch it.
+stack: [three.js, glTF, TypeScript]
+image: ../shots/lab-peluche.jpg
+alt:
+  es: Un peluche con traje sentado sobre la O del logo de ALCO.
+  ca: Un peluix amb vestit assegut damunt de la O del logo d'ALCO.
+  en: A plush toy in a suit sitting on the O of the ALCO logo.

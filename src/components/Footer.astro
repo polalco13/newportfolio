@@ -1,0 +1,78 @@
+---
+// Pie común: contacto, redes y privacidad.
+import Mail from '@lucide/astro/icons/mail';
+import Brand from './Brand.astro';
+import { COPY, LINKS } from '../content/copy';
+import type { Lang } from '../../shared/site';
+
+interface Props {
+  lang: Lang;
+}
+
+const t = COPY[Astro.props.lang];
+---
+
+<footer class="foot">
+  <ul class="social">
+    <li>
+      <a href={`mailto:${LINKS.email}`} aria-label={`${t.writeMe}: ${LINKS.email}`} title={LINKS.email}>
+        <Mail size={20} stroke-width={1.5} aria-hidden="true" />
+      </a>
+    </li>
+    <li><a href={LINKS.instagram} aria-label="Instagram" title="Instagram"><Brand name="instagram" /></a></li>
+    <li><a href={LINKS.linkedin} aria-label="LinkedIn" title="LinkedIn"><Brand name="linkedin" /></a></li>
+    <li><a href={LINKS.github} aria-label="GitHub" title="GitHub"><Brand name="github" /></a></li>
+  </ul>
+  <p>{t.noCookies} · <a href={t.privacyPath}>{t.privacy}</a></p>
+</footer>
+
+<style>
+  .foot {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px 24px;
+    padding: 0 max(24px, env(safe-area-inset-right)) max(18px, env(safe-area-inset-bottom))
+      max(24px, env(safe-area-inset-left));
+    font-size: 0.875rem;
+    color: var(--dim);
+  }
+  .foot ul {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .foot p {
+    margin: 0;
+  }
+  /* Iconos de contacto: zona táctil de 44 px; el margen negativo alinea el primero con el texto. */
+  .foot .social {
+    gap: 4px;
+    margin-left: -12px;
+  }
+  .social a {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    transition: color 150ms ease;
+  }
+  .foot a {
+    text-decoration: none;
+  }
+  .foot a:hover {
+    color: var(--silver);
+  }
+  .foot p a:hover {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+  @media (max-width: 640px) {
+    .foot {
+      justify-content: flex-start;
+    }
+  }
+</style>

@@ -1,9 +1,27 @@
 // Datos que comparten la web (Astro), el Worker de Cloudflare y el middleware de Vercel: idiomas,
-// documentos y la elección de idioma.
+// páginas, documentos y la elección de idioma.
 
 export const LANGS = ['es', 'ca', 'en'] as const;
 export type Lang = (typeof LANGS)[number];
 export const DEFAULT_LANG: Lang = 'es';
+
+/** El vestíbulo (/) y las dos subwebs: ALCO (canal L) y Pol ingeniero (canal R). */
+export type PageId = 'home' | 'alco' | 'dev';
+export type SubwebId = Exclude<PageId, 'home'>;
+export const SUBWEBS: SubwebId[] = ['alco', 'dev'];
+
+/** Ruta sin idioma de cada página; el Worker y el middleware las sirven en el idioma del navegador. */
+export function pagePath(page: PageId, lang?: Lang): string {
+  const tail = page === 'home' ? '' : `/${page}`;
+  return lang ? `/${lang}${tail}` : tail || '/';
+}
+export const NEGOTIATED: string[] = (['home', ...SUBWEBS] as PageId[]).map((p) => pagePath(p));
+
+/** /cv era la landing centrada en el CV: ahora lleva a la subweb del ingeniero. */
+export const REDIRECTS: Record<string, string> = Object.fromEntries([
+  ['/cv', '/dev'],
+  ...LANGS.map((l) => [`/${l}/cv`, `/${l}/dev`]),
+]);
 
 export type DocId = 'alco' | 'cv';
 

@@ -172,7 +172,7 @@ const COLORS: RGB[] = [
   [1, 0.769, 0.639], // melocotón #ffc4a3
 ];
 /** El color de cada puerta: melocotón para el DJ, lavanda para el CV. */
-const DOOR: Record<string, RGB> = { alco: [1, 0.769, 0.639], cv: [0.788, 0.714, 1] };
+const DOOR: Record<string, RGB> = { alco: [1, 0.769, 0.639], dev: [0.788, 0.714, 1] };
 /** Píxeles de humo como máximo; el resto lo escala el navegador. */
 const MAX_PIXELS = 420_000;
 const REVEAL_MS = 2600;
@@ -260,8 +260,8 @@ class Haze {
       return;
     }
     addEventListener('pointermove', (event) => this.onPointer(event), { passive: true });
-    for (const button of document.querySelectorAll<HTMLElement>('.btn[data-doc]')) {
-      const color = DOOR[button.dataset.doc ?? ''];
+    for (const button of document.querySelectorAll<HTMLElement>('.btn[data-door]')) {
+      const color = DOOR[button.dataset.door ?? ''];
       if (!color) continue;
       const on = () => {
         this.tint = color;

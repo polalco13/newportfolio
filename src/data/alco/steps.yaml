@@ -1,0 +1,73 @@
+# «Cómo preparo tu fecha». TODO(pol): confirmar los pasos. `gap` es el aire sobre la foto (en px).
+- id: hablamos
+  order: 1
+  photo: dia-pergola
+  gap: 120
+  title:
+    es: Hablamos
+    ca: En parlem
+    en: We talk
+  text:
+    es: Fecha, lugar, cuánta gente y qué celebráis. Y las canciones que no pueden faltar, ni sonar.
+    ca: Data, lloc, quanta gent i què celebreu. I les cançons que no poden faltar, ni sonar.
+    en: Date, venue, how many people and what you're celebrating, plus the songs that must play and the ones that mustn't.
+- id: momentos
+  order: 2
+  photo: palau-reial
+  gap: 40
+  title:
+    es: Los momentos
+    ca: Els moments
+    en: The moments
+  text:
+    es: Te envío el orden de la noche, con la hora de cada momento, y lo ajustamos juntos.
+    ca: T'envio l'ordre de la nit, amb l'hora de cada moment, i l'ajustem junts.
+    en: I send you the running order with a time for each moment, and we adjust it together.
+- id: reservas
+  order: 3
+  photo: cabina-cdj-oscuro
+  gap: 96
+  title:
+    es: Más de las que caben
+    ca: Més de les que hi caben
+    en: More than will fit
+  text:
+    es: Para cada momento preparo reservas, por si la pista pide otra cosa.
+    ca: Per a cada moment preparo reserves, per si la pista demana una altra cosa.
+    en: For every moment I prepare spares, in case the floor wants something else.
+- id: rekordbox
+  order: 4
+  photo: retrato-lateral
+  gap: 64
+  title:
+    es: Rekordbox
+    ca: Rekordbox
+    en: Rekordbox
+  text:
+    es: Cada momento es una playlist en el equipo, ordenada y con la tonalidad marcada.
+    ca: Cada moment és una playlist a l'equip, ordenada i amb la tonalitat marcada.
+    en: Each moment is a playlist on the decks, in order and with its key marked.
+- id: montaje
+  order: 5
+  photo: escenario-recodo
+  gap: 132
+  title:
+    es: El montaje
+    ca: El muntatge
+    en: Set up
+  text:
+    es: Llego con tiempo, monto la Opus Quad y pruebo el sonido antes de que llegue nadie.
+    ca: Arribo amb temps, munto l'Opus Quad i provo el so abans que arribi ningú.
+    en: I arrive early, set up the Opus Quad and check the sound before anyone arrives.
+- id: noche
+  order: 6
+  photo: crowd-bengalas
+  gap: 56
+  title:
+    es: La noche
+    ca: La nit
+    en: On the night
+  text:
+    es: Sigo el orden y leo la pista. Si pide otra cosa, la tiene.
+    ca: Segueixo l'ordre i llegeixo la pista. Si demana una altra cosa, la té.
+    en: I follow the order and read the floor. If it wants something else, it gets it.

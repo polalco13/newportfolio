@@ -1,0 +1,111 @@
+# Una carpeta por tipo de evento. `real: false` marca los momentos de ejemplo hasta que Pol los confirme.
+# `photo` y `moments[].photo` son ids de gallery.yaml.
+order: 1
+color: peach
+real: false
+photo: palau-reial
+title:
+  es: Bodas
+  ca: Casaments
+  en: Weddings
+line:
+  es: Del aperitivo a la última canción, con vuestra música donde importa.
+  ca: De l'aperitiu a l'última cançó, amb la vostra música on importa.
+  en: From the drinks reception to the last song, with your music where it matters.
+cta:
+  es: Pedir fecha para una boda
+  ca: Demana data per a un casament
+  en: Check a date for a wedding
+source:
+  es: Una boda, de principio a fin
+  ca: Un casament, de principi a fi
+  en: A wedding, start to finish
+sourceNote:
+  es: las horas las ponemos juntos
+  ca: les hores les posem junts
+  en: we set the times together
+moments:
+  - h: '19:00'
+    photo: dia-pergola
+    name:
+      es: Aperitivo
+      ca: Aperitiu
+      en: Drinks reception
+    meta:
+      es: de fondo
+      ca: de fons
+      en: in the background
+    text:
+      es: Música que deja hablar, a volumen de conversación.
+      ca: Música que deixa parlar, a volum de conversa.
+      en: Music that lets people talk, at conversation volume.
+  - h: '20:30'
+    photo: palau-reial
+    name:
+      es: Entrada al banquete
+      ca: Entrada al banquet
+      en: Entrance
+    meta:
+      es: 1 canción
+      ca: 1 cançó
+      en: 1 song
+    text:
+      es: La que elijáis para entrar. La lanzo al segundo, cuando os abren la puerta.
+      ca: La que trieu per entrar. La llanço al segon, quan us obren la porta.
+      en: The one you choose to walk in to, played the second the doors open.
+  - h: '21:00'
+    photo: bn-espaldas-jardin
+    name:
+      es: Cena
+      ca: Sopar
+      en: Dinner
+    meta:
+      es: sube poco a poco
+      ca: puja a poc a poc
+      en: building slowly
+    text:
+      es: De menos a más entre plato y plato, para que la gente llegue a la pista con ganas.
+      ca: De menys a més entre plat i plat, perquè la gent arribi a la pista amb ganes.
+      en: Building between courses, so people reach the dance floor ready to go.
+  - h: '23:30'
+    photo: jardin-noche-publico
+    name:
+      es: Primer baile
+      ca: Primer ball
+      en: First dance
+    meta:
+      es: 1 canción
+      ca: 1 cançó
+      en: 1 song
+    text:
+      es: Vuestra canción, y justo después, la pista abierta para todos.
+      ca: La vostra cançó, i just després, la pista oberta per a tothom.
+      en: Your song, and right after it, the floor open to everyone.
+  - h: '23:35'
+    photo: cabina-publico
+    name:
+      es: Fiesta
+      ca: Festa
+      en: Party
+    meta:
+      es: la pista abierta
+      ca: la pista oberta
+      en: open floor
+    text:
+      es: Lo que pide la gente y lo que nos pedisteis, hasta que se encienden las luces.
+      ca: El que demana la gent i el que ens vau demanar, fins que s'encenen els llums.
+      en: What the crowd asks for and what you asked for, until the lights come on.
+  - h: '03:00'
+    photo: bn-bengalas-manos
+    name:
+      es: La última
+      ca: L'última
+      en: The last song
+    meta:
+      es: 1 canción
+      ca: 1 cançó
+      en: 1 song
+    text:
+      es: La que todos cantan abrazados. Se elige con tiempo.
+      ca: La que tothom canta abraçat. Es tria amb temps.
+      en: The one everyone sings arm in arm. We pick it well in advance.

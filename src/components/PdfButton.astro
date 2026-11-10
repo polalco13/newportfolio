@@ -1,0 +1,99 @@
+---
+// Botón del PDF dentro de cada subweb. En el móvil abre el visor del navegador; dentro de Instagram,
+// Facebook o LinkedIn avisa de que se puede abrir fuera si no se ve.
+import Download from '@lucide/astro/icons/download';
+import { COPY } from '../content/copy';
+import { docSize } from '../content/files';
+import { DOCS, type DocId, type Lang } from '../../shared/site';
+
+interface Props {
+  lang: Lang;
+  doc: DocId;
+  /** Origen de la descarga (?src=), para el contador del Worker. */
+  src: string;
+}
+
+const { lang, doc, src } = Astro.props;
+const t = COPY[lang];
+---
+
+<div class="pdf-wrap">
+  <a class="pdf" href={`${DOCS[doc].path}?src=${src}`} download={DOCS[doc].filename}>
+    <Download size={20} stroke-width={1.5} aria-hidden="true" />
+    <span>
+      <strong>{t.doc[doc].label}</strong>
+      <small>{t.doc[doc].meta(DOCS[doc].pages, docSize(doc, lang))}</small>
+    </span>
+  </a>
+  <p class="inapp" hidden>
+    {t.inApp}
+    <button type="button" data-copied={t.copied}>{t.copyLink}</button>
+  </p>
+</div>
+
+<script is:inline>
+  (() => {
+    if (matchMedia('(pointer: coarse)').matches) {
+      document.querySelectorAll('.pdf[download]').forEach((a) => a.removeAttribute('download'));
+    }
+    if (!/Instagram|FBAN|FBAV|LinkedInApp/i.test(navigator.userAgent)) return;
+    document.querySelectorAll('.inapp').forEach((hint) => {
+      const button = hint.querySelector('button');
+      if (!button) return;
+      hint.hidden = false;
+      button.addEventListener('click', async () => {
+        try {
+          await navigator.clipboard.writeText(location.origin + location.pathname);
+          button.textContent = button.dataset.copied || button.textContent;
+        } catch {
+          // Sin portapapeles: la dirección sigue en la barra para copiarla a mano.
+        }
+      });
+    });
+  })();
+</script>
+
+<style>
+  .pdf-wrap {
+    display: grid;
+    gap: 10px;
+  }
+  .pdf {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    width: fit-content;
+    min-height: 44px;
+    padding: 10px 16px;
+    background: color-mix(in oklab, currentColor 9%, transparent);
+    color: inherit;
+    text-decoration: none;
+    transition: background-color 150ms ease;
+  }
+  .pdf:hover {
+    background: color-mix(in oklab, currentColor 16%, transparent);
+  }
+  .pdf span {
+    display: grid;
+  }
+  .pdf strong {
+    font-weight: 600;
+  }
+  .pdf small {
+    font-size: 13px;
+    opacity: 0.78;
+  }
+  .inapp {
+    margin: 0;
+    font-size: 13px;
+  }
+  .inapp button {
+    margin-left: 8px;
+    padding: 6px 10px;
+    border: 0;
+    background: color-mix(in oklab, currentColor 12%, transparent);
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+  }
+</style>

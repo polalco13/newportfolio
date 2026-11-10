@@ -1,0 +1,66 @@
+# FIB (UPC) y el TFG en ESSI.
+order: 5
+color: rose
+title:
+  es: Universidad
+  ca: Universitat
+  en: University
+line:
+  es: Ingeniería del Software en la FIB, y un TFG que acabó en producción.
+  ca: Enginyeria del Programari a la FIB, i un TFG que va acabar en producció.
+  en: Software Engineering at FIB, and a final thesis that ended up in production.
+source:
+  es: FIB, UPC
+  ca: FIB, UPC
+  en: FIB, UPC
+sourceNote:
+  es: de 2021 a 2026
+  ca: del 2021 al 2026
+  en: 2021 to 2026
+items:
+  - name:
+      es: Taiga para la FIB
+      ca: Taiga per a la FIB
+      en: Taiga for FIB
+    meta:
+      es: TFG · 9,3
+      ca: TFG · 9,3
+      en: thesis · 9.3
+    card:
+      big:
+        es: '9,3'
+        ca: '9,3'
+        en: '9.3'
+      small:
+        es: Taiga desplegado con Docker para las asignaturas
+        ca: Taiga desplegat amb Docker per a les assignatures
+        en: Taiga deployed with Docker for the courses
+    summary:
+      es: Desplegué y adapté Taiga con Docker (backend, frontend y servicios asíncronos) para el seguimiento de proyectos en asignaturas de ingeniería del software. Lo usan estudiantes y profesores.
+      ca: Vaig desplegar i adaptar Taiga amb Docker (backend, frontend i serveis asíncrons) per al seguiment de projectes en assignatures d'enginyeria del programari. El fan servir estudiants i professors.
+      en: I deployed and adapted Taiga with Docker (backend, frontend and async services) to track projects in software engineering courses. Students and teachers use it.
+    role:
+      es: Prácticas en ESSI, UPC
+      ca: Pràctiques a ESSI, UPC
+      en: Internship at ESSI, UPC
+    stack: [Docker, Taiga]
+  - name:
+      es: Grado en Ingeniería Informática
+      ca: Grau en Enginyeria Informàtica
+      en: BSc in Computer Engineering
+    meta: 2021–2026
+    card:
+      big: FIB
+      small:
+        es: Especialidad en Ingeniería del Software
+        ca: Especialitat en Enginyeria del Programari
+        en: Software Engineering major
+    summary:
+      es: Grado en Ingeniería Informática en la Facultat d'Informàtica de Barcelona, especialidad en Ingeniería del Software.
+      ca: Grau en Enginyeria Informàtica a la Facultat d'Informàtica de Barcelona, especialitat en Enginyeria del Programari.
+      en: BSc in Computer Engineering at the Barcelona School of Informatics (FIB), Software Engineering major.
+    role:
+      es: Universitat Politècnica de Catalunya
+      ca: Universitat Politècnica de Catalunya
+      en: Universitat Politècnica de Catalunya
+    stack: [UPC]

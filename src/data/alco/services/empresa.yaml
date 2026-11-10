@@ -1,0 +1,70 @@
+# Momentos reales: fan zone de fútbol en Barcelona, viernes 23/10/2026, 20:00–21:00.
+# TODO(pol): confirmar si se puede decir DAZN; hasta entonces, «fan zone de fútbol».
+order: 2
+color: lavender
+real: true
+front: true
+photo: crowd-bengalas
+title:
+  es: Empresas y marcas
+  ca: Empreses i marques
+  en: Corporate and brands
+line:
+  es: Fiestas de empresa, presentaciones y activaciones; la música va al ritmo del programa.
+  ca: Festes d'empresa, presentacions i activacions; la música va al ritme del programa.
+  en: Company parties, launches and activations, with the music following the programme.
+cta:
+  es: Pedir fecha para un evento de empresa
+  ca: Demana data per a un esdeveniment d'empresa
+  en: Check a date for a corporate event
+source:
+  es: Fan zone de fútbol, Barcelona
+  ca: Fan zone de futbol, Barcelona
+  en: Football fan zone, Barcelona
+sourceNote:
+  es: viernes 23 de octubre de 2026, 20:00–21:00 · los momentos reales de esa hora
+  ca: divendres 23 d'octubre de 2026, 20:00–21:00 · els moments reals d'aquella hora
+  en: Friday 23 October 2026, 20:00–21:00 · the real moments of that hour
+moments:
+  - h: '20:00'
+    photo: dia-pergola
+    name:
+      es: Calentamiento
+      ca: Escalfament
+      en: Warm up
+    meta:
+      es: 17 min
+      ca: 17 min
+      en: 17 min
+    text:
+      es: De menos a más, con música que conoce todo el mundo, mientras la plaza se llena.
+      ca: De menys a més, amb música que coneix tothom, mentre la plaça s'omple.
+      en: Building up with music everyone knows while the square fills.
+  - h: '20:17'
+    photo: cabina-mezclando
+    name:
+      es: La voz del speaker
+      ca: La veu del speaker
+      en: Under the host
+    meta:
+      es: 22 min
+      ca: 22 min
+      en: 22 min
+    text:
+      es: Cambio de estilo por debajo de la bienvenida, sin cortar y sin pisarle la voz.
+      ca: Canvi d'estil per sota de la benvinguda, sense tallar i sense trepitjar-li la veu.
+      en: A change of style under the host's welcome, with no cut and never over their voice.
+  - h: '20:39'
+    photo: crowd-bengalas
+    name:
+      es: Subida y entrega
+      ca: Pujada i relleu
+      en: Peak and handover
+    meta:
+      es: 21 min
+      ca: 21 min
+      en: 21 min
+    text:
+      es: El momento más alto de la hora, y la pista entregada al artista siguiente a su hora exacta.
+      ca: El moment més alt de l'hora, i la pista lliurada a l'artista següent a l'hora exacta.
+      en: The high point of the hour, then the floor handed to the next artist right on time.

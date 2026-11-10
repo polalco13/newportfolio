@@ -1,0 +1,63 @@
+# Trabajo actual en The Etailers. Sin captura: el código y los paneles son de clientes.
+order: 1
+color: lavender
+title:
+  es: Datos
+  ca: Dades
+  en: Data
+line:
+  es: Pipelines que recogen datos de fuentes oficiales y los dejan listos para decidir.
+  ca: Pipelines que recullen dades de fonts oficials i les deixen a punt per decidir.
+  en: Pipelines that collect data from official sources and leave it ready for decisions.
+source:
+  es: The Etailers
+  ca: The Etailers
+  en: The Etailers
+sourceNote:
+  es: desde octubre de 2026
+  ca: des de l'octubre del 2026
+  en: since October 2026
+items:
+  - name:
+      es: Pipelines de EcommGuard
+      ca: Pipelines d'EcommGuard
+      en: EcommGuard pipelines
+    meta: '2026'
+    card:
+      big: EcommGuard
+      small:
+        es: Indicadores de mercado de fuentes oficiales
+        ca: Indicadors de mercat de fonts oficials
+        en: Market indicators from official sources
+    summary:
+      es: Recojo indicadores de mercado de fuentes oficiales y alimento los cuadros de mando de EcommGuard, el producto de analítica de The Etailers.
+      ca: Recullo indicadors de mercat de fonts oficials i alimento els quadres de comandament d'EcommGuard, el producte d'analítica de The Etailers.
+      en: I collect market indicators from official sources and feed the EcommGuard dashboards, the analytics product of The Etailers.
+    role:
+      es: Ingeniero de software, The Etailers
+      ca: Enginyer de programari, The Etailers
+      en: Software Engineer, The Etailers
+    stack: [TypeScript, Node.js, Angular]
+  - name:
+      es: Automatizaciones
+      ca: Automatitzacions
+      en: Automation
+    meta: '2026'
+    card:
+      big:
+        es: Operaciones
+        ca: Operacions
+        en: Operations
+      small:
+        es: Tareas de datos y de operaciones
+        ca: Tasques de dades i d'operacions
+        en: Data and operations tasks
+    summary:
+      es: Automatizo tareas recurrentes de datos y de operaciones para que dejen de hacerse a mano.
+      ca: Automatitzo tasques recurrents de dades i d'operacions perquè deixin de fer-se a mà.
+      en: I automate recurring data and operations tasks so nobody has to do them by hand.
+    role:
+      es: Ingeniero de software, The Etailers
+      ca: Enginyer de programari, The Etailers
+      en: Software Engineer, The Etailers
+    stack: [TypeScript, Node.js]

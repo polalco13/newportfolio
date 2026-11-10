@@ -1,0 +1,13 @@
+order: 2
+year: 2026
+name: { es: Logo de luz, ca: Logo de llum, en: Neon logo }
+line:
+  es: El logo de ALCO como un rótulo de luz que se traza, se enciende y toma el color del foco que lo apunta.
+  ca: El logo d'ALCO com un rètol de llum que es traça, s'encén i agafa el color del focus que l'apunta.
+  en: The ALCO logo as a neon sign that draws itself, lights up and takes the colour of the light pointed at it.
+stack: [Canvas 2D, SVG, TypeScript]
+image: ../shots/lab-logo.jpg
+alt:
+  es: Las letras A y L del logo de ALCO encendidas como un rótulo de luz.
+  ca: Les lletres A i L del logo d'ALCO enceses com un rètol de llum.
+  en: The letters A and L of the ALCO logo lit like a neon sign.

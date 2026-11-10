@@ -1,0 +1,81 @@
+order: 4
+color: sky
+real: false
+photo: jardin-noche-pista
+title:
+  es: Festes majors
+  ca: Festes majors
+  en: Town festivals
+line:
+  es: Plazas con todas las edades, y canciones que canta la plaza entera.
+  ca: Places amb totes les edats, i cançons que canta la plaça sencera.
+  en: Squares full of every age, and songs the whole square sings.
+cta:
+  es: Pedir fecha para una festa major
+  ca: Demana data per a una festa major
+  en: Check a date for a town festival
+source:
+  es: Una noche de festa major
+  ca: Una nit de festa major
+  en: A town festival night
+sourceNote:
+  es: las horas, las del programa
+  ca: les hores, les del programa
+  en: times follow the programme
+moments:
+  - h: '23:00'
+    photo: recodo-publico
+    name:
+      es: Después del concierto
+      ca: Després del concert
+      en: After the concert
+    meta:
+      es: recoger la plaza
+      ca: recollir la plaça
+      en: keeping the square
+    text:
+      es: Enlazo con lo último que ha sonado para que nadie se vaya.
+      ca: Enllaço amb l'últim que ha sonat perquè no marxi ningú.
+      en: I pick up from the last song so nobody leaves.
+  - h: '00:00'
+    photo: jardin-noche-publico
+    name:
+      es: Remember
+      ca: Remember
+      en: Classics
+    meta:
+      es: todas las edades
+      ca: totes les edats
+      en: every age
+    text:
+      es: Lo que cantan los padres y los hijos a la vez.
+      ca: El que canten els pares i els fills alhora.
+      en: What parents and kids sing together.
+  - h: '01:30'
+    photo: cabina-publico
+    name:
+      es: Latino y reggaeton
+      ca: Llatí i reggaeton
+      en: Latin and reggaeton
+    meta:
+      es: sube
+      ca: puja
+      en: building
+    text:
+      es: La parte que más baila.
+      ca: La part que balla més.
+      en: The part that dances most.
+  - h: '03:00'
+    photo: bn-bengalas-manos
+    name:
+      es: Himnos
+      ca: Himnes
+      en: Anthems
+    meta:
+      es: en catalán y castellano
+      ca: en català i castellà
+      en: in Catalan and Spanish
+    text:
+      es: Las de la fiesta del pueblo, para cerrar cantando.
+      ca: Les de la festa del poble, per tancar cantant.
+      en: The town's own songs, to close singing.

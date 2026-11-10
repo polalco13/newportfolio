@@ -1,0 +1,72 @@
+# Mafrica S.A. Sin captura: aplicaciones internas.
+order: 3
+color: mint
+title:
+  es: Industria
+  ca: Indústria
+  en: Industry
+line:
+  es: Software que habla con máquinas, como básculas, lectores de códigos e impresoras.
+  ca: Programari que parla amb màquines, com bàscules, lectors de codis i impressores.
+  en: Software that talks to machines such as scales, barcode readers and printers.
+source:
+  es: Mafrica S.A.
+  ca: Mafrica S.A.
+  en: Mafrica S.A.
+sourceNote:
+  es: Cardona, de mayo a agosto de 2026
+  ca: Cardona, de maig a agost del 2026
+  en: Cardona, May to August 2026
+items:
+  - name:
+      es: Plataforma de soporte
+      ca: Plataforma de suport
+      en: Support platform
+    meta:
+      es: desde cero
+      ca: des de zero
+      en: from scratch
+    card:
+      big:
+        es: Soporte
+        ca: Suport
+        en: Support
+      small:
+        es: Autenticación, avisos en tiempo real y monitorización
+        ca: Autenticació, avisos en temps real i monitoratge
+        en: Authentication, real time alerts and monitoring
+    summary:
+      es: Construí desde cero una plataforma interna de soporte y conocimiento, con autenticación, notificaciones en tiempo real, integraciones externas, monitorización y seguridad.
+      ca: Vaig construir des de zero una plataforma interna de suport i coneixement, amb autenticació, notificacions en temps real, integracions externes, monitoratge i seguretat.
+      en: I built an internal support and knowledge platform from scratch, with authentication, real time notifications, external integrations, monitoring and security.
+    role:
+      es: Desarrollador full stack
+      ca: Desenvolupador full stack
+      en: Full Stack Developer
+    stack: [Vue 3, Quasar, FastAPI, SQL Server, Docker]
+  - name:
+      es: Apps de planta
+      ca: Apps de planta
+      en: Shop floor apps
+    meta:
+      es: básculas e impresoras
+      ca: bàscules i impressores
+      en: scales and printers
+    card:
+      big:
+        es: Planta
+        ca: Planta
+        en: Shop floor
+      small:
+        es: Básculas, lectores de códigos e impresoras
+        ca: Bàscules, lectors de codis i impressores
+        en: Scales, barcode readers and printers
+    summary:
+      es: Mantuve y amplié aplicaciones industriales conectadas a básculas, lectores de códigos de barras e impresoras con APIs REST y WebSockets.
+      ca: Vaig mantenir i ampliar aplicacions industrials connectades a bàscules, lectors de codis de barres i impressores amb APIs REST i WebSockets.
+      en: I maintained and extended industrial apps connected to scales, barcode readers and printers through REST APIs and WebSockets.
+    role:
+      es: Desarrollador full stack
+      ca: Desenvolupador full stack
+      en: Full Stack Developer
+    stack: [ASP.NET Core, C#, Vue 3, WebSockets]

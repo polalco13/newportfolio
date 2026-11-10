@@ -1,0 +1,13 @@
+order: 1
+year: 2026
+name: { es: Humo de club, ca: Fum de club, en: Club smoke }
+line:
+  es: El fondo de polalco.com, un solo shader con humo que sube, focos con programa y el puntero que lo arrastra.
+  ca: El fons de polalco.com, un sol shader amb fum que puja, focus amb programa i el punter que l'arrossega.
+  en: The polalco.com background, a single shader with rising smoke, programmed stage lights and a pointer that drags it.
+stack: [WebGL, GLSL, TypeScript]
+image: ../shots/lab-humo.jpg
+alt:
+  es: Humo de colores que sube entre tres focos de escenario.
+  ca: Fum de colors que puja entre tres focus d'escenari.
+  en: Coloured smoke rising between three stage lights.

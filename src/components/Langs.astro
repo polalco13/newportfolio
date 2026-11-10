@@ -1,0 +1,44 @@
+---
+// Selector de idioma: lleva a la misma página con el idioma fijo (/es/…, /ca/…, /en/…).
+import { COPY } from '../content/copy';
+import { LANGS, pagePath, type Lang, type PageId } from '../../shared/site';
+
+interface Props {
+  lang: Lang;
+  page: PageId;
+}
+
+const { lang, page } = Astro.props;
+---
+
+<nav class="langs" aria-label={COPY[lang].language}>
+  {
+    LANGS.map((l) => (
+      <a href={pagePath(page, l)} hreflang={l} lang={l} aria-current={l === lang ? 'true' : undefined}>
+        {COPY[l].name}
+      </a>
+    ))
+  }
+</nav>
+
+<style>
+  .langs {
+    display: flex;
+    gap: 2px;
+  }
+  .langs a {
+    padding: 8px;
+    font-size: 0.9375rem;
+    color: var(--dim);
+    text-decoration: none;
+  }
+  .langs a:hover {
+    color: var(--silver);
+  }
+  .langs a[aria-current='true'] {
+    color: var(--silver);
+    text-decoration: underline;
+    text-underline-offset: 6px;
+    text-decoration-thickness: 1px;
+  }
+</style>

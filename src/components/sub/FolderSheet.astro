@@ -1,0 +1,382 @@
+---
+// Lo que hay dentro de las carpetas: una palabra gigante y, por carpeta, sus elementos en barras que se
+// abren (momentos en /alco, proyectos en /dev). Al señalar una barra, su foto sale en el marco fijo.
+// Sin JavaScript se ven todas las carpetas una debajo de otra; src/scripts/folders.ts deja solo la abierta.
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+export interface SheetItem {
+  h?: string;
+  name: string;
+  meta: string;
+  text: string;
+  image?: ImageMetadata;
+  /** Sin foto: una ficha de texto del mismo tamaño. */
+  card?: { big: string; small: string };
+  role?: { label: string; value: string };
+  tags?: string[];
+  links?: { label: string; href: string }[];
+}
+export interface SheetFolder {
+  id: string;
+  color: string;
+  source: string;
+  note: string;
+  /** Texto de la marca «Ejemplo», si los elementos son de ejemplo. */
+  sample?: string;
+  items: SheetItem[];
+}
+
+interface Props {
+  id: string;
+  giant: string;
+  folders: SheetFolder[];
+  front: string;
+  /** Si los elementos llevan hora (momentos) o no (proyectos). */
+  timed: boolean;
+}
+
+const { id, giant, folders, front, timed } = Astro.props;
+const frontColor = folders.find((f) => f.id === front)?.color ?? folders[0].color;
+---
+
+<section class:list={['sheet', { timed }]} id={id} data-sheet style={`--folder: var(--${frontColor})`} aria-labelledby={`${id}-t`}>
+  <div class="grid pad">
+    <div class="col">
+      <h2 class="giant" id={`${id}-t`} data-fit>
+        <span>{giant}</span>
+      </h2>
+      {
+        folders.map((f) => (
+          <div class:list={['set', { active: f.id === front }]} id={`m-${f.id}`} data-folder={f.id}>
+            <p class="source">
+              <b>{f.source}</b> <span>· {f.note}</span>
+              {f.sample && <span class="flag">{f.sample}</span>}
+            </p>
+            <div class="bars">
+              {f.items.map((it, i) => (
+                <details data-i={i} data-name={it.name} data-h={it.h ?? ''} open={i === 0}>
+                  <summary>
+                    {timed && <b>{it.h ?? '·'}</b>}
+                    <span class="name">{it.name}</span>
+                    <span class="meta">{it.meta}</span>
+                    <span class="plus" aria-hidden="true" />
+                  </summary>
+                  <div class="panel">
+                    {it.image ? (
+                      <Image class="inline" src={it.image} alt="" widths={[480, 760]} sizes="(max-width: 760px) 92vw, 0px" format="webp" quality={70} loading="lazy" />
+                    ) : (
+                      it.card && (
+                        <div class="inline card-img" aria-hidden="true">
+                          <b>{it.card.big}</b>
+                          <span>{it.card.small}</span>
+                        </div>
+                      )
+                    )}
+                    <p>{it.text}</p>
+                    {it.role && (
+                      <p>
+                        <b>{it.role.label}</b> {it.role.value}
+                      </p>
+                    )}
+                    {it.tags && (
+                      <ul class="tags">
+                        {it.tags.map((tag) => (
+                          <li>{tag}</li>
+                        ))}
+                      </ul>
+                    )}
+                    {it.links && (
+                      <p class="links">
+                        {it.links.map((l) => (
+                          <a class="link" href={l.href}>
+                            {l.label}
+                          </a>
+                        ))}
+                      </p>
+                    )}
+                  </div>
+                </details>
+              ))}
+            </div>
+          </div>
+        ))
+      }
+    </div>
+    <div class="frames" aria-hidden="true">
+      {
+        folders.map((f) => (
+          <figure class:list={['preview', { active: f.id === front }]} data-folder={f.id}>
+            {f.items.map((it, i) =>
+              it.image ? (
+                <Image class:list={['pv', { on: i === 0 }]} data-i={i} src={it.image} alt="" widths={[480, 900]} sizes="(max-width: 760px) 0px, 36vw" format="webp" quality={72} loading="lazy" />
+              ) : (
+                it.card && (
+                  <div class:list={['pv', 'card-img', { on: i === 0 }]} data-i={i}>
+                    <b>{it.card.big}</b>
+                    <span>{it.card.small}</span>
+                  </div>
+                )
+              ),
+            )}
+            <figcaption>
+              <b data-pv-name>{f.items[0].name}</b>
+              <span data-pv-h>{timed ? (f.items[0].h ?? '') : f.items[0].meta}</span>
+            </figcaption>
+          </figure>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .sheet {
+    width: 86vw;
+    margin: 0 auto;
+    background: var(--folder);
+    color: var(--ink);
+    padding-block: 56px 120px;
+    transition: background-color 420ms ease;
+    scroll-margin-top: 24px;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: minmax(0, 620px) minmax(0, 1fr);
+    gap: 64px;
+    align-items: start;
+    padding-left: 40px;
+    padding-right: 40px;
+  }
+  .col {
+    container-type: inline-size;
+  }
+  /* La palabra llena la columna justa: src/scripts/subweb.ts la mide y ajusta el tamaño. */
+  .giant {
+    margin: 0;
+    font-size: 17cqw;
+    white-space: nowrap;
+    font-weight: 800;
+    line-height: 0.8;
+    letter-spacing: -0.035em;
+    text-transform: uppercase;
+  }
+  .set {
+    scroll-margin-top: 24px;
+  }
+  /* Con JavaScript solo se ve la carpeta abierta; sin él, todas, una detrás de otra. */
+  :global(.js) .set:not(.active) {
+    display: none;
+  }
+  .set + .set {
+    margin-top: 56px;
+  }
+  .source {
+    margin: 26px 0 28px;
+  }
+  .source b {
+    font-weight: 600;
+  }
+  .source span {
+    color: var(--soft);
+  }
+  .flag {
+    display: inline-block;
+    margin-left: 6px;
+    padding: 1px 8px;
+    background: var(--ink);
+    color: var(--folder) !important;
+    font-size: var(--s1);
+    font-weight: 600;
+    vertical-align: 2px;
+  }
+  .bars {
+    display: grid;
+    gap: 6px;
+  }
+  details {
+    background: color-mix(in oklab, var(--folder) 72%, var(--ink) 9%);
+    transition: opacity 180ms ease;
+  }
+  summary {
+    list-style: none;
+    display: grid;
+    grid-template-columns: 1fr auto 20px;
+    gap: 12px;
+    align-items: center;
+    min-height: 56px;
+    padding: 0 18px;
+    cursor: pointer;
+    font-weight: 500;
+  }
+  .timed summary {
+    grid-template-columns: 64px 1fr auto 20px;
+  }
+  summary::-webkit-details-marker {
+    display: none;
+  }
+  summary b {
+    font-variant-numeric: tabular-nums;
+    font-weight: 600;
+  }
+  .meta {
+    color: var(--soft);
+    font-variant-numeric: tabular-nums;
+  }
+  .plus {
+    position: relative;
+    width: 14px;
+    height: 14px;
+  }
+  .plus::before,
+  .plus::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 6px;
+    width: 14px;
+    height: 2px;
+    background: currentColor;
+    transition: transform 240ms var(--ease);
+  }
+  .plus::after {
+    transform: rotate(90deg);
+  }
+  details[open] .plus::after {
+    transform: rotate(0deg);
+  }
+  .panel {
+    display: grid;
+    gap: 12px;
+    padding: 4px 20px 22px;
+  }
+  .panel[hidden] {
+    display: none;
+  }
+  .panel p {
+    margin: 0;
+    max-width: 54ch;
+  }
+  .panel p b {
+    font-weight: 600;
+  }
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .tags li {
+    padding: 3px 10px;
+    background: color-mix(in oklab, var(--folder) 55%, var(--ink) 16%);
+    font-size: var(--s1);
+    font-weight: 600;
+  }
+  .links {
+    display: flex;
+    gap: 20px;
+  }
+  .panel :global(.inline) {
+    display: none;
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+    object-position: top;
+  }
+  .preview {
+    position: sticky;
+    top: calc(var(--bar) + 24px);
+    display: none;
+    aspect-ratio: 4 / 5;
+    margin: 0;
+    overflow: hidden;
+    background: var(--ink);
+  }
+  .preview.active {
+    display: block;
+  }
+  .preview :global(.pv) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top;
+    opacity: 0;
+    transition: opacity 240ms ease;
+  }
+  .preview :global(.pv.on) {
+    opacity: 1;
+  }
+  .card-img {
+    display: grid;
+    align-content: end;
+    gap: 8px;
+    padding: 28px 28px 80px;
+    background: var(--ink);
+    color: var(--folder);
+  }
+  .card-img b {
+    font-size: var(--s4);
+    font-weight: 300;
+    line-height: 1;
+    letter-spacing: -0.03em;
+    color: var(--paper);
+  }
+  figcaption {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 14px 16px;
+    background: var(--ink);
+    color: var(--paper);
+  }
+  figcaption b {
+    font-weight: 600;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .bars:hover details:not(:hover) {
+      opacity: 0.5;
+    }
+  }
+  @media (max-width: 760px) {
+    .sheet {
+      width: 100%;
+      padding-block: 40px 80px;
+    }
+    .grid {
+      grid-template-columns: 1fr;
+      gap: 0;
+      padding-left: var(--gut);
+      padding-right: var(--gut-r);
+    }
+    .frames {
+      display: none;
+    }
+    .panel :global(.inline) {
+      display: block;
+    }
+    .panel .card-img {
+      padding-bottom: 28px;
+    }
+    summary,
+    .timed summary {
+      padding: 0 14px;
+    }
+    .timed summary {
+      grid-template-columns: 54px 1fr 20px;
+    }
+    .meta {
+      display: none;
+    }
+    summary {
+      grid-template-columns: 1fr 20px;
+    }
+  }
+</style>

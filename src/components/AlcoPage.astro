@@ -1,0 +1,193 @@
+---
+// Subweb de ALCO (canal L), de noche. La portada son cinco carpetas, una por tipo de evento, que se abren
+// en los momentos de ese evento. Todo el contenido sale de src/data/alco; los textos, de copy.ts.
+// /dev es la misma página de día: comparten cada pieza de src/components/sub.
+import { getCollection } from 'astro:content';
+import Channel from '../layouts/Channel.astro';
+import TopBar from './sub/TopBar.astro';
+import Hero from './sub/Hero.astro';
+import FolderStack, { type Folder } from './sub/FolderStack.astro';
+import FolderSheet, { type SheetFolder } from './sub/FolderSheet.astro';
+import Intro from './sub/Intro.astro';
+import Marquee from './sub/Marquee.astro';
+import TaggedTiles from './sub/TaggedTiles.astro';
+import DragRow from './sub/DragRow.astro';
+import Visit, { type Field } from './sub/Visit.astro';
+import BackCard from './sub/BackCard.astro';
+import { LETTERS, TIGHT_VIEWBOX } from './alco-logo';
+import { COPY, LINKS } from '../content/copy';
+import { LOCALE } from '../content/files';
+import { pagePath, type Lang } from '../../shared/site';
+
+interface Props {
+  lang: Lang;
+  negotiated: boolean;
+}
+
+const { lang, negotiated } = Astro.props;
+const t = COPY[lang];
+const a = t.alco;
+
+const byOrder = <T extends { data: { order: number } }>(x: T, y: T) => x.data.order - y.data.order;
+const services = (await getCollection('services')).sort(byOrder);
+const gallery = (await getCollection('gallery')).sort(byOrder);
+const steps = (await getCollection('steps')).sort(byOrder);
+const brands = (await getCollection('brands')).filter((b) => b.data.show);
+
+// Las fotos se nombran por su id de gallery.yaml; un id que no existe para la compilación.
+const photo = (id: string) => {
+  const entry = gallery.find((g) => g.id === id);
+  if (!entry) throw new Error(`Foto «${id}» no está en src/data/alco/gallery.yaml`);
+  return entry.data;
+};
+const day = new Intl.DateTimeFormat(LOCALE[lang], { day: '2-digit', month: '2-digit', year: 'numeric', timeZone: 'UTC' });
+const when = (date?: string) => (date ? day.format(new Date(`${date}T00:00:00Z`)) : '');
+const placeOf = (p: ReturnType<typeof photo>) => (typeof p.place === 'string' ? p.place : p.place?.[lang]);
+const caption = (id: string) => {
+  const p = photo(id);
+  return [placeOf(p), when(p.date)].filter(Boolean).join(' · ');
+};
+
+const front = services.find((s) => s.data.front)?.id ?? services[0].id;
+const devHref = negotiated ? pagePath('dev') : pagePath('dev', lang);
+
+const folders: Folder[] = services.map(({ id, data }) => {
+  const timed = data.moments.filter((m) => m.h);
+  return {
+    id,
+    color: data.color,
+    tab: data.title[lang],
+    count: `${a.count(data.moments.length)} · ${data.real ? a.real : a.sample.toLowerCase()}`,
+    title: data.title[lang],
+    what: data.line[lang],
+    cta: { label: data.cta[lang], href: '#fecha', type: data.title[lang] },
+    peek: (timed.length ? timed : data.moments).slice(0, 4).map((m) => ({ a: m.h ?? '·', b: m.name[lang] })),
+    more: { label: a.seeAll, href: `#m-${id}` },
+    image: photo(data.photo).image,
+    caption: caption(data.photo),
+  };
+});
+
+const sheet: SheetFolder[] = services.map(({ id, data }) => ({
+  id,
+  color: data.color,
+  source: data.source[lang],
+  note: data.sourceNote[lang],
+  sample: data.real ? undefined : a.sample,
+  items: data.moments.map((m) => ({
+    h: m.h,
+    name: m.name[lang],
+    meta: m.meta[lang],
+    text: m.text[lang],
+    image: photo(m.photo).image,
+  })),
+}));
+
+const labelled = gallery.filter((g) => g.data.label);
+const tiles = labelled.map((g) => ({
+  image: g.data.image,
+  alt: g.data.alt[lang],
+  title: placeOf(g.data) ?? g.data.label![lang],
+  when: when(g.data.date),
+  label: g.data.label![lang],
+  note: g.data.credit,
+}));
+// Los locales con nombre propio, una vez cada uno, para la franja que pasa.
+const venues = [...new Set(labelled.map((g) => g.data.place).filter((p): p is string => typeof p === 'string'))];
+
+const rowSteps = steps.map((s) => ({ title: s.data.title[lang], text: s.data.text[lang], image: photo(s.data.photo).image, gap: s.data.gap }));
+const credits = [...new Set(gallery.map((g) => g.data.credit).filter(Boolean))];
+const frontType = services.find((s) => s.id === front)?.data.title[lang];
+
+const fields: Field[] = [
+  { name: 'date', label: a.card.date, type: 'date', required: true },
+  { name: 'type', label: a.card.type, type: 'select', options: [...services.map((s) => s.data.title[lang]), a.card.other], selected: frontType },
+  { name: 'place', label: a.card.place, type: 'text', placeholder: a.card.placeHint },
+  { name: 'people', label: a.card.people, type: 'number', half: true },
+  { name: 'name', label: a.card.name, type: 'text', autocomplete: 'name', half: true },
+];
+---
+
+<Channel lang={lang} page="alco" negotiated={negotiated} theme="night">
+  <TopBar
+    lang={lang}
+    page="alco"
+    negotiated={negotiated}
+    links={[
+      { label: a.nav.events, href: '#eventos' },
+      { label: a.howTitle, href: '#como' },
+      { label: a.nav.photos, href: '#fotos' },
+    ]}
+    cta={{ label: a.book, href: '#fecha' }}
+  />
+
+  <main>
+    <Hero id="alco-t" headline={a.headline} lede={a.lede} image={photo('sala-laser').image}>
+      <FolderStack id="eventos" folders={folders} front={front} label={a.folders} lang={lang} doc="alco" src="web-alco" />
+    </Hero>
+
+    <FolderSheet id="momentos" giant={a.moments} folders={sheet} front={front} timed />
+
+    <Intro id="como" title={a.howTitle} body={a.howBody} facts={a.facts} image={photo('bn-espaldas-jardin').image} alt={photo('bn-espaldas-jardin').alt[lang]}>
+      {
+        brands.length > 0 && (
+          <p class="brands" data-reveal>
+            {brands.map((b) => b.data.name).join(' · ')}
+          </p>
+        )
+      }
+    </Intro>
+
+    {venues.length > 0 && <Marquee items={venues} tone="peach" />}
+
+    <TaggedTiles id="fotos" title={a.where} tiles={tiles} />
+
+    <DragRow title={a.prepTitle} steps={rowSteps} prev={t.prev} next={t.next} label={t.rowLabel} />
+
+    <Visit
+      id="fecha"
+      line={a.card.line}
+      title={a.book}
+      body={a.card.body}
+      fields={fields}
+      note={a.card.mail(LINKS.email)}
+      submit={a.card.submit}
+      sent={a.card.sent}
+      mail={LINKS.email}
+      subject={a.card.subject}
+      image={{ src: photo('jardin-noche-pista').image, alt: photo('jardin-noche-pista').alt[lang] }}
+    />
+  </main>
+
+  <BackCard lang={lang} page="alco" title={a.back.title} body={a.back.body} stamp={photo('retrato-lateral').image} imprint={`ALCO · Pol Alcoverro · polalco.com${credits.length ? ` · ${a.photo}: ${credits.join(', ')}` : ''}`}>
+    <a href={`mailto:${LINKS.email}`}>{LINKS.email}</a>
+    <a href={LINKS.instagram}>Instagram @pol.alco</a>
+    <a href={devHref}>{a.back.otherHalf}</a>
+    <a href="/alco.pdf?src=web-alco-pie">{t.doc.alco.label} (PDF)</a>
+    <span>{a.back.city}</span>
+    <svg slot="wordmark" viewBox={TIGHT_VIEWBOX}>{LETTERS.map((d) => <path d={d} />)}</svg>
+  </BackCard>
+</Channel>
+
+<script>
+  // Al abrir una carpeta (o pulsar su botón), el formulario de fecha ya trae ese tipo de evento.
+  const select = document.querySelector<HTMLSelectElement>('#fecha select[name="type"]');
+  const setType = (type?: string) => {
+    if (!select || !type) return;
+    const option = [...select.options].find((o) => o.text === type);
+    if (option) select.value = option.value;
+  };
+  addEventListener('folderchange', (e) => {
+    const folder = document.querySelector<HTMLElement>(`.folder[data-id="${(e as CustomEvent<string>).detail}"] .btn[data-type]`);
+    setType(folder?.dataset.type);
+  });
+  document.addEventListener('click', (e) => setType((e.target as Element).closest<HTMLElement>('.btn[data-type]')?.dataset.type));
+</script>
+
+<style>
+  .brands {
+    margin: 56px 0 0;
+    font-size: var(--s3);
+    font-weight: 300;
+  }
+</style>

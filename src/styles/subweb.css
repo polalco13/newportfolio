@@ -1,0 +1,168 @@
+/* Tokens y piezas comunes de las dos subwebs (/alco de noche y /dev de día). Las reglas van dentro de .ch
+   (el marco de layouts/Channel.astro): la misma ruta compila también el vestíbulo y su CSS llega a todas. */
+:root {
+  --paper: var(--silver);
+  --ink: var(--ink-dark);
+  --day: #f4f2f7;
+  --soft: #4f4859;
+  --night-2: #1f1a29;
+  --mint: #b8ecd6;
+  --sky: #bcd8ff;
+  --rose: #ffbccb;
+  /* Cinco tamaños: pequeño, texto, subtítulo, título y cartel. */
+  --s1: 13px;
+  --s2: 17px;
+  --s3: clamp(24px, 1.3rem + 0.6vw, 30px);
+  --s4: clamp(44px, 5vw, 72px);
+  --s5: min(9.25vw, 133px);
+  --gut: max(16px, env(safe-area-inset-left, 0px));
+  --gut-r: max(16px, env(safe-area-inset-right, 0px));
+  --bar: 64px;
+  --ease-in-out: cubic-bezier(0.76, 0, 0.24, 1);
+  --ease-soft: cubic-bezier(0.33, 1, 0.68, 1);
+}
+/* El suelo y la tinta de cada canal: noche para ALCO (L), día para el ingeniero (R). */
+.ch[data-theme-ground='night'] {
+  --ground: var(--night);
+  --fg: var(--paper);
+  --muted: var(--dim);
+  background: var(--ground);
+  color: var(--fg);
+}
+.ch[data-theme-ground='day'] {
+  --ground: var(--day);
+  --fg: var(--ink);
+  --muted: var(--soft);
+  background: var(--ground);
+  color: var(--fg);
+  color-scheme: light;
+}
+.ch {
+  font-size: var(--s2);
+  overflow-x: clip;
+}
+.ch img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+.ch :focus-visible {
+  outline-color: currentColor;
+}
+.ch .pad {
+  padding-left: max(32px, var(--gut));
+  padding-right: max(32px, var(--gut-r));
+}
+.ch .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 52px;
+  padding: 0 26px;
+  border: 0;
+  background: var(--ink);
+  color: var(--paper);
+  font: inherit;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    transform 140ms var(--ease),
+    background-color 180ms ease;
+}
+.ch .btn:hover {
+  background: #2c2436;
+}
+.ch .btn:active {
+  transform: scale(0.97);
+}
+.ch .link {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+  transition: text-underline-offset 180ms ease;
+}
+.ch .link:hover {
+  text-underline-offset: 6px;
+}
+/* Título de sección: el mismo en todas, grande y fino, frente al cartel grueso de la portada. */
+.ch .sec-title {
+  margin: 0;
+  font-size: var(--s4);
+  font-weight: 300;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+.ch section[id],
+.ch [data-anchor] {
+  scroll-margin-top: calc(var(--bar) + 16px);
+}
+
+/* Entradas, una vez (src/scripts/subweb.ts). Sin JavaScript o con «reducir movimiento», todo quieto y visible. */
+@media (prefers-reduced-motion: no-preference) {
+  html:has(.ch) {
+    scroll-behavior: smooth;
+  }
+  .js .ch [data-reveal] {
+    opacity: 0;
+    transform: translateY(24px);
+    transition:
+      opacity 700ms var(--ease),
+      transform 900ms var(--ease);
+    transition-delay: var(--d, 0ms);
+  }
+  .js .ch [data-reveal].is-in {
+    opacity: 1;
+    transform: none;
+  }
+  /* La persiana va en la imagen: el observador mira el marco, que no está recortado. */
+  .js .ch [data-shutter] img {
+    clip-path: inset(0 0 100% 0);
+    transform: scale(1.08);
+    transition:
+      clip-path 1100ms var(--ease-in-out),
+      transform 1600ms var(--ease);
+  }
+  .js .ch [data-shutter].is-in img {
+    clip-path: inset(0 0 0 0);
+    transform: none;
+  }
+}
+@media (max-width: 760px) {
+  :root {
+    --bar: 56px;
+  }
+  .ch .pad {
+    padding-left: var(--gut);
+    padding-right: var(--gut-r);
+  }
+}
+
+/* Lo recortado con clip-path (pestañas, botones con esquinas) dibuja el foco por dentro. */
+.ch .tab:focus-visible,
+.ch .cut:focus-visible {
+  outline-offset: -4px;
+}
+
+/* Paso entre páginas: el vestíbulo y las dos subwebs se funden, y lo que comparten (la marca, el
+   titular, el montón de carpetas) viaja de una a otra. Donde no hay transiciones de vista, carga normal. */
+@view-transition {
+  navigation: auto;
+}
+::view-transition-group(mark-alco),
+::view-transition-group(mark-dev),
+::view-transition-group(headline),
+::view-transition-group(stack) {
+  animation-duration: 620ms;
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 420ms;
+}
+@media (prefers-reduced-motion: reduce) {
+  @view-transition {
+    navigation: none;
+  }
+}

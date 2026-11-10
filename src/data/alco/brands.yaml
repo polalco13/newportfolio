@@ -1,0 +1,15 @@
+# Marcas y eventos. Solo salen en la web los que tienen `show: true`.
+# TODO(pol): confirmar cuáles se pueden nombrar públicamente y completar el tipo de evento.
+- id: dazn
+  name: DAZN
+  event: { es: Fan zone de El Clásico, ca: Fan zone d'El Clásico, en: El Clásico fan zone }
+  year: 2026
+  show: false
+- id: puma
+  name: PUMA
+  event: { es: Evento de marca, ca: Esdeveniment de marca, en: Brand event }
+  show: false
+- id: girona-fc
+  name: Girona FC
+  event: { es: Evento del club, ca: Esdeveniment del club, en: Club event }
+  show: false

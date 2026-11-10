@@ -8,9 +8,9 @@
     "binding": "ASSETS",
     "html_handling": "auto-trailing-slash",
     "not_found_handling": "404-page",
-    // El Worker elige el idioma de estas tres páginas y sirve y cuenta los PDFs.
-    // Todo lo demás sale directamente de los assets.
-    "run_worker_first": ["/", "/alco", "/cv", "/alco.pdf", "/cv.pdf"]
+    // El Worker elige el idioma de estas tres páginas, redirige /cv (y /xx/cv) a /dev y sirve y
+    // cuenta los PDFs. Todo lo demás sale directamente de los assets.
+    "run_worker_first": ["/", "/alco", "/dev", "/cv", "/cv/", "/*/cv", "/*/cv/", "/alco.pdf", "/cv.pdf"]
   },
   // Una fila por descarga: documento, origen, ref, país e idioma. Sin IP ni cookies.
   "analytics_engine_datasets": [{ "binding": "DOWNLOADS", "dataset": "polalco_downloads" }],

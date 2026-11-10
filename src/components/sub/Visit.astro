@@ -1,0 +1,249 @@
+---
+// El cierre con formulario: una pregunta grande y una tarjeta a la derecha. En /alco, sobre una foto a
+// sangre; en /dev, sobre un campo de color. El formulario no envía nada por su cuenta: prepara el correo
+// con los datos (src/scripts/subweb.ts) y, sin JavaScript, abre el programa de correo.
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+export interface Field {
+  name: string;
+  label: string;
+  type: 'text' | 'date' | 'number' | 'email' | 'select';
+  options?: string[];
+  selected?: string;
+  placeholder?: string;
+  required?: boolean;
+  autocomplete?: string;
+  /** Media anchura: dos seguidas comparten fila. */
+  half?: boolean;
+}
+
+interface Props {
+  id: string;
+  line: [string, string];
+  title: string;
+  body: string;
+  fields: Field[];
+  note: string;
+  submit: string;
+  sent: string;
+  mail: string;
+  subject: string;
+  image?: { src: ImageMetadata; alt: string };
+  /** Sin foto: el color del campo. */
+  tone?: 'lavender' | 'sky' | 'mint' | 'peach' | 'rose';
+}
+
+const { id, line, title, body, fields, note, submit, sent, mail, subject, image, tone = 'lavender' } = Astro.props;
+---
+
+<section class:list={['visit', { photo: image }]} id={id} style={image ? undefined : `--field: var(--${tone})`} aria-labelledby={`${id}-t`}>
+  {image && <Image class="bleed" src={image.src} alt={image.alt} widths={[800, 1350]} sizes="100vw" format="webp" quality={70} loading="lazy" />}
+  <h2 class="line" id={`${id}-t`} data-reveal>{line[0]}<br />{line[1]}</h2>
+  <form class="card" data-book data-mail={mail} data-subject={subject} action={`mailto:${mail}`} method="post" enctype="text/plain">
+    <h3>{title}</h3>
+    <p>{body}</p>
+    <div class="fields">
+      {
+        fields.map((f) => (
+          <div class:list={['field', { half: f.half }]}>
+            <label for={`${id}-${f.name}`}>{f.label}</label>
+            {f.type === 'select' ? (
+              <select id={`${id}-${f.name}`} name={f.name}>
+                {f.options?.map((o) => (
+                  <option selected={o === f.selected}>{o}</option>
+                ))}
+              </select>
+            ) : (
+              <input
+                id={`${id}-${f.name}`}
+                name={f.name}
+                type={f.type}
+                placeholder={f.placeholder}
+                required={f.required}
+                autocomplete={f.autocomplete ?? 'off'}
+                min={f.type === 'number' ? 1 : undefined}
+                inputmode={f.type === 'number' ? 'numeric' : undefined}
+              />
+            )}
+          </div>
+        ))
+      }
+    </div>
+    <p class="mail">{note}</p>
+    <output hidden>{sent}</output>
+    <button class="btn" type="submit">{submit}</button>
+  </form>
+</section>
+
+<style>
+  .visit {
+    position: relative;
+    min-height: 660px;
+    overflow: hidden;
+    background: var(--field, var(--night-2));
+    color: var(--ink);
+  }
+  .visit :global(.bleed) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .visit.photo {
+    min-height: min(100svh, 900px);
+  }
+  /* Velo neutro sobre la foto, para que la pregunta se lea. */
+  .photo::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgb(20 17 28 / 0.38);
+    pointer-events: none;
+  }
+  .line {
+    position: absolute;
+    z-index: 1;
+    left: max(32px, var(--gut));
+    bottom: 56px;
+    margin: 0;
+    font-size: clamp(44px, 7vw, 104px);
+    font-weight: 700;
+    line-height: 0.95;
+    letter-spacing: -0.04em;
+  }
+  /* Sobre la foto, arriba: abajo está la gente, y encima no se leería. */
+  .photo .line {
+    top: 64px;
+    bottom: auto;
+    color: var(--paper);
+  }
+  .card {
+    position: absolute;
+    z-index: 1;
+    top: 60px;
+    right: max(60px, var(--gut-r));
+    width: 380px;
+    padding: 32px 32px 0;
+    background: var(--paper);
+    color: var(--ink);
+    color-scheme: light;
+  }
+  .card :focus-visible {
+    outline-color: var(--ink);
+  }
+  .card h3 {
+    margin: 0 0 6px;
+    font-size: var(--s3);
+    font-weight: 300;
+    letter-spacing: -0.02em;
+  }
+  .card > p {
+    margin: 0 0 20px;
+  }
+  .fields {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px 12px;
+  }
+  .field {
+    grid-column: 1 / -1;
+    display: grid;
+    gap: 4px;
+  }
+  .field.half {
+    grid-column: auto;
+  }
+  .field label {
+    font-size: var(--s1);
+    font-weight: 600;
+  }
+  .field input,
+  .field select {
+    width: 100%;
+    height: 44px;
+    padding: 0 12px;
+    border: 1px solid #b9b1c4;
+    border-radius: 0;
+    background: #fff;
+    color: var(--ink);
+    font: inherit;
+    font-size: 16px;
+    transition: border-color 160ms ease;
+  }
+  .field input:hover,
+  .field select:hover {
+    border-color: var(--soft);
+  }
+  .card .mail {
+    margin: 18px 0;
+    font-size: var(--s1);
+    color: var(--soft);
+  }
+  .card output {
+    display: block;
+    padding-bottom: 12px;
+    font-size: var(--s1);
+  }
+  .card output[hidden] {
+    display: none;
+  }
+  .card .btn {
+    width: calc(100% + 64px);
+    margin: 10px -32px 0;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .visit :global(.bleed) {
+      animation: drift 28s ease-in-out infinite alternate;
+    }
+  }
+  @keyframes drift {
+    from {
+      transform: scale(1.04);
+    }
+    to {
+      transform: scale(1.12) translate3d(-2%, -1.5%, 0);
+    }
+  }
+  @media (max-width: 900px) {
+    .visit,
+    .visit.photo {
+      min-height: 0;
+      padding-bottom: 40px;
+    }
+    .visit :global(.bleed),
+    .photo::after {
+      height: 62svh;
+      bottom: auto;
+    }
+    .line {
+      position: relative;
+      left: auto;
+      bottom: auto;
+      padding: 72px var(--gut) 0;
+      font-size: min(10vw, 64px);
+    }
+    /* La pregunta, al pie de la foto; la tarjeta la pisa un poco por debajo, sin taparla. */
+    .photo .line {
+      display: flex;
+      flex-direction: column;
+      justify-content: end;
+      top: auto;
+      height: 62svh;
+      padding-top: 0;
+      padding-bottom: 76px;
+    }
+    .photo .card {
+      margin-top: -48px;
+    }
+    .card {
+      position: relative;
+      top: auto;
+      right: auto;
+      width: auto;
+      max-width: 520px;
+      margin: 32px var(--gut) 0;
+    }
+  }
+</style>

@@ -1,7 +1,8 @@
 // Worker de polalco.com. Casi todo son assets estáticos de Astro; el Worker solo hace dos cosas:
-// 1. Sirve /, /alco y /cv en el idioma del navegador (castellano, catalán o inglés), sin redirigir.
+// 1. Sirve /, /alco y /dev en el idioma del navegador (castellano, catalán o inglés), sin redirigir.
 // 2. Sirve /alco.pdf y /cv.pdf y apunta cada descarga en Workers Analytics Engine.
-import { DEFAULT_LANG, DOCS, pickLang, type Doc, type DocId } from '../shared/site';
+// 3. Redirige las rutas antiguas (/cv → /dev), igual que vercel.json.
+import { DEFAULT_LANG, DOCS, NEGOTIATED, REDIRECTS, pickLang, type Doc, type DocId } from '../shared/site';
 
 interface Env {
   ASSETS: Fetcher;
@@ -12,7 +13,7 @@ interface Env {
 const BY_PATH = new Map<string, Doc & { id: DocId }>(
   (Object.keys(DOCS) as DocId[]).map((id) => [DOCS[id].path, { id, ...DOCS[id] }]),
 );
-const NEGOTIATED = new Set(['/', '/alco', '/cv']);
+const NEGOTIATED_PATHS = new Set(NEGOTIATED);
 // Robots y vistas previas de enlaces (WhatsApp, Slack, LinkedInBot…) no cuentan como descargas.
 const BOTS = /bot|crawler|spider|preview|facebookexternalhit|whatsapp|headless|curl|wget|python/i;
 
@@ -21,7 +22,10 @@ export default {
     const url = new URL(request.url);
     const doc = BY_PATH.get(url.pathname);
     if (doc) return serveDoc(request, env, url, doc);
-    if (NEGOTIATED.has(url.pathname)) return servePage(request, env, url);
+    // Con o sin barra final (/cv/), como Vercel con trailingSlash: false.
+    const moved = REDIRECTS[url.pathname.replace(/(.)\/$/, '$1')];
+    if (moved) return Response.redirect(new URL(moved + url.search, url).href, 301);
+    if (NEGOTIATED_PATHS.has(url.pathname)) return servePage(request, env, url);
     return env.ASSETS.fetch(request);
   },
 } satisfies ExportedHandler<Env>;

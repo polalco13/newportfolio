@@ -1,0 +1,102 @@
+# Productos propios y un encargo privado. Sacado de newportfolio (rama redesign).
+# TODO(pol): backend y usuarios de GradeTracker, stack y cifras de FIB Hub, usuarios de BusosPenedès,
+# ¿mondj.cat o la URL de Vercel?
+order: 2
+color: sky
+front: true
+title:
+  es: Producto web
+  ca: Producte web
+  en: Web product
+line:
+  es: Productos que la gente usa de verdad, de la idea al despliegue.
+  ca: Productes que la gent fa servir de veritat, de la idea al desplegament.
+  en: Products people really use, from the idea to the deploy.
+source:
+  es: Cinco productos
+  ca: Cinc productes
+  en: Five products
+sourceNote:
+  es: cuatro en línea y uno privado
+  ca: quatre en línia i un de privat
+  en: four live and one private
+items:
+  - name: GradeTracker
+    meta: gradetracker.es
+    image: ../shots/gradetracker-desktop.jpg
+    summary:
+      es: Calculadora de notas y seguimiento del progreso universitario, con cálculos de «y si…» y un chatbot de IA para planificar el curso.
+      ca: Calculadora de notes i seguiment del progrés universitari, amb càlculs de «i si…» i un xatbot d'IA per planificar el curs.
+      en: A university grade calculator and progress tracker with what if calculations and an AI chatbot for academic planning.
+    role:
+      es: Ingeniería de producto y arquitectura del frontend
+      ca: Enginyeria de producte i arquitectura del frontend
+      en: Product engineering and frontend architecture
+    stack: [Next.js, TypeScript]
+    url: https://www.gradetracker.es/
+  - name: FIB Hub
+    meta: fib-hub.vercel.app
+    image: ../shots/fibhub-desktop.jpg
+    summary:
+      es: Buscador de apuntes, exámenes antiguos, soluciones y opiniones de profesores para los estudiantes de la FIB.
+      ca: Cercador d'apunts, exàmens antics, solucions i opinions de professors per als estudiants de la FIB.
+      en: A searchable hub of notes, past exams, solutions and professor reviews for FIB students.
+    role:
+      es: Full stack
+      ca: Full stack
+      en: Full stack
+    stack: [React, Node.js, PostgreSQL]
+    url: https://fib-hub.vercel.app/
+  - name: BusosPenedès
+    meta:
+      es: código abierto
+      ca: codi obert
+      en: open source
+    image: ../shots/busos-desktop.jpg
+    summary:
+      es: Horarios de autobús entre el Alt Penedès y Barcelona pensados para el móvil, con filtros de origen, destino y día.
+      ca: Horaris d'autobús entre l'Alt Penedès i Barcelona pensats per al mòbil, amb filtres d'origen, destinació i dia.
+      en: Mobile friendly bus timetables between the Alt Penedès and Barcelona, with origin, destination and travel day filters.
+    role:
+      es: Diseño y desarrollo de producto
+      ca: Disseny i desenvolupament de producte
+      en: Product design and development
+    stack: [Next.js, TypeScript]
+    url: https://busos-alco.vercel.app/
+    source: https://github.com/polalco13/transport-penedes
+  - name: Mon DJ
+    meta:
+      es: web de un DJ
+      ca: web d'un DJ
+      en: a DJ's website
+    image: ../shots/mondj-desktop.jpg
+    summary:
+      es: Web de portfolio para un DJ, pensada para convertir visitas en peticiones de fecha.
+      ca: Web de portfolio per a un DJ, pensada per convertir visites en peticions de data.
+      en: A booking focused portfolio site for a DJ.
+    role:
+      es: Frontend y sistema de animación
+      ca: Frontend i sistema d'animació
+      en: Frontend and motion system
+    stack: [Astro]
+    url: https://mondj-website.vercel.app/
+  - name: Opsmonitor
+    meta:
+      es: privado
+      ca: privat
+      en: private
+    card:
+      big: Opsmonitor
+      small:
+        es: Logística en Estados Unidos, en remoto
+        ca: Logística als Estats Units, en remot
+        en: Logistics in the United States, remote
+    summary:
+      es: Monté la infraestructura y los componentes base de una app en React y TypeScript que optimiza procesos para una empresa logística de Estados Unidos.
+      ca: Vaig muntar la infraestructura i els components base d'una app en React i TypeScript que optimitza processos per a una empresa logística dels Estats Units.
+      en: I set up the infrastructure and the core components of a React and TypeScript app that streamlines processes for a US logistics company.
+    role:
+      es: Desarrollador frontend, en remoto
+      ca: Desenvolupador frontend, en remot
+      en: Frontend Developer, remote
+    stack: [React, TypeScript]

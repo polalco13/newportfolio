@@ -1,0 +1,174 @@
+---
+// Una historia de izquierda a derecha: columnas de texto con su foto debajo, a alturas distintas, en una
+// fila que se arrastra (con botones y barra de progreso; src/scripts/subweb.ts).
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+export interface Step {
+  title: string;
+  text: string;
+  image: ImageMetadata;
+  /** Aire sobre la foto, en px: así las fotos suben y bajan a lo largo de la fila. */
+  gap: number;
+}
+
+interface Props {
+  /** Para los ids; distinto si la página tiene más de una. */
+  id?: string;
+  title: string;
+  steps: Step[];
+  prev: string;
+  next: string;
+  label: string;
+}
+
+const { id = 'row', title, steps, prev, next, label } = Astro.props;
+---
+
+<section class="moments pad" aria-labelledby={`${id}-t`} data-row>
+  <div class="head">
+    <h2 class="sec-title" id={`${id}-t`} data-reveal>{title}</h2>
+    <div>
+      <button type="button" data-prev aria-label={prev}>←</button>
+      <button type="button" data-next aria-label={next}>→</button>
+    </div>
+  </div>
+  <div class="progress" aria-hidden="true"><i></i></div>
+  <div class="track-row" tabindex="0" role="region" aria-label={label}>
+    {
+      steps.map((s, i) => (
+        <article data-reveal style={`--d: ${i * 70}ms`}>
+          <h3>{s.title}</h3>
+          <p>{s.text}</p>
+          <span class="gap" style={`height: ${s.gap}px`} />
+          <Image src={s.image} alt="" widths={[300, 560]} sizes="(max-width: 760px) 72vw, 280px" format="webp" quality={70} loading="lazy" />
+        </article>
+      ))
+    }
+  </div>
+</section>
+
+<style>
+  .moments {
+    padding-block: 20px 160px;
+  }
+  .head {
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    gap: 24px;
+  }
+  .head div {
+    display: flex;
+    gap: 8px;
+  }
+  button {
+    width: 48px;
+    height: 48px;
+    border: 0;
+    font: inherit;
+    cursor: pointer;
+    transition:
+      transform 140ms var(--ease),
+      opacity 180ms ease;
+  }
+  /* El botón va en el color del texto y la flecha, en el del fondo. */
+  :global([data-theme-ground='night']) button {
+    background: var(--paper);
+    color: var(--ink);
+  }
+  :global([data-theme-ground='day']) button {
+    background: var(--ink);
+    color: var(--paper);
+  }
+  button:active {
+    transform: scale(0.94);
+  }
+  button:disabled {
+    opacity: 0.3;
+    cursor: default;
+  }
+  .progress {
+    height: 6px;
+    margin: 32px 0 36px;
+    background: color-mix(in oklab, currentColor 12%, transparent);
+  }
+  .progress i {
+    display: block;
+    height: 100%;
+    background: currentColor;
+    transform-origin: left;
+    transform: scaleX(0.2);
+    transition: transform 160ms linear;
+  }
+  .track-row {
+    display: flex;
+    gap: 32px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    margin-left: calc(-1 * max(32px, var(--gut)));
+    margin-right: calc(-1 * max(32px, var(--gut-r)));
+    padding-left: max(32px, var(--gut));
+    padding-right: max(32px, var(--gut-r));
+  }
+  .track-row::-webkit-scrollbar {
+    display: none;
+  }
+  /* Con ratón la fila se agarra y se arrastra (src/scripts/subweb.ts). */
+  @media (hover: hover) and (pointer: fine) {
+    :global(.js) .track-row {
+      cursor: grab;
+    }
+    .track-row:global(.is-dragging) {
+      cursor: grabbing;
+      scroll-snap-type: none;
+      user-select: none;
+    }
+  }
+  article :global(img) {
+    pointer-events: none;
+  }
+  article {
+    flex: 0 0 280px;
+    scroll-snap-align: start;
+    display: flex;
+    flex-direction: column;
+  }
+  h3 {
+    margin: 0 0 8px;
+    font-size: var(--s2);
+    font-weight: 700;
+  }
+  p {
+    margin: 0;
+    min-height: 4.5em;
+  }
+  .gap {
+    flex: none;
+  }
+  article :global(img) {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    object-position: top;
+  }
+  @media (max-width: 760px) {
+    .moments {
+      padding-block: 0 96px;
+    }
+    .head div {
+      display: none;
+    }
+    .track-row {
+      gap: 16px;
+      margin-left: calc(-1 * var(--gut));
+      margin-right: calc(-1 * var(--gut-r));
+      padding-left: var(--gut);
+      padding-right: var(--gut-r);
+    }
+    article {
+      flex-basis: 72vw;
+    }
+  }
+</style>

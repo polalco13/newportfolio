@@ -1,0 +1,88 @@
+---
+// Una franja de color a sangre con nombres propios en grande que pasan despacio: los locales en /alco,
+// las empresas en /dev. Es repetición de lo que la sección siguiente ya dice con texto, por eso va
+// oculta al lector de pantalla. Con «reducir movimiento» se queda quieta.
+interface Props {
+  items: string[];
+  tone: 'peach' | 'ink' | 'lavender' | 'mint';
+}
+
+const { items, tone } = Astro.props;
+// Cada mitad de la cinta tiene que pasar del ancho de la pantalla: se repite la lista hasta ocho nombres.
+const set = Array.from({ length: Math.max(1, Math.ceil(8 / items.length)) }, () => items).flat();
+---
+
+<div class="marquee" data-tone={tone} aria-hidden="true">
+  <div class="tape">
+    {
+      [0, 1].map(() => (
+        <p>
+          {set.map((item) => (
+            <span>
+              {item}
+              <i>/</i>
+            </span>
+          ))}
+        </p>
+      ))
+    }
+  </div>
+</div>
+
+<style>
+  .marquee {
+    overflow: hidden;
+    padding-block: 26px 30px;
+    background: var(--band);
+    color: var(--band-ink);
+  }
+  [data-tone='peach'] {
+    --band: var(--peach);
+    --band-ink: var(--ink);
+  }
+  [data-tone='lavender'] {
+    --band: var(--lavender);
+    --band-ink: var(--ink);
+  }
+  [data-tone='mint'] {
+    --band: var(--mint);
+    --band-ink: var(--ink);
+  }
+  [data-tone='ink'] {
+    --band: var(--ink);
+    --band-ink: var(--paper);
+  }
+  .tape {
+    display: flex;
+    width: max-content;
+  }
+  p {
+    display: flex;
+    flex: none;
+    margin: 0;
+    font-size: clamp(52px, 8.6vw, 124px);
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.045em;
+    white-space: nowrap;
+  }
+  span {
+    display: flex;
+  }
+  i {
+    margin: 0 0.32em;
+    font-style: normal;
+    font-weight: 300;
+    opacity: 0.45;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .tape {
+      animation: pass 46s linear infinite;
+    }
+  }
+  @keyframes pass {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+</style>

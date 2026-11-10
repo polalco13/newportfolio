@@ -1,0 +1,11 @@
+kind: work
+role: { es: Desarrollador full stack en prácticas, ca: Desenvolupador full stack en pràctiques, en: Intern Full Stack Developer }
+org: ESSI, UPC
+place: { es: Barcelona, ca: Barcelona, en: Barcelona }
+start: 2025-09
+end: 2026-01
+summary:
+  es: Desplegué y adapté Taiga con Docker (backend, frontend y servicios asíncronos) para el seguimiento de proyectos en asignaturas de ingeniería del software, usado por estudiantes y profesores. Este trabajo fue mi TFG.
+  ca: Vaig desplegar i adaptar Taiga amb Docker (backend, frontend i serveis asíncrons) per al seguiment de projectes en assignatures d'enginyeria del programari, utilitzat per estudiants i professors. Aquesta feina va ser el meu TFG.
+  en: Deployed and customised Taiga with Docker (backend, frontend and async services) for project tracking in software engineering courses, used by students and instructors. This work became my thesis.
+stack: [Docker, Taiga]

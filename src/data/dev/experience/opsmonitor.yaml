@@ -1,0 +1,14 @@
+kind: work
+role: { es: Desarrollador frontend, ca: Desenvolupador frontend, en: Frontend Developer }
+org: Opsmonitor
+place:
+  es: En remoto, California
+  ca: En remot, Califòrnia
+  en: Remote, California
+start: 2026-02
+end: 2026-04
+summary:
+  es: Monté la infraestructura y los componentes base de una nueva app web en React y TypeScript que optimiza procesos para una empresa logística de Estados Unidos. Usé herramientas de IA y flujos con agentes para entregar más rápido. Código privado.
+  ca: Vaig muntar la infraestructura i els components base d'una nova app web en React i TypeScript que optimitza processos per a una empresa logística dels Estats Units. Vaig fer servir eines d'IA i fluxos amb agents per lliurar més ràpid. Codi privat.
+  en: Set up the infrastructure and core components of a new React and TypeScript web app that optimises processes for a US logistics company. Used AI tools and agentic workflows to speed up delivery. Private codebase.
+stack: [React, TypeScript]

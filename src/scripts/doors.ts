@@ -14,7 +14,7 @@ let doors: HTMLElement[] | null = null;
 const spot = new WeakMap<HTMLElement, number>();
 
 export function lightDoors(): void {
-  doors ??= [...document.querySelectorAll<HTMLElement>('.btn[data-doc]')];
+  doors ??= [...document.querySelectorAll<HTMLElement>('.btn[data-door]')];
   if (!doors.length || !stage.lights.length) return;
   const width = innerWidth;
   const height = innerHeight;

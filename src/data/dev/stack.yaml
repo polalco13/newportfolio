@@ -1,0 +1,13 @@
+# Tecnologías por contexto, en el orden en que salen.
+- id: every-day
+  order: 1
+  label: { es: Cada día, ca: Cada dia, en: Every day }
+  items: [TypeScript, React, Next.js, Angular, Node.js]
+- id: production
+  order: 2
+  label: { es: En producción en Mafrica, ca: En producció a Mafrica, en: In production at Mafrica }
+  items: [Vue 3, Quasar, FastAPI, ASP.NET Core, C#, SQL Server, Docker, REST, WebSockets]
+- id: also
+  order: 3
+  label: { es: También, ca: També, en: Also }
+  items: [JavaScript, Python, Java, C++, SQL, PostgreSQL, MySQL, Firebase, Tailwind CSS, Git, Astro, three.js, WebGL, SwiftUI]

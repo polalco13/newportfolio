@@ -3,7 +3,7 @@ import { statSync } from 'node:fs';
 import { join } from 'node:path';
 import { DOCS, type DocId, type Lang } from '../../shared/site';
 
-const LOCALE: Record<Lang, string> = { es: 'es-ES', ca: 'ca-ES', en: 'en-GB' };
+export const LOCALE: Record<Lang, string> = { es: 'es-ES', ca: 'ca-ES', en: 'en-GB' };
 
 export function docSize(id: DocId, lang: Lang): string {
   const bytes = statSync(join(process.cwd(), 'public', DOCS[id].asset)).size;

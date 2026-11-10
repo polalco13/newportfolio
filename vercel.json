@@ -6,7 +6,11 @@
   "outputDirectory": "dist",
   "cleanUrls": true,
   "trailingSlash": false,
-  "redirects": [{ "source": "/Pol-Alcoverro-CV.pdf", "destination": "/cv.pdf", "permanent": true }],
+  "redirects": [
+    { "source": "/Pol-Alcoverro-CV.pdf", "destination": "/cv.pdf", "permanent": true },
+    { "source": "/cv", "destination": "/dev", "permanent": true },
+    { "source": "/:lang(es|ca|en)/cv", "destination": "/:lang/dev", "permanent": true }
+  ],
   "rewrites": [
     { "source": "/alco.pdf", "destination": "/files/ALCO-Portfolio-DJ-2026.pdf" },
     { "source": "/cv.pdf", "destination": "/files/Pol-Alcoverro-CV.pdf" }

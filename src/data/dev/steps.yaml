@@ -1,0 +1,73 @@
+# «Cómo llevo un proyecto». `gap` es el aire sobre la captura (en px); `image`, una captura de ./shots/.
+- id: terminado
+  order: 1
+  image: ./shots/gradetracker-desktop.jpg
+  gap: 120
+  title:
+    es: Qué es «terminado»
+    ca: Què és «acabat»
+    en: What “done” means
+  text:
+    es: Una especificación corta antes de escribir código, para que los dos sepamos cuándo está hecho.
+    ca: Una especificació curta abans d'escriure codi, perquè tots dos sapiguem quan està fet.
+    en: A short spec before any code, so we both know when it is finished.
+- id: fases
+  order: 2
+  image: ./shots/fibhub-desktop.jpg
+  gap: 40
+  title:
+    es: Por fases
+    ca: Per fases
+    en: In phases
+  text:
+    es: El trabajo en fases pequeñas, y cada una se puede probar por separado.
+    ca: La feina en fases petites, i cadascuna es pot provar per separat.
+    en: The work in small phases, each one testable on its own.
+- id: rama
+  order: 3
+  image: ./shots/busos-desktop.jpg
+  gap: 96
+  title:
+    es: Una rama por cambio
+    ca: Una branca per canvi
+    en: One branch per change
+  text:
+    es: Cada cambio en su rama, con pruebas primero donde el código lo permite.
+    ca: Cada canvi a la seva branca, amb proves primer on el codi ho permet.
+    en: Every change on its own branch, tests first where the code allows it.
+- id: local
+  order: 4
+  image: ./shots/polalco-home.jpg
+  gap: 64
+  title:
+    es: En local primero
+    ca: En local primer
+    en: Local first
+  text:
+    es: Nada llega a producción sin haber funcionado antes en mi máquina.
+    ca: Res no arriba a producció sense haver funcionat abans a la meva màquina.
+    en: Nothing reaches production before it has worked on my machine.
+- id: simple
+  order: 5
+  image: ./shots/mondj-desktop.jpg
+  gap: 132
+  title:
+    es: Lo simple
+    ca: El més simple
+    en: The simple option
+  text:
+    es: Entre dos soluciones que funcionan, la más fácil de montar y de pasar a otra persona.
+    ca: Entre dues solucions que funcionen, la més fàcil de muntar i de passar a una altra persona.
+    en: Between two solutions that work, the one that is easier to set up and hand over.
+- id: escrito
+  order: 6
+  image: ./shots/busos-mobile.jpg
+  gap: 56
+  title:
+    es: Por escrito
+    ca: Per escrit
+    en: In writing
+  text:
+    es: Reviso antes de fusionar y dejo escrito por qué se decidió cada cosa.
+    ca: Reviso abans de fusionar i deixo escrit per què es va decidir cada cosa.
+    en: I review before merging and write down why each decision was made.

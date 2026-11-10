@@ -1,0 +1,15 @@
+# TODO(pol): confirmar el título y el lugar (difieren entre la web antigua y el CV).
+kind: work
+role: { es: Desarrollador full stack, ca: Desenvolupador full stack, en: Full Stack Developer }
+org: Mafrica S.A.
+place:
+  es: Cardona, presencial
+  ca: Cardona, presencial
+  en: Cardona, on site
+start: 2026-05
+end: 2026-08
+summary:
+  es: Construí desde cero una plataforma interna de soporte y conocimiento, con autenticación, notificaciones en tiempo real, integraciones externas, monitorización y seguridad. Mantuve y amplié aplicaciones industriales conectadas a básculas, lectores de códigos de barras e impresoras con APIs REST y WebSockets.
+  ca: Vaig construir des de zero una plataforma interna de suport i coneixement, amb autenticació, notificacions en temps real, integracions externes, monitoratge i seguretat. Vaig mantenir i ampliar aplicacions industrials connectades a bàscules, lectors de codis de barres i impressores amb APIs REST i WebSockets.
+  en: Built an internal support and knowledge platform from scratch, with authentication, real time notifications, external integrations, monitoring and security. Maintained and extended industrial apps connected to scales, barcode readers and printers through REST APIs and WebSockets.
+stack: [Vue 3, Quasar, FastAPI, ASP.NET Core, C#, SQL Server, Docker]

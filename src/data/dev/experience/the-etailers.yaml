@@ -1,0 +1,10 @@
+kind: work
+role: { es: Ingeniero de software, ca: Enginyer de programari, en: Software Engineer }
+org: The Etailers
+place: { es: Barcelona, ca: Barcelona, en: Barcelona }
+start: 2026-10
+summary:
+  es: Agencia de ecommerce que trabaja con Magento y Adobe Commerce. Construyo los pipelines de datos que recogen indicadores de mercado de fuentes oficiales y alimentan los cuadros de mando de EcommGuard, y automatizo tareas recurrentes de datos y operaciones.
+  ca: Agència d'ecommerce que treballa amb Magento i Adobe Commerce. Construeixo els pipelines de dades que recullen indicadors de mercat de fonts oficials i alimenten els quadres de comandament d'EcommGuard, i automatitzo tasques recurrents de dades i operacions.
+  en: Ecommerce agency working with Magento and Adobe Commerce. I build data pipelines that collect market indicators from official sources and feed the EcommGuard analytics dashboards, and I automate recurring data and operations tasks.
+stack: [TypeScript, React, Next.js, Angular, Node.js]

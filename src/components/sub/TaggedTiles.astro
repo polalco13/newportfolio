@@ -1,0 +1,186 @@
+---
+// Fotos con su etiqueta pegada debajo, como una copia con su tira: dónde, cuándo, qué y de quién.
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+export interface Tile {
+  image: ImageMetadata;
+  alt: string;
+  title: string;
+  when: string;
+  label: string;
+  note?: string;
+  /** Una frase más, bajo la etiqueta. */
+  text?: string;
+}
+
+interface Props {
+  /** Para los ids; distinto si la página tiene más de una. */
+  id?: string;
+  title: string;
+  tiles: Tile[];
+  cols?: 3 | 4;
+}
+
+const { id = 'tiles', title, tiles, cols = 4 } = Astro.props;
+---
+
+<section class="gallery pad" id={id} aria-labelledby={`${id}-t`}>
+  <h2 class="sec-title" id={`${id}-t`} data-reveal>{title}</h2>
+  <ul class:list={['tiles', `c${cols}`]}>
+    {
+      tiles.map((tile, i) => (
+        <li data-reveal style={`--d: ${(i % cols) * 70}ms`}>
+          <figure>
+            <div class="ph">
+              <Image src={tile.image} alt={tile.alt} widths={[400, 600, 800]} sizes={`(max-width: 1024px) 48vw, ${cols === 3 ? 31 : 23}vw`} format="webp" quality={72} loading="lazy" />
+            </div>
+            <figcaption>
+              <div>
+                <b>{tile.title}</b>
+                <span>{tile.when}</span>
+              </div>
+              <div>
+                <span>{tile.label}</span>
+                {tile.note && <span>{tile.note}</span>}
+              </div>
+              {tile.text && <p>{tile.text}</p>}
+            </figcaption>
+          </figure>
+        </li>
+      ))
+    }
+  </ul>
+</section>
+
+<style>
+  .gallery {
+    padding-block: 130px 150px;
+  }
+  .gallery h2 {
+    margin-bottom: 56px;
+  }
+  .tiles {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 28px 12px;
+    align-items: start;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .tiles.c3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  /* Las columnas pares bajan un escalón: la cuadrícula deja de ser una reja. */
+  .c4 li:nth-child(2n),
+  .c3 li:nth-child(3n + 2) {
+    margin-top: 64px;
+  }
+  figcaption p {
+    margin: 4px 0 2px;
+    font-size: 15px;
+    line-height: 1.4;
+  }
+  figure {
+    margin: 0;
+  }
+  .ph {
+    overflow: hidden;
+  }
+  .ph :global(img) {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    object-position: top;
+    transition: transform 600ms var(--ease-soft);
+  }
+  li:hover .ph :global(img) {
+    transform: scale(1.03);
+  }
+  figcaption {
+    display: grid;
+    gap: 6px;
+    min-height: 84px;
+    padding: 12px;
+    font-size: var(--s1);
+    font-variant-numeric: tabular-nums;
+    background: var(--bg);
+    color: var(--fg);
+  }
+  figcaption div {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+  }
+  figcaption b {
+    font-size: var(--s2);
+    font-weight: 600;
+  }
+  /* Cuatro pares de tintas que rotan, para que dos vecinas nunca coincidan. */
+  li:nth-child(4n + 1) {
+    --bg: var(--peach);
+    --fg: var(--ink);
+  }
+  li:nth-child(4n + 2) {
+    --bg: var(--night-2);
+    --fg: var(--paper);
+  }
+  li:nth-child(4n + 3) {
+    --bg: var(--mint);
+    --fg: var(--ink);
+  }
+  li:nth-child(4n + 4) {
+    --bg: var(--paper);
+    --fg: var(--ink);
+  }
+  li:nth-child(8n + 5) {
+    --bg: var(--sky);
+  }
+  li:nth-child(8n + 7) {
+    --bg: var(--night-2);
+    --fg: var(--peach);
+  }
+  @media (max-width: 1024px) {
+    .tiles,
+    .tiles.c3 {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 20px 8px;
+    }
+    .c3 li:nth-child(3n + 2) {
+      margin-top: 0;
+    }
+    .c4 li:nth-child(2n),
+    .c3 li:nth-child(2n) {
+      margin-top: 40px;
+    }
+  }
+  @media (max-width: 760px) {
+    .gallery {
+      padding-block: 88px 96px;
+    }
+    .gallery h2 {
+      margin-bottom: 32px;
+    }
+    figcaption {
+      min-height: 0;
+    }
+    figcaption div + div,
+    figcaption p {
+      display: none;
+    }
+    .tiles.c3 {
+      grid-template-columns: 1fr;
+    }
+    .c3 li:nth-child(n) {
+      margin-top: 0;
+    }
+    /* Tres columnas pasan a una: cabe la etiqueta entera. */
+    .c3 figcaption div + div {
+      display: flex;
+    }
+    .c3 figcaption p {
+      display: block;
+    }
+  }
+</style>

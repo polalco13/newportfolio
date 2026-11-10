@@ -1,0 +1,215 @@
+# Fotos de la galería; salen por `order`. Las imágenes están en ./gallery/.
+# mood: cabina, pista, sala, jardin o dia. credit: autor de la foto, si hay que citarlo.
+# place y date salen del nombre del archivo original en ~/Desktop/Medios/fotos; las fotos con `label`
+# salen en «Dónde he pinchado». TODO(pol): confirmar que se pueden nombrar los locales.
+- id: palau-reial
+  order: 1
+  place: Palau Reial
+  date: '2025-02-27'
+  label:
+    es: Cabina en un salón
+    ca: Cabina en un saló
+    en: Booth in a hall
+  image: ./gallery/palau-reial.jpg
+  mood: sala
+  alt:
+    es: ALCO pinchando en un salón con cortinas y lámparas de araña.
+    ca: ALCO punxant en un saló amb cortines i aranyes de vidre.
+    en: ALCO playing in a hall with curtains and chandeliers.
+- id: crowd-bengalas
+  order: 2
+  place: La Referencia
+  date: '2025-10-26'
+  label:
+    es: Pista con bengalas
+    ca: Pista amb bengales
+    en: Sparklers on the floor
+  image: ./gallery/crowd-bengalas.jpg
+  mood: pista
+  credit: '@marcjunque'
+  alt:
+    es: Sala llena vista desde arriba, bengalas encendidas junto a la cabina y el público con las manos arriba.
+    ca: Sala plena vista des de dalt, bengales enceses al costat de la cabina i el públic amb les mans enlaire.
+    en: A packed room from above, sparklers lit beside the booth and the crowd with their hands up.
+- id: bn-espaldas-jardin
+  order: 3
+  place: El Recodu
+  date: '2026-09-25'
+  label:
+    es: Cabina en el jardín
+    ca: Cabina al jardí
+    en: Garden booth
+  image: ./gallery/bn-espaldas-jardin.jpg
+  mood: jardin
+  alt:
+    es: ALCO de espaldas en la cabina de un jardín de noche, en blanco y negro.
+    ca: ALCO d'esquena a la cabina d'un jardí de nit, en blanc i negre.
+    en: ALCO from behind in the booth of a garden at night, in black and white.
+- id: cabina-cdj-oscuro
+  order: 4
+  image: ./gallery/cabina-cdj-oscuro.jpg
+  mood: cabina
+  alt:
+    es: ALCO concentrado sobre los CDJ, luz tenue.
+    ca: ALCO concentrat sobre els CDJ, amb llum tènue.
+    en: ALCO focused over the CDJs in low light.
+- id: jardin-noche-publico
+  order: 5
+  place: El Recodu
+  date: '2026-09-25'
+  label:
+    es: Jardín de noche
+    ca: Jardí de nit
+    en: Garden at night
+  image: ./gallery/jardin-noche-publico.jpg
+  mood: jardin
+  alt:
+    es: Público junto a la cabina en una fiesta de jardín.
+    ca: Públic al costat de la cabina en una festa de jardí.
+    en: The crowd beside the booth at a garden party.
+- id: sala-bola
+  order: 6
+  place: La Referencia
+  date: '2025-10-26'
+  label:
+    es: Sala con bola de espejos
+    ca: Sala amb bola de miralls
+    en: Mirror ball room
+  image: ./gallery/sala-bola.jpg
+  mood: sala
+  credit: '@marcjunque'
+  alt:
+    es: Sala con bola de espejos y haces de luz.
+    ca: Sala amb bola de miralls i feixos de llum.
+    en: A room with a mirror ball and light beams.
+- id: retrato-lateral
+  order: 7
+  image: ./gallery/retrato-lateral.jpg
+  mood: cabina
+  alt:
+    es: Retrato lateral de ALCO en cabina.
+    ca: Retrat lateral d'ALCO a la cabina.
+    en: Side portrait of ALCO in the booth.
+- id: escenario-recodo
+  order: 8
+  place: El Recodu
+  date: '2026-09-25'
+  label:
+    es: Escenario de neón
+    ca: Escenari de neó
+    en: Neon stage
+  image: ./gallery/escenario-recodo.jpg
+  mood: cabina
+  alt:
+    es: ALCO pinchando en un escenario con cortina roja y rótulo de neón.
+    ca: ALCO punxant en un escenari amb cortina vermella i rètol de neó.
+    en: ALCO playing on a stage with a red curtain and a neon sign.
+- id: sala-bengalas-vertical
+  order: 9
+  place: La Referencia
+  date: '2025-10-26'
+  image: ./gallery/sala-bengalas-vertical.jpg
+  mood: pista
+  credit: '@marcjunque'
+  alt:
+    es: Cabina con bengalas y público en la pista.
+    ca: Cabina amb bengales i públic a la pista.
+    en: The booth with sparklers and the crowd on the dance floor.
+- id: jardin-noche-pista
+  order: 10
+  place: El Recodu
+  date: '2026-09-25'
+  label:
+    es: Pista bajo los pinos
+    ca: Pista sota els pins
+    en: Floor under the pines
+  image: ./gallery/jardin-noche-pista.jpg
+  mood: jardin
+  alt:
+    es: Pista al aire libre bajo los pinos, CDJ en primer plano.
+    ca: Pista a l'aire lliure sota els pins, amb els CDJ en primer pla.
+    en: An open-air dance floor under the pines, CDJs in the foreground.
+- id: cabina-mezclando
+  order: 11
+  image: ./gallery/cabina-mezclando.jpg
+  mood: cabina
+  alt:
+    es: ALCO mezclando con el público detrás.
+    ca: ALCO mesclant amb el públic al darrere.
+    en: ALCO mixing with the crowd behind him.
+- id: dia-pergola
+  order: 12
+  place:
+    es: En una plaza
+    ca: En una plaça
+    en: In a square
+  date: '2026-10-07'
+  label:
+    es: Sesión de día
+    ca: Sessió de dia
+    en: Daytime set
+  image: ./gallery/dia-pergola.jpg
+  mood: dia
+  alt:
+    es: ALCO con auriculares pinchando de día bajo una pérgola.
+    ca: ALCO amb auriculars punxant de dia sota una pèrgola.
+    en: ALCO in headphones playing a daytime set under a pergola.
+- id: recodo-publico
+  order: 13
+  place: El Recodu
+  date: '2026-09-25'
+  label:
+    es: Público frente al escenario
+    ca: Públic davant l'escenari
+    en: Crowd at the stage
+  image: ./gallery/recodo-publico.jpg
+  mood: pista
+  alt:
+    es: Público frente al escenario con el rótulo de neón.
+    ca: Públic davant de l'escenari amb el rètol de neó.
+    en: The crowd in front of the stage and its neon sign.
+- id: sala-laser
+  order: 14
+  place: La Referencia
+  date: '2025-10-26'
+  label:
+    es: Sala con láser
+    ca: Sala amb làser
+    en: Lasers in the room
+  image: ./gallery/sala-laser.jpg
+  mood: sala
+  credit: '@marcjunque'
+  alt:
+    es: Sala llena con láser y bola de espejos.
+    ca: Sala plena amb làser i bola de miralls.
+    en: A packed room with lasers and a mirror ball.
+- id: bn-bengalas-manos
+  order: 15
+  place: La Referencia
+  date: '2025-10-26'
+  label:
+    es: Manos arriba
+    ca: Mans enlaire
+    en: Hands up
+  image: ./gallery/bn-bengalas-manos.jpg
+  mood: pista
+  credit: '@marcjunque'
+  alt:
+    es: Manos arriba y bengalas, en blanco y negro.
+    ca: Mans enlaire i bengales, en blanc i negre.
+    en: Hands up and sparklers, in black and white.
+- id: cabina-publico
+  order: 16
+  place: La Referencia
+  date: '2025-10-26'
+  label:
+    es: Cabina con público
+    ca: Cabina amb públic
+    en: Booth and crowd
+  image: ./gallery/cabina-publico.jpg
+  mood: cabina
+  credit: '@marcjunque'
+  alt:
+    es: Cabina rodeada de público.
+    ca: Cabina envoltada de públic.
+    en: The booth surrounded by the crowd.

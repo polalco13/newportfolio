@@ -1,10 +1,11 @@
-// Middleware de Vercel: hace lo mismo que el Worker de Cloudflare (worker/index.ts) con /, /alco y /cv,
+// Middleware de Vercel: hace lo mismo que el Worker de Cloudflare (worker/index.ts) con /, /alco y /dev,
 // que se sirven en el idioma del navegador sin redirigir. Los PDF los sirven las rewrites de
-// vercel.json; en Vercel no hay contador de descargas.
+// vercel.json, igual que la redirección de /cv a /dev; en Vercel no hay contador de descargas.
 import { next, rewrite } from '@vercel/functions';
 import { DEFAULT_LANG, pickLang } from './shared/site';
 
-export const config = { matcher: ['/', '/alco', '/cv'] };
+// Vercel lee el matcher sin ejecutar el archivo: tiene que ser literal (es NEGOTIATED de shared/site.ts).
+export const config = { matcher: ['/', '/alco', '/dev'] };
 
 export default function middleware(request: Request): Response {
   const lang = pickLang(request.headers.get('accept-language'));

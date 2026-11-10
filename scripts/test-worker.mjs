@@ -22,14 +22,21 @@ const page = async (path, acceptLanguage) => {
   return [await res.text(), res.headers.get('content-language'), res.headers.get('vary')];
 };
 
-// Idioma de /, /alco y /cv según el navegador, sin redirigir.
+// Idioma de /, /alco y /dev según el navegador, sin redirigir.
 assert.deepEqual(await page('/'), ['asset:/', 'es', 'Accept-Language']);
 assert.deepEqual(await page('/', 'ca,es;q=0.8'), ['asset:/ca', 'ca', 'Accept-Language']);
 assert.deepEqual(await page('/', 'en;q=0.5,es;q=0.9'), ['asset:/', 'es', 'Accept-Language']);
 assert.deepEqual(await page('/', 'fr-FR,fr;q=0.9'), ['asset:/en', 'en', 'Accept-Language']);
 assert.deepEqual(await page('/alco', 'en-GB'), ['asset:/en/alco', 'en', 'Accept-Language']);
-assert.deepEqual(await page('/cv', 'ca-ES'), ['asset:/ca/cv', 'ca', 'Accept-Language']);
-assert.equal(await (await call('/es/cv')).text(), 'asset:/es/cv', 'las rutas con idioma no se tocan');
+assert.deepEqual(await page('/dev', 'ca-ES'), ['asset:/ca/dev', 'ca', 'Accept-Language']);
+assert.equal(await (await call('/es/dev')).text(), 'asset:/es/dev', 'las rutas con idioma no se tocan');
+
+// /cv era la landing del CV: ahora redirige (301) a la subweb del ingeniero, con el idioma y la query.
+for (const [from, to] of [['/cv', '/dev'], ['/cv/', '/dev'], ['/ca/cv?src=li', '/ca/dev?src=li'], ['/en/cv/', '/en/dev']]) {
+  const moved = await call(from);
+  assert.equal(moved.status, 301, from);
+  assert.equal(moved.headers.get('location'), `https://polalco.com${to}`, from);
+}
 
 // Descargas: cabeceras del PDF y una fila por descarga real.
 const res = await call('/alco.pdf?src=IG&ref=Empresa X!', {

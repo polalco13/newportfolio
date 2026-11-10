@@ -1,0 +1,367 @@
+---
+// Subweb de Pol ingeniero (canal R), de día: la misma página que /alco con otra luz. La portada son cinco
+// carpetas, una por tipo de problema, que se abren en sus proyectos. Todo el contenido sale de
+// src/data/dev; los textos, de copy.ts.
+import { getCollection } from 'astro:content';
+import Channel from '../layouts/Channel.astro';
+import TopBar from './sub/TopBar.astro';
+import Hero from './sub/Hero.astro';
+import FolderStack, { type Folder } from './sub/FolderStack.astro';
+import FolderSheet, { type SheetFolder } from './sub/FolderSheet.astro';
+import Intro from './sub/Intro.astro';
+import Marquee from './sub/Marquee.astro';
+import TaggedTiles from './sub/TaggedTiles.astro';
+import DragRow from './sub/DragRow.astro';
+import Visit, { type Field } from './sub/Visit.astro';
+import BackCard from './sub/BackCard.astro';
+import { COPY, LINKS } from '../content/copy';
+import { LOCALE } from '../content/files';
+import { pagePath, type Lang } from '../../shared/site';
+
+interface Props {
+  lang: Lang;
+  negotiated: boolean;
+}
+
+const { lang, negotiated } = Astro.props;
+const t = COPY[lang];
+const d = t.dev;
+
+const byOrder = <T extends { data: { order: number } }>(x: T, y: T) => x.data.order - y.data.order;
+const areas = (await getCollection('areas')).sort(byOrder);
+const roles = (await getCollection('experience')).sort((x, y) => y.data.start.localeCompare(x.data.start));
+const work = roles.filter((r) => r.data.kind === 'work');
+const education = roles.filter((r) => r.data.kind === 'education');
+const stack = (await getCollection('stack')).sort(byOrder);
+const lab = (await getCollection('lab')).sort(byOrder);
+const steps = (await getCollection('devSteps')).sort(byOrder);
+const gallery = await getCollection('gallery');
+
+// Las dos fotos de ALCO que salen aquí: la otra mitad de la web.
+const photo = (id: string) => {
+  const entry = gallery.find((g) => g.id === id);
+  if (!entry) throw new Error(`Foto «${id}» no está en src/data/alco/gallery.yaml`);
+  return entry.data;
+};
+/** Un nombre propio vale para los tres idiomas; el resto viene traducido. */
+const L = (v: string | Record<Lang, string>) => (typeof v === 'string' ? v : v[lang]);
+const fmt = new Intl.DateTimeFormat(LOCALE[lang], { month: 'short', year: 'numeric', timeZone: 'UTC' });
+const month = (m: string) => fmt.format(new Date(`${m}-01T00:00:00Z`));
+const period = (start: string, end?: string) => `${month(start)} – ${end ? month(end) : d.now}`;
+
+/** Un título largo («Grado en…, especialidad en…») se parte por la coma: lo segundo baja a la línea de la entidad. */
+const split = (role: string) => {
+  const [head, ...rest] = role.split(', ');
+  const tail = rest.join(', ');
+  return { head, tail: tail && tail[0].toUpperCase() + tail.slice(1) };
+};
+
+const front = areas.find((x) => x.data.front)?.id ?? areas[0].id;
+const alcoHref = negotiated ? pagePath('alco') : pagePath('alco', lang);
+const card = (c?: { big: string | Record<Lang, string>; small: Record<Lang, string> }) => (c ? { big: L(c.big), small: c.small[lang] } : undefined);
+
+const folders: Folder[] = areas.map(({ id, data }) => ({
+  id,
+  color: data.color,
+  tab: data.title[lang],
+  count: d.count(data.items.length),
+  title: data.title[lang],
+  what: data.line[lang],
+  cta: { label: d.folderCta, href: '#escribeme' },
+  peek: data.items.slice(0, 5).map((it) => ({ a: L(it.name), b: L(it.meta) })),
+  more: { label: d.seeAll, href: `#m-${id}` },
+  image: data.items[0].image,
+  card: card(data.items[0].card),
+  caption: L(data.items[0].name),
+}));
+
+const sheet: SheetFolder[] = areas.map(({ id, data }) => ({
+  id,
+  color: data.color,
+  source: data.source[lang],
+  note: data.sourceNote[lang],
+  items: data.items.map((it) => ({
+    name: L(it.name),
+    meta: L(it.meta),
+    text: it.summary[lang],
+    image: it.image,
+    card: card(it.card),
+    role: { label: d.role, value: it.role[lang] },
+    tags: it.stack,
+    links: [...(it.url ? [{ label: d.visit, href: it.url }] : []), ...(it.source ? [{ label: d.source, href: it.source }] : [])],
+  })),
+}));
+
+const tiles = lab.map(({ data }) => ({
+  image: data.image,
+  alt: data.alt[lang],
+  title: data.name[lang],
+  when: String(data.year),
+  label: data.stack.join(' · '),
+  text: data.line[lang],
+}));
+const rowSteps = steps.map((s) => ({ title: s.data.title[lang], text: s.data.text[lang], image: s.data.image, gap: s.data.gap }));
+
+const fields: Field[] = [
+  { name: 'company', label: d.card.company, type: 'text', autocomplete: 'organization' },
+  { name: 'role', label: d.card.role, type: 'text', placeholder: d.card.roleHint },
+  { name: 'email', label: d.card.email, type: 'email', autocomplete: 'email', required: true },
+];
+---
+
+<Channel lang={lang} page="dev" negotiated={negotiated} theme="day">
+  <TopBar
+    lang={lang}
+    page="dev"
+    negotiated={negotiated}
+    links={[
+      { label: d.projects, href: '#proyectos' },
+      { label: d.experience, href: '#experiencia' },
+      { label: d.lab, href: '#lab' },
+    ]}
+    cta={{ label: d.cta, href: '#escribeme' }}
+  />
+
+  <main>
+    <Hero id="dev-t" headline={d.headline} lede={d.lede}>
+      <FolderStack id="trabajo" folders={folders} front={front} label={d.folders} lang={lang} doc="cv" src="web-dev" timed={false} />
+    </Hero>
+
+    <FolderSheet id="proyectos" giant={d.projects} folders={sheet} front={front} timed={false} />
+
+    <Intro id="como" title={d.howTitle} body={d.howBody} facts={d.facts} image={photo('cabina-publico').image} alt={photo('cabina-publico').alt[lang]}>
+      <Fragment slot="caption">
+        {d.night.text}{' '}
+        <a class="link" href={alcoHref}>{d.night.link}</a>.
+      </Fragment>
+    </Intro>
+
+    <Marquee items={work.map((r) => r.data.org)} tone="ink" />
+
+    <section class="xp pad" id="experiencia" aria-labelledby="xp-t">
+      <h2 class="sec-title" id="xp-t" data-reveal>{d.experience}</h2>
+      <ol class="roles">
+        {
+          work.map(({ data }, i) => (
+            <li data-reveal style={`--d: ${Math.min(i, 4) * 60}ms`}>
+              <p class="when">{period(data.start, data.end)}</p>
+              <div>
+                <h3>{data.role[lang]}</h3>
+                <p class="org">
+                  {data.org} · {data.place[lang]}
+                </p>
+              </div>
+              <p class="sum">{data.summary[lang]}</p>
+            </li>
+          ))
+        }
+      </ol>
+      <h2 class="sub" data-reveal>{d.education}</h2>
+      <ol class="roles">
+        {
+          education.map(({ data }) => (
+            <li data-reveal>
+              <p class="when">{period(data.start, data.end)}</p>
+              <div>
+                <h3>{split(data.role[lang]).head}</h3>
+                <p class="org">{[split(data.role[lang]).tail, data.org].filter(Boolean).join(' · ')}</p>
+              </div>
+              <p class="sum">{data.summary[lang]}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </section>
+
+    <section class="tech pad" id="stack" aria-labelledby="stack-t">
+      <h2 class="sec-title" id="stack-t" data-reveal>{d.stack}</h2>
+      <dl>
+        {
+          stack.map(({ data }, i) => (
+            <div data-reveal style={`--d: ${i * 80}ms`}>
+              <dt>{data.label[lang]}</dt>
+              <dd>
+                <ul>
+                  {data.items.map((s) => (
+                    <li>{s}</li>
+                  ))}
+                </ul>
+              </dd>
+            </div>
+          ))
+        }
+      </dl>
+    </section>
+
+    <TaggedTiles id="lab" title={d.lab} tiles={tiles} cols={3} />
+
+    <DragRow title={d.prepTitle} steps={rowSteps} prev={t.prev} next={t.next} label={t.rowLabel} />
+
+    <Visit
+      id="escribeme"
+      line={d.card.line}
+      title={d.card.title}
+      body={d.card.body}
+      fields={fields}
+      note={d.card.mail(LINKS.email)}
+      submit={d.card.submit}
+      sent={d.card.sent}
+      mail={LINKS.email}
+      subject={d.card.subject}
+      tone="lavender"
+    />
+  </main>
+
+  <BackCard lang={lang} page="dev" title={d.back.title} body={d.back.body} stamp={photo('retrato-lateral').image} imprint={`Pol Alcoverro · polalco.com · ${t.noCookies.toLowerCase()}`}>
+    <a href={`mailto:${LINKS.email}`}>{LINKS.email}</a>
+    <a href={LINKS.linkedin}>LinkedIn</a>
+    <a href={LINKS.github}>GitHub · polalco13</a>
+    <a href="/cv.pdf?src=web-dev-pie">{d.back.cv}</a>
+    <a href={alcoHref}>{d.back.otherHalf}</a>
+    <p slot="wordmark" data-fit><span>Pol Alcoverro</span></p>
+  </BackCard>
+</Channel>
+
+<style>
+  /* Experiencia: una barra por puesto, como los proyectos dentro de su carpeta. */
+  .xp {
+    padding-block: 130px 40px;
+  }
+  .roles {
+    display: grid;
+    gap: 6px;
+    margin: 56px 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  .roles li {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: 8px 24px;
+    align-items: start;
+    padding: 28px 24px 30px;
+    background: color-mix(in oklab, var(--ink) 5%, transparent);
+    transition: background-color 200ms ease;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .roles li:hover {
+      background: color-mix(in oklab, var(--ink) 9%, transparent);
+    }
+  }
+  .when {
+    grid-column: 1 / 3;
+    margin: 6px 0 0;
+    color: var(--soft);
+    font-variant-numeric: tabular-nums;
+  }
+  .roles div {
+    grid-column: 3 / 8;
+  }
+  .roles h3 {
+    margin: 0;
+    font-size: var(--s3);
+    font-weight: 500;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+  .org {
+    margin: 8px 0 0;
+    color: var(--soft);
+  }
+  .sum {
+    grid-column: 8 / 13;
+    margin: 4px 0 0;
+  }
+  .sub {
+    margin: 72px 0 0;
+    font-size: var(--s3);
+    font-weight: 300;
+    letter-spacing: -0.02em;
+  }
+  .sub + .roles {
+    margin-top: 24px;
+  }
+
+  /* Stack: por contexto, en texto grande; nada de nubes de etiquetas. */
+  .tech {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: 24px;
+    padding-block: 110px 20px;
+  }
+  .tech h2 {
+    grid-column: 1 / 5;
+  }
+  .tech dl {
+    grid-column: 5 / 13;
+    display: grid;
+    gap: 44px;
+    margin: 6px 0 0;
+  }
+  .tech dt {
+    color: var(--soft);
+  }
+  .tech dd {
+    margin: 10px 0 0;
+  }
+  .tech ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-size: var(--s3);
+    line-height: 1.25;
+    letter-spacing: -0.015em;
+  }
+  .tech li:not(:last-child)::after {
+    content: '/';
+    margin: 0 0.45em;
+    font-weight: 300;
+    opacity: 0.35;
+  }
+
+  @media (max-width: 1024px) {
+    .when {
+      grid-column: 1 / 13;
+      margin: 0;
+    }
+    .roles div {
+      grid-column: 1 / 13;
+    }
+    .sum {
+      grid-column: 1 / 13;
+      margin-top: 8px;
+      max-width: 62ch;
+    }
+    .tech h2,
+    .tech dl {
+      grid-column: 1 / 13;
+    }
+    .tech dl {
+      margin-top: 24px;
+    }
+  }
+  @media (max-width: 760px) {
+    .xp {
+      padding-block: 88px 24px;
+    }
+    .roles {
+      margin-top: 32px;
+    }
+    .roles li {
+      padding: 20px 16px 22px;
+    }
+    .sub {
+      margin-top: 56px;
+    }
+    .tech {
+      padding-block: 80px 0;
+    }
+    .tech dl {
+      gap: 32px;
+    }
+  }
+</style>
