@@ -17,6 +17,7 @@ import BackCard from './sub/BackCard.astro';
 import { COPY, LINKS } from '../content/copy';
 import { LOCALE } from '../content/files';
 import { pagePath, type Lang } from '../../shared/site';
+import portrait from '../data/dev/photos/retrato.jpg';
 
 interface Props {
   lang: Lang;
@@ -35,13 +36,12 @@ const education = roles.filter((r) => r.data.kind === 'education');
 const stack = (await getCollection('stack')).sort(byOrder);
 const lab = (await getCollection('lab')).sort(byOrder);
 const steps = (await getCollection('devSteps')).sort(byOrder);
-const gallery = await getCollection('gallery');
-
-// Las dos fotos de ALCO que salen aquí: la otra mitad de la web.
-const photo = (id: string) => {
-  const entry = gallery.find((g) => g.id === id);
-  if (!entry) throw new Error(`Foto «${id}» no está en src/data/alco/gallery.yaml`);
-  return entry.data;
+// La única foto de Pol en /dev: el retrato profesional, de frente y serio (src/data/dev/photos/).
+// Nada de fotos de cabina: esas son de /alco.
+const portraitAlt: Record<Lang, string> = {
+  es: 'Pol Alcoverro, retrato de frente con americana oscura y camiseta blanca.',
+  ca: 'Pol Alcoverro, retrat de cara amb americana fosca i samarreta blanca.',
+  en: 'Pol Alcoverro, front-facing portrait in a dark blazer and white T-shirt.',
 };
 /** Un nombre propio vale para los tres idiomas; el resto viene traducido. */
 const L = (v: string | Record<Lang, string>) => (typeof v === 'string' ? v : v[lang]);
@@ -129,7 +129,7 @@ const fields: Field[] = [
 
     <FolderSheet id="proyectos" giant={d.projects} folders={sheet} front={front} timed={false} />
 
-    <Intro id="como" title={d.howTitle} body={d.howBody} facts={d.facts} image={photo('cabina-publico').image} alt={photo('cabina-publico').alt[lang]}>
+    <Intro id="como" title={d.howTitle} body={d.howBody} facts={d.facts} image={portrait} alt={portraitAlt[lang]}>
       <Fragment slot="caption">
         {d.night.text}{' '}
         <a class="link" href={alcoHref}>{d.night.link}</a>.
@@ -212,7 +212,7 @@ const fields: Field[] = [
     />
   </main>
 
-  <BackCard lang={lang} page="dev" title={d.back.title} body={d.back.body} stamp={photo('retrato-lateral').image} imprint={`Pol Alcoverro · polalco.com · ${t.noCookies.toLowerCase()}`}>
+  <BackCard lang={lang} page="dev" title={d.back.title} body={d.back.body} stamp={portrait} imprint={`Pol Alcoverro · polalco.com · ${t.noCookies.toLowerCase()}`}>
     <a href={`mailto:${LINKS.email}`}>{LINKS.email}</a>
     <a href={LINKS.linkedin}>LinkedIn</a>
     <a href={LINKS.github}>GitHub · polalco13</a>
