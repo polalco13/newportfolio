@@ -20,8 +20,30 @@ const alternates = [
   ...LANGS.map((l) => ({ lang: l, href: pagePath(page, l) })),
   { lang: 'x-default', href: pagePath(page) },
 ];
-// Las imágenes para compartir se rehacen en la F6; hasta entonces /dev usa la del CV.
-const og = page === 'alco' ? '/og/alco.png' : '/og/cv.png';
+// Una imagen para compartir por subweb e idioma (scripts/og.mjs): el titular sobre la foto o sobre el papel.
+const og = `/og/${page}-${lang}.${page === 'alco' ? 'jpg' : 'png'}`;
+const site = Astro.site ?? new URL('https://www.polalco.com');
+const url = new URL(negotiated ? pagePath(page) : pagePath(page, lang), site).href;
+const pol = { '@id': new URL('/#pol', site).href };
+// /alco es un servicio (DJ para eventos); /dev, la página de perfil de la misma persona.
+const schema =
+  page === 'alco'
+    ? [
+        {
+          '@type': 'Service',
+          name: t.title.alco,
+          description: t.description.alco,
+          serviceType: 'DJ',
+          url,
+          inLanguage: lang,
+          provider: pol,
+          areaServed: [
+            { '@type': 'City', name: 'Barcelona' },
+            { '@type': 'AdministrativeArea', name: 'Catalunya' },
+          ],
+        },
+      ]
+    : [{ '@type': 'ProfilePage', name: t.title.dev, description: t.description.dev, url, inLanguage: lang, mainEntity: pol }];
 ---
 
 <Base
@@ -31,11 +53,14 @@ const og = page === 'alco' ? '/og/alco.png' : '/og/cv.png';
   canonical={negotiated ? pagePath(page) : pagePath(page, lang)}
   alternates={alternates}
   ogImage={og}
+  ogAlt={`${t[page].headline.join(' ')} ${t.title[page]}`}
   ogLocale={t.ogLocale}
+  schema={schema}
   theme={theme}
 >
   <script is:inline>document.documentElement.classList.add('js');</script>
   <div class="ch" data-theme-ground={theme} data-channel={page === 'alco' ? 'L' : 'R'}>
+    <a class="skip" href="#main">{t.skip}</a>
     <slot />
   </div>
 </Base>
@@ -48,5 +73,26 @@ const og = page === 'alco' ? '/og/alco.png' : '/og/cv.png';
   /* En la página de día, también el fondo de detrás (rebote del scroll, transición entre páginas). */
   body:has([data-theme-ground='day']) {
     background: var(--day);
+  }
+  /* Solo aparece al llegar con el teclado. */
+  .ch .skip {
+    position: fixed;
+    top: 8px;
+    left: 8px;
+    z-index: 100;
+    padding: 12px 18px;
+    background: var(--ink);
+    color: var(--paper);
+    font-weight: 600;
+    text-decoration: none;
+    transform: translateY(-200%);
+  }
+  .ch .skip:focus-visible {
+    transform: none;
+    outline-color: var(--paper);
+    outline-offset: -4px;
+  }
+  .ch main:focus {
+    outline: none;
   }
 </style>

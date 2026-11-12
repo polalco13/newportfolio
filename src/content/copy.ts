@@ -16,6 +16,8 @@ interface Copy {
   home: string;
   /** Nombre accesible de la marca de la cabecera, que vuelve al vestíbulo. */
   backHome: string;
+  /** Primer enlace de cada subweb con teclado: salta la barra. */
+  skip: string;
   /** Nombre accesible del conmutador entre las dos subwebs. */
   channels: string;
   prev: string;
@@ -137,6 +139,7 @@ export const COPY: Record<Lang, Copy> = {
     },
     home: 'Inicio',
     backHome: 'Volver a polalco.com',
+    skip: 'Saltar al contenido',
     channels: 'Canal',
     prev: 'Anterior',
     next: 'Siguiente',
@@ -148,7 +151,7 @@ export const COPY: Record<Lang, Copy> = {
       nav: { events: 'Eventos', photos: 'Fotos' },
       folders: 'Tipo de evento',
       moments: 'Momentos',
-      sample: 'Ejemplo',
+      sample: 'Orden tipo',
       real: 'evento real',
       count: (n) => `${n} momentos`,
       seeAll: 'Ver todos los momentos',
@@ -282,6 +285,7 @@ export const COPY: Record<Lang, Copy> = {
     },
     home: 'Inici',
     backHome: 'Torna a polalco.com',
+    skip: 'Salta al contingut',
     channels: 'Canal',
     prev: 'Anterior',
     next: 'Següent',
@@ -293,7 +297,7 @@ export const COPY: Record<Lang, Copy> = {
       nav: { events: 'Esdeveniments', photos: 'Fotos' },
       folders: "Tipus d'esdeveniment",
       moments: 'Moments',
-      sample: 'Exemple',
+      sample: 'Ordre tipus',
       real: 'esdeveniment real',
       count: (n) => `${n} moments`,
       seeAll: 'Mira tots els moments',
@@ -427,6 +431,7 @@ export const COPY: Record<Lang, Copy> = {
     },
     home: 'Home',
     backHome: 'Back to polalco.com',
+    skip: 'Skip to content',
     channels: 'Channel',
     prev: 'Previous',
     next: 'Next',
@@ -438,7 +443,7 @@ export const COPY: Record<Lang, Copy> = {
       nav: { events: 'Events', photos: 'Photos' },
       folders: 'Kind of event',
       moments: 'Moments',
-      sample: 'Example',
+      sample: 'Typical order',
       real: 'real event',
       count: (n) => `${n} moments`,
       seeAll: 'See every moment',

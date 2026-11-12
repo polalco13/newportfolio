@@ -1,0 +1,171 @@
+<!doctype html>
+<!-- Imagen para compartir de cada subweb (1200×630): /alco de noche sobre la foto de la portada y /dev de
+     día con las carpetas. La genera scripts/og.mjs con ?page=alco|dev&lang=es|ca|en.
+     Los titulares son los de src/content/copy.ts (alco.headline y dev.headline): si cambian allí, aquí también. -->
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <style>
+      @font-face {
+        font-family: 'Hanken Grotesk Variable';
+        font-weight: 100 900;
+        src: url('../node_modules/@fontsource-variable/hanken-grotesk/files/hanken-grotesk-latin-wght-normal.woff2') format('woff2');
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+      }
+      html,
+      body {
+        width: 1200px;
+        height: 630px;
+        overflow: hidden;
+      }
+      body {
+        position: relative;
+        font-family: 'Hanken Grotesk Variable', sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+      body[data-page='alco'] {
+        background: #14111c;
+        color: #f5f2fa;
+      }
+      body[data-page='dev'] {
+        background: #f4f2f7;
+        color: #1a1420;
+      }
+      .photo {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center 38%;
+      }
+      .veil {
+        position: absolute;
+        inset: 0;
+        background: rgb(20 17 28 / 0.56);
+      }
+      body[data-page='dev'] .photo,
+      body[data-page='dev'] .veil {
+        display: none;
+      }
+      .mark {
+        position: absolute;
+        left: 64px;
+        top: 56px;
+        font-size: 30px;
+        font-weight: 600;
+        letter-spacing: -0.01em;
+      }
+      .mark svg {
+        display: block;
+        height: 34px;
+        fill: currentColor;
+      }
+      .where {
+        position: absolute;
+        right: 64px;
+        top: 58px;
+        font-size: 26px;
+        opacity: 0.85;
+      }
+      h1 {
+        position: absolute;
+        left: 60px;
+        top: 138px;
+        font-size: 138px;
+        font-weight: 700;
+        line-height: 0.95;
+        letter-spacing: -0.04em;
+        white-space: nowrap;
+      }
+      .line {
+        position: absolute;
+        left: 64px;
+        bottom: 164px;
+        font-size: 30px;
+      }
+      /* El montón de carpetas, como en la portada de cada subweb. */
+      .stack {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 112px;
+      }
+      .stack i {
+        position: absolute;
+        left: 0;
+        right: 0;
+        height: 60px;
+        font-style: normal;
+      }
+      .stack b {
+        position: absolute;
+        top: -30px;
+        height: 31px;
+        padding: 0 26px;
+        clip-path: polygon(12px 0, calc(100% - 12px) 0, 100% 100%, 0 100%);
+        font-size: 20px;
+        font-weight: 600;
+        line-height: 31px;
+        color: #1a1420;
+        background: inherit;
+      }
+    </style>
+  </head>
+  <body>
+    <img class="photo" src="../src/data/alco/gallery/sala-laser.jpg" alt="" />
+    <div class="veil"></div>
+    <p class="mark" id="mark"></p>
+    <p class="where" id="where"></p>
+    <h1 id="headline"></h1>
+    <p class="line" id="line"></p>
+    <div class="stack" id="stack"></div>
+    <template id="logo">
+      <svg viewBox="40 40 1689.5 418" aria-hidden="true">
+          <path d="M497.8 452 L497.8 46 L453.85 46 C341.85 46 304.62 59.68 252.34 137.19 L40 452 L158.21 452 L333.49 192.13 C362.43 149.23 397.8 126.79 397.8 156.79 L397.8 277 L305.2 277 L241.79 371 L397.8 371 L397.8 452 Z" />
+          <path d="M570.3 46 L670.3 46 L670.3 233 C670.3 305.5 722.8 358 795.3 358 L914.3 358 L914.3 452 L795.3 452 C664.8 452 570.3 360.02 570.3 233 Z" />
+          <path d="M1291.24 93.28 C1252.61 59.99 1201.02 40 1143.5 40 C1020.42 40 924.5 131.54 924.5 249 C924.5 366.46 1020.42 458 1143.5 458 C1201.02 458 1252.61 438.01 1291.24 404.72 L1235.03 321.39 C1214.83 346.93 1182.76 362 1143.5 362 C1075.08 362 1028.5 316.24 1028.5 249 C1028.5 181.76 1075.08 136 1143.5 136 C1182.76 136 1214.83 151.07 1235.03 176.61 Z" />
+          <path d="M1291.5 249 C1291.5 131.54 1387.42 40 1510.5 40 C1633.58 40 1729.5 131.54 1729.5 249 C1729.5 366.46 1633.58 458 1510.5 458 C1387.42 458 1291.5 366.46 1291.5 249 Z M1510.5 136 C1442.08 136 1395.5 181.76 1395.5 249 C1395.5 316.24 1442.08 362 1510.5 362 C1578.92 362 1625.5 316.24 1625.5 249 C1625.5 181.76 1578.92 136 1510.5 136 Z" />
+      </svg>
+    </template>
+    <script>
+      const T = {
+        alco: {
+          es: { h: ['Cada canción,', 'a su hora.'], line: 'DJ open format · bodas, festes majors, club y empresa', where: 'Barcelona', tabs: ['Bodas', 'Ceremonias', 'Festes majors', 'Club', 'Empresas y marcas'] },
+          ca: { h: ['Cada cançó,', 'a la seva hora.'], line: 'DJ open format · casaments, festes majors, club i empresa', where: 'Barcelona', tabs: ['Casaments', 'Cerimònies', 'Festes majors', 'Club', 'Empreses i marques'] },
+          en: { h: ['Every song,', 'right on time.'], line: 'Open format DJ · weddings, festes majors, clubs and brands', where: 'Barcelona', tabs: ['Weddings', 'Ceremonies', 'Festes majors', 'Club', 'Brands'] },
+        },
+        dev: {
+          es: { h: ['Cada dato,', 'en su sitio.'], line: 'Ingeniero de software · de la interfaz al pipeline de datos', where: 'Barcelona', tabs: ['Datos', 'Industria', 'Móvil', 'Universidad', 'Producto web'] },
+          ca: { h: ['Cada dada,', 'al seu lloc.'], line: 'Enginyer de programari · de la interfície al pipeline de dades', where: 'Barcelona', tabs: ['Dades', 'Indústria', 'Mòbil', 'Universitat', 'Producte web'] },
+          en: { h: ['Every number,', 'in its place.'], line: 'Software engineer · from the interface to the data pipeline', where: 'Barcelona', tabs: ['Data', 'Industry', 'Mobile', 'University', 'Web product'] },
+        },
+      };
+      const COLORS = {
+        alco: ['#ffc4a3', '#b8ecd6', '#bcd8ff', '#ffbccb', '#c9b6ff'],
+        dev: ['#c9b6ff', '#b8ecd6', '#ffc4a3', '#ffbccb', '#bcd8ff'],
+      };
+      const q = new URLSearchParams(location.search);
+      const page = q.get('page') === 'dev' ? 'dev' : 'alco';
+      const lang = ['es', 'ca', 'en'].includes(q.get('lang')) ? q.get('lang') : 'es';
+      const t = T[page][lang];
+      document.documentElement.lang = lang;
+      document.body.dataset.page = page;
+      const mark = document.getElementById('mark');
+      if (page === 'alco') mark.append(document.getElementById('logo').content.cloneNode(true));
+      else mark.textContent = 'Pol Alcoverro';
+      document.getElementById('where').textContent = t.where + ' · polalco.com';
+      document.getElementById('headline').innerHTML = t.h.join('<br />');
+      document.getElementById('line').textContent = t.line;
+      // Cinco bandas con su pestaña, repartidas a lo ancho como en la web.
+      const left = [64, 420, 760, 980, 250];
+      document.getElementById('stack').innerHTML = COLORS[page]
+        .map((c, i) => `<i style="top:${i * 22}px;background:${c}"><b style="left:${left[i]}px">${t.tabs[i]}</b></i>`)
+        .join('');
+    </script>
+  </body>
+</html>

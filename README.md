@@ -10,7 +10,7 @@ pnpm preview       # compila con Astro y lo sirve con el Worker en http://127.0.
 pnpm preview:lan   # lo mismo, visible en la wifi para probarlo en el móvil
 pnpm dev           # solo Astro, con recarga en caliente (sin Worker: los PDFs están en /files/)
 pnpm test          # prueba el Worker (idiomas, redirecciones, cabeceras de los PDFs y el contador)
-pnpm og            # regenera las imágenes para compartir (necesita Google Chrome)
+pnpm og            # regenera las imágenes para compartir: vestíbulo y, por idioma, /alco y /dev (necesita Google Chrome)
 ```
 
 ## Cómo está hecha
@@ -38,9 +38,10 @@ pnpm og            # regenera las imágenes para compartir (necesita Google Chro
 | `/es/…`, `/ca/…`, `/en/…` | Lo mismo con el idioma fijo (el selector lleva aquí) |
 | `/alco.pdf`, `/cv.pdf` | Los documentos; `?src=` (ig, li, qr, mail…) y `?ref=` dicen de dónde viene la descarga |
 | `/privacidad`, `/ca/privacitat`, `/en/privacy` | Privacidad |
+| `/sitemap.xml` | Mapa del sitio con las alternativas de idioma (`src/pages/sitemap.xml.ts`); `robots.txt` lo enlaza |
 
 ## Publicación
 
-polalco.com se publica en **Vercel** desde `main`: `vercel.json` (Astro estático, URLs sin `.html`, las rutas de los PDFs y la redirección de /cv) y `middleware.ts`, que hace lo mismo que el Worker con /, /alco y /dev. En Vercel no hay contador de descargas.
+polalco.com se publica en **Vercel** desde `main`: `vercel.json` (Astro estático, URLs sin `.html`, las rutas de los PDFs y la redirección de /cv) y `middleware.ts`, que hace lo mismo que el Worker con /, /alco y /dev. En Vercel no hay contador de descargas. `vercel.json` pone también la caché larga de `/_astro/` (archivos con huella) y las cabeceras de seguridad.
 
 El Worker de Cloudflare (`worker/`, `wrangler.jsonc`) sigue aquí para `pnpm preview` y por si la web pasa a Cloudflare; entonces habría que volver a explicar el contador en la página de privacidad.

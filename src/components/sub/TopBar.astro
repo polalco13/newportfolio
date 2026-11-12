@@ -22,7 +22,7 @@ const to = (id: 'home' | SubwebId) => (negotiated ? pagePath(id) : pagePath(id, 
 
 <header class="top" data-top>
   <div class="bar pad">
-    <a class="mark" href={to('home')} aria-label={t.backHome} data-mark={page}>
+    <a class="mark" href={to('home')} aria-label={page === 'alco' ? `ALCO · ${t.backHome}` : `Pol Alcoverro · ${t.backHome}`} data-mark={page}>
       {
         page === 'alco' ? (
           <svg viewBox={VIEWBOX} aria-hidden="true">

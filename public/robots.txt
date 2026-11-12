@@ -2,3 +2,5 @@ User-agent: *
 Allow: /
 # Los PDFs se comparten por /alco.pdf y /cv.pdf; la carpeta real no hace falta indexarla.
 Disallow: /files/
+
+Sitemap: https://www.polalco.com/sitemap.xml
