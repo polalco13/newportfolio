@@ -38,6 +38,8 @@ interface Props {
 
 const { id, giant, folders, front, timed } = Astro.props;
 const frontColor = folders.find((f) => f.id === front)?.color ?? folders[0].color;
+/** Una captura de móvil (más alta que ancha) dentro de un marco apaisado se enseña entera, sin recortar. */
+const tall = (img: ImageMetadata) => !timed && img.height > img.width;
 ---
 
 <section class:list={['sheet', { timed }]} id={id} data-sheet style={`--folder: var(--${frontColor})`} aria-labelledby={`${id}-t`}>
@@ -64,7 +66,7 @@ const frontColor = folders.find((f) => f.id === front)?.color ?? folders[0].colo
                   </summary>
                   <div class="panel">
                     {it.image ? (
-                      <Image class="inline" src={it.image} alt="" widths={[480, 760]} sizes="(max-width: 760px) 92vw, 0px" format="webp" quality={70} loading="lazy" />
+                      <Image class:list={['inline', { tall: tall(it.image) }]} src={it.image} alt="" widths={[480, 760]} sizes={timed ? '(max-width: 760px) 92vw, 0px' : '(max-width: 760px) 92vw, (max-width: 900px) 520px, 0px'} format="webp" quality={70} loading="lazy" />
                     ) : (
                       it.card && (
                         <div class="inline card-img" aria-hidden="true">
@@ -109,7 +111,7 @@ const frontColor = folders.find((f) => f.id === front)?.color ?? folders[0].colo
           <figure class:list={['preview', { active: f.id === front }]} data-folder={f.id}>
             {f.items.map((it, i) =>
               it.image ? (
-                <Image class:list={['pv', { on: i === 0 }]} data-i={i} src={it.image} alt="" widths={[480, 900]} sizes="(max-width: 760px) 0px, 36vw" format="webp" quality={72} loading="lazy" />
+                <Image class:list={['pv', { on: i === 0, tall: tall(it.image) }]} data-i={i} src={it.image} alt="" widths={[480, 900, 1280]} sizes={timed ? '(max-width: 760px) 0px, 36vw' : '(max-width: 760px) 0px, 44vw'} format="webp" quality={72} loading="lazy" />
               ) : (
                 it.card && (
                   <div class:list={['pv', 'card-img', { on: i === 0 }]} data-i={i}>
@@ -339,6 +341,50 @@ const frontColor = folders.find((f) => f.id === front)?.color ?? folders[0].colo
   }
   figcaption b {
     font-weight: 600;
+  }
+  /* Proyectos: capturas de pantalla, no fotos. El marco es 16:10 más el pie, la columna de la captura
+     gana ancho y la captura se ve entera, sin cortar titulares por los lados. */
+  .sheet:not(.timed) {
+    --cap: 54px;
+  }
+  @media (min-width: 901px) {
+    .sheet:not(.timed) .grid {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr);
+    }
+  }
+  /* En una tableta de pie no caben las dos columnas: la captura va dentro de cada proyecto, como en el móvil. */
+  @media (min-width: 761px) and (max-width: 900px) {
+    .sheet:not(.timed) .grid {
+      grid-template-columns: 1fr;
+    }
+    .sheet:not(.timed) .frames {
+      display: none;
+    }
+    .sheet:not(.timed) .panel :global(.inline) {
+      display: block;
+      max-width: 520px;
+    }
+  }
+  .sheet:not(.timed) .preview {
+    box-sizing: content-box;
+    aspect-ratio: auto;
+    height: var(--cap);
+    padding-top: 62.5%;
+  }
+  .sheet:not(.timed) .preview :global(.pv) {
+    height: calc(100% - var(--cap));
+  }
+  .sheet:not(.timed) .card-img {
+    padding-bottom: 28px;
+  }
+  .sheet:not(.timed) figcaption {
+    min-height: var(--cap);
+    align-items: center;
+    padding-block: 0;
+  }
+  .sheet :global(img.tall) {
+    object-fit: contain;
+    background: var(--ink);
   }
   @media (hover: hover) and (pointer: fine) {
     .bars:hover details:not(:hover) {

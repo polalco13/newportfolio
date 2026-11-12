@@ -23,6 +23,8 @@ interface Props {
 }
 
 const { id = 'row', title, steps, prev, next, label } = Astro.props;
+/** Una captura de pantalla apaisada se enseña entera (16:10); una foto o una captura de móvil, en 4:5. */
+const isWide = (img: ImageMetadata) => img.width > img.height;
 ---
 
 <section class="moments pad" aria-labelledby={`${id}-t`} data-row>
@@ -37,11 +39,15 @@ const { id = 'row', title, steps, prev, next, label } = Astro.props;
   <div class="track-row" tabindex="0" role="region" aria-label={label}>
     {
       steps.map((s, i) => (
-        <article data-reveal style={`--d: ${i * 70}ms`}>
+        <article class:list={{ wide: isWide(s.image) }} data-reveal style={`--d: ${i * 70}ms`}>
           <h3>{s.title}</h3>
           <p>{s.text}</p>
           <span class="gap" style={`height: ${s.gap}px`} />
-          <Image src={s.image} alt="" widths={[300, 560]} sizes="(max-width: 760px) 72vw, 280px" format="webp" quality={70} loading="lazy" />
+          {isWide(s.image) ? (
+            <Image src={s.image} alt="" widths={[420, 840]} sizes="(max-width: 760px) 86vw, 420px" format="webp" quality={72} loading="lazy" />
+          ) : (
+            <Image src={s.image} alt="" widths={[300, 560]} sizes="(max-width: 760px) 72vw, 280px" format="webp" quality={70} loading="lazy" />
+          )}
         </article>
       ))
     }
@@ -106,6 +112,8 @@ const { id = 'row', title, steps, prev, next, label } = Astro.props;
     gap: 32px;
     overflow-x: auto;
     scroll-snap-type: x mandatory;
+    /* Sin esto, el ajuste lleva la primera columna al borde de la pantalla y se come el margen. */
+    scroll-padding-inline: max(32px, var(--gut)) max(32px, var(--gut-r));
     scrollbar-width: none;
     margin-left: calc(-1 * max(32px, var(--gut)));
     margin-right: calc(-1 * max(32px, var(--gut-r)));
@@ -153,6 +161,12 @@ const { id = 'row', title, steps, prev, next, label } = Astro.props;
     object-fit: cover;
     object-position: top;
   }
+  article.wide {
+    flex-basis: 420px;
+  }
+  article.wide :global(img) {
+    aspect-ratio: 16 / 10;
+  }
   @media (max-width: 760px) {
     .moments {
       padding-block: 0 96px;
@@ -162,6 +176,7 @@ const { id = 'row', title, steps, prev, next, label } = Astro.props;
     }
     .track-row {
       gap: 16px;
+      scroll-padding-inline: var(--gut) var(--gut-r);
       margin-left: calc(-1 * var(--gut));
       margin-right: calc(-1 * var(--gut-r));
       padding-left: var(--gut);
@@ -169,6 +184,9 @@ const { id = 'row', title, steps, prev, next, label } = Astro.props;
     }
     article {
       flex-basis: 72vw;
+    }
+    article.wide {
+      flex-basis: 86vw;
     }
   }
 </style>

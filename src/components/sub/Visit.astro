@@ -193,6 +193,26 @@ const { id, line, title, body, fields, note, submit, sent, mail, subject, image,
     width: calc(100% + 64px);
     margin: 10px -32px 0;
   }
+  /* Sin foto (/dev): la pregunta y la tarjeta, centradas una frente a otra sobre el campo de color.
+     La pregunta crece hasta llenar el ancho que deja la tarjeta, así el campo no queda vacío. */
+  @media (min-width: 901px) {
+    .visit:not(.photo) {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 380px;
+      align-items: center;
+      gap: 48px;
+      min-height: 0;
+      padding: 72px max(60px, var(--gut-r)) 72px max(32px, var(--gut));
+    }
+    .visit:not(.photo) .line {
+      position: static;
+      font-size: clamp(44px, calc((100vw - 540px) / 7.6), 120px);
+    }
+    .visit:not(.photo) .card {
+      position: static;
+      width: auto;
+    }
+  }
   @media (prefers-reduced-motion: no-preference) {
     .visit :global(.bleed) {
       animation: drift 28s ease-in-out infinite alternate;

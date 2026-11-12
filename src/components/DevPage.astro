@@ -122,7 +122,7 @@ const fields: Field[] = [
     cta={{ label: d.cta, href: '#escribeme' }}
   />
 
-  <main>
+  <main id="main" tabindex="-1">
     <Hero id="dev-t" headline={d.headline} lede={d.lede}>
       <FolderStack id="trabajo" folders={folders} front={front} label={d.folders} lang={lang} doc="cv" src="web-dev" timed={false} />
     </Hero>
@@ -304,21 +304,26 @@ const fields: Field[] = [
   }
   .tech dd {
     margin: 10px 0 0;
+    overflow-x: clip;
   }
   .tech ul {
+    --sep: 1.35em;
     display: flex;
     flex-wrap: wrap;
     gap: 4px 0;
-    margin: 0;
+    margin: 0 0 0 calc(-1 * var(--sep));
     padding: 0;
     list-style: none;
     font-size: var(--s3);
     line-height: 1.25;
     letter-spacing: -0.015em;
   }
-  .tech li:not(:last-child)::after {
+  /* La barra va delante de cada elemento; la del primero de cada línea cae fuera del <dd> y se recorta. */
+  .tech li::before {
     content: '/';
-    margin: 0 0.45em;
+    display: inline-block;
+    width: var(--sep);
+    text-align: center;
     font-weight: 300;
     opacity: 0.35;
   }
