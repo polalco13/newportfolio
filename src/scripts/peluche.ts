@@ -318,8 +318,11 @@ export async function startPeluche(trace: HTMLElement): Promise<void> {
     toggle();
   }).observe(trace);
   document.addEventListener('visibilitychange', toggle);
+  /** Hasta que los shaders del muñeco están compilados (compileAsync, al final) no se pinta nada:
+      el primer fotograma ya no para la página para compilarlos. */
+  let compiled = false;
   function toggle(): void {
-    renderer.setAnimationLoop(visible && !document.hidden ? frame : null);
+    renderer.setAnimationLoop(compiled && visible && !document.hidden ? frame : null);
   }
 
   const debugHop = params.get('peluche-salto'); // revisión: ?peluche-salto=O,C,0.5 congela un salto
@@ -410,7 +413,11 @@ export async function startPeluche(trace: HTMLElement): Promise<void> {
     renderer.render(scene, camera);
     if (!canvas.classList.contains('on')) requestAnimationFrame(() => canvas.classList.add('on'));
   }
-  toggle();
+  const begin = (): void => {
+    compiled = true;
+    toggle();
+  };
+  renderer.compileAsync(scene, camera).then(begin, begin);
 }
 
 /** Mancha radial para la sombra de contacto. */

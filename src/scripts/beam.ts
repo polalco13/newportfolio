@@ -96,7 +96,7 @@ class Sign {
     this.ctx = ctx;
     const ds = Array.from(svg.querySelectorAll('path'), (p) => p.getAttribute('d') ?? '');
     this.letters = ds.map((d) => new Path2D(d));
-    this.fig = sample(svg, ds, innerWidth < 700 ? 1500 : 2400);
+    this.fig = sample(ds, innerWidth < 700 ? 1500 : 2400);
     this.pts = new Float32Array(this.fig.n * 2);
   }
 
@@ -392,17 +392,57 @@ class Sign {
   }
 }
 
-/** Reparte `total` puntos entre los contornos del logo, en proporción a su longitud. */
-function sample(host: SVGSVGElement, ds: string[], total: number): Figure {
-  const subpaths = ds.flatMap((d) => d.split(/(?=M)/).map((part) => part.trim()).filter(Boolean));
-  const paths = subpaths.map((d) => {
-    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-    path.setAttribute('d', d);
-    path.setAttribute('visibility', 'hidden');
-    host.appendChild(path);
-    return path;
-  });
-  const lengths = paths.map((path) => path.getTotalLength());
+/** Tramos rectos en los que se parte cada curva: de sobra para que el error no llegue a una décima de píxel. */
+const CURVE_STEPS = 48;
+
+/** Un contorno («M … Z») aplanado en una línea quebrada, con la longitud acumulada en cada vértice.
+    El logo solo usa M, L, C y Z en absoluto (src/components/alco-logo.ts); otra orden es un error. */
+function flatten(d: string): { xy: number[]; at: number[] } {
+  const xy: number[] = [];
+  const at: number[] = [];
+  let x = 0;
+  let y = 0;
+  let length = 0;
+  const to = (nx: number, ny: number): void => {
+    length += Math.hypot(nx - x, ny - y);
+    x = nx;
+    y = ny;
+    xy.push(x, y);
+    at.push(length);
+  };
+  for (const [, cmd, rest] of d.matchAll(/([A-Za-z])([^A-Za-z]*)/g)) {
+    const v = (rest.match(/-?\d*\.?\d+(?:e-?\d+)?/gi) ?? []).map(Number);
+    if (cmd === 'M') {
+      [x, y] = v;
+      xy.push(x, y);
+      at.push(0);
+    } else if (cmd === 'L') {
+      for (let i = 0; i + 1 < v.length; i += 2) to(v[i], v[i + 1]);
+    } else if (cmd === 'C') {
+      for (let i = 0; i + 5 < v.length; i += 6) {
+        const [x0, y0] = [x, y];
+        for (let step = 1; step <= CURVE_STEPS; step++) {
+          const t = step / CURVE_STEPS;
+          const m = 1 - t;
+          const [k0, k1, k2, k3] = [m * m * m, 3 * m * m * t, 3 * m * t * t, t * t * t];
+          to(k0 * x0 + k1 * v[i] + k2 * v[i + 2] + k3 * v[i + 4], k0 * y0 + k1 * v[i + 1] + k2 * v[i + 3] + k3 * v[i + 5]);
+        }
+      }
+    } else if (cmd === 'Z') {
+      if (Math.hypot(xy[0] - x, xy[1] - y) > 1e-6) to(xy[0], xy[1]);
+    } else {
+      throw new Error(`Orden de trazado no prevista en el logo: ${cmd}`);
+    }
+  }
+  return { xy, at };
+}
+
+/** Reparte `total` puntos entre los contornos del logo, en proporción a su longitud, a pasos iguales
+    sobre cada contorno. Antes lo hacía el SVG (getPointAtLength, una llamada por punto): eran unos
+    2.400 viajes al motor de dibujo justo al cargar. */
+function sample(ds: string[], total: number): Figure {
+  const contours = ds.flatMap((d) => d.split(/(?=M)/).map((part) => part.trim()).filter(Boolean)).map(flatten);
+  const lengths = contours.map((c) => c.at[c.at.length - 1]);
   const sum = lengths.reduce((a, b) => a + b, 0);
   const counts = lengths.map((length) => Math.max(12, Math.round((total * length) / sum)));
   const n = counts.reduce((a, b) => a + b, 0);
@@ -410,15 +450,18 @@ function sample(host: SVGSVGElement, ds: string[], total: number): Figure {
   const starts = new Uint8Array(n);
   const bounds = [0];
   let k = 0;
-  paths.forEach((path, j) => {
+  contours.forEach(({ xy, at }, j) => {
     starts[k] = 1;
+    let seg = 1;
     for (let i = 0; i < counts[j]; i++, k++) {
-      const point = path.getPointAtLength((lengths[j] * i) / counts[j]);
-      logo[2 * k] = point.x;
-      logo[2 * k + 1] = point.y;
+      const dist = (lengths[j] * i) / counts[j];
+      while (seg < at.length - 1 && at[seg] < dist) seg++;
+      const span = at[seg] - at[seg - 1];
+      const t = span > 0 ? (dist - at[seg - 1]) / span : 0;
+      logo[2 * k] = xy[2 * seg - 2] + (xy[2 * seg] - xy[2 * seg - 2]) * t;
+      logo[2 * k + 1] = xy[2 * seg - 1] + (xy[2 * seg + 1] - xy[2 * seg - 1]) * t;
     }
     bounds.push(k);
-    path.remove();
   });
   return { n, logo, bounds, starts };
 }

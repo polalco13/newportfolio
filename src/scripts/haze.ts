@@ -183,15 +183,23 @@ const MOVE_MS = 2400;
 export function startHaze(): void {
   const canvas = document.querySelector<HTMLCanvasElement>('canvas.haze');
   if (!canvas) return;
+  const fallback = (error: unknown) => console.warn('Sin humo en WebGL; queda el fondo CSS.', error);
   try {
-    new Haze(canvas).start();
+    const haze = new Haze(canvas);
+    // El shader se compila en segundo plano; hasta que está listo se ve el fondo en CSS.
+    haze
+      .linked()
+      .then(() => haze.start())
+      .catch(fallback);
   } catch (error) {
-    console.warn('Sin humo en WebGL; queda el fondo CSS.', error);
+    fallback(error);
   }
 }
 
 class Haze {
   private readonly gl: WebGLRenderingContext;
+  private readonly program: WebGLProgram;
+  private readonly shaders: WebGLShader[];
   private readonly u: Record<string, WebGLUniformLocation | null> = {};
   private readonly reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   private clock = 0;
@@ -225,10 +233,43 @@ class Haze {
     this.gl = gl;
     const program = gl.createProgram();
     if (!program) throw new Error('No se pudo crear el programa');
-    gl.attachShader(program, compile(gl, gl.VERTEX_SHADER, VERT));
-    gl.attachShader(program, compile(gl, gl.FRAGMENT_SHADER, FRAG));
+    this.program = program;
+    // Compilar y enlazar no bloquean; preguntar cómo ha ido, sí. Por eso el resultado se mira en linked().
+    this.shaders = [compile(gl, gl.VERTEX_SHADER, VERT), compile(gl, gl.FRAGMENT_SHADER, FRAG)];
+    for (const shader of this.shaders) gl.attachShader(program, shader);
     gl.linkProgram(program);
-    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(program) ?? 'link');
+  }
+
+  /** Se resuelve cuando el programa está enlazado. Con KHR_parallel_shader_compile se pregunta fotograma a
+      fotograma sin parar la página; sin la extensión, se espera aquí como antes. */
+  linked(): Promise<void> {
+    const { gl, program } = this;
+    const parallel = gl.getExtension('KHR_parallel_shader_compile');
+    return new Promise((resolve, reject) => {
+      const check = (): void => {
+        // Con el contexto perdido la consulta devuelve null para siempre: se deja el fondo en CSS.
+        if (gl.isContextLost()) {
+          reject(new Error('Contexto WebGL perdido antes de enlazar'));
+          return;
+        }
+        if (parallel && !gl.getProgramParameter(program, parallel.COMPLETION_STATUS_KHR)) {
+          requestAnimationFrame(check);
+          return;
+        }
+        if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+          const log = this.shaders.map((shader) => gl.getShaderInfoLog(shader)).find(Boolean) ?? gl.getProgramInfoLog(program) ?? 'link';
+          reject(new Error(log));
+          return;
+        }
+        this.setup();
+        resolve();
+      };
+      check();
+    });
+  }
+
+  private setup(): void {
+    const { gl, program } = this;
     gl.useProgram(program);
     // Un triángulo que cubre toda la pantalla.
     gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
@@ -429,7 +470,6 @@ function compile(gl: WebGLRenderingContext, type: number, source: string): WebGL
   if (!shader) throw new Error('No se pudo crear el shader');
   gl.shaderSource(shader, source);
   gl.compileShader(shader);
-  if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(shader) ?? 'shader');
   return shader;
 }
 
