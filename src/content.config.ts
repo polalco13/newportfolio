@@ -163,4 +163,28 @@ const lab = defineCollection({
     }),
 });
 
-export const collections = { services, steps, brands, gallery, areas, devSteps, experience, stack, lab };
+/** «Webs para negocios»: los paquetes que ofrece Pol, sin precio. */
+const webPlans = defineCollection({
+  loader: file('./src/data/dev/webs/plans.yaml'),
+  schema: z.object({ order: z.number(), name: t, for: t, time: t, includes: z.array(t).min(1) }),
+});
+
+/** «Webs para negocios»: webs publicadas que se pueden enseñar, con su captura. */
+const webWork = defineCollection({
+  loader: file('./src/data/dev/webs/work.yaml'),
+  schema: ({ image }) =>
+    z.object({
+      order: z.number(),
+      name: z.string().min(1),
+      kind: t,
+      text: t,
+      /** Sense `url` la targeta no enllaça enlloc (p. ex. una maqueta encara no publicada). */
+      url: z.url().optional(),
+      /** Maqueta d'un negoci inventat: surt marcada com a tal. */
+      concept: z.boolean().default(false),
+      image: image(),
+      alt: t,
+    }),
+});
+
+export const collections = { services, steps, brands, gallery, areas, devSteps, experience, stack, lab, webPlans, webWork };

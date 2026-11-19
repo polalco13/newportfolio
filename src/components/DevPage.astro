@@ -14,6 +14,7 @@ import TaggedTiles from './sub/TaggedTiles.astro';
 import DragRow from './sub/DragRow.astro';
 import Visit, { type Field } from './sub/Visit.astro';
 import BackCard from './sub/BackCard.astro';
+import Webs from './sub/Webs.astro';
 import { COPY, LINKS } from '../content/copy';
 import { LOCALE } from '../content/files';
 import { pagePath, type Lang } from '../../shared/site';
@@ -116,6 +117,7 @@ const fields: Field[] = [
     negotiated={negotiated}
     links={[
       { label: d.projects, href: '#proyectos' },
+      { label: d.webs.nav, href: '#webs' },
       { label: d.experience, href: '#experiencia' },
       { label: d.lab, href: '#lab' },
     ]}
@@ -128,6 +130,8 @@ const fields: Field[] = [
     </Hero>
 
     <FolderSheet id="proyectos" giant={d.projects} folders={sheet} front={front} timed={false} />
+
+    <Webs lang={lang} />
 
     <Intro id="como" title={d.howTitle} body={d.howBody} facts={d.facts} image={portrait} alt={portraitAlt[lang]}>
       <Fragment slot="caption">

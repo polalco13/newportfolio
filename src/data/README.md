@@ -28,6 +28,8 @@ Los textos fijos de la página (titular, botones, «Cómo trabajo» y sus cuatro
 | Un paso de «Cómo llevo un proyecto» | `steps.yaml` | `id`, `order`, `title`, `text`, `image` (`./shots/…`) y `gap` (aire sobre la captura, en px). |
 | Un puesto o estudio | `experience/<id>.yaml` | `kind` (`work` o `education`), `role`, `org`, `place`, `start` (`2026-10`), `end` (sin `end`, «hoy»), `summary`, `stack`. Se ordenan solos por fecha. |
 | Tecnologías | `stack.yaml` | Grupos con `order`, `label` e `items`. |
+| Un paquete de «Webs para negocios» | `webs/plans.yaml` | `id`, `order`, `name`, `for` (para quién), `time` (plazo) e `includes` (lista de textos). Sin precios. Son tres columnas: procura que sean 3. |
+| Una web hecha para enseñar | `webs/work.yaml` | `id`, `order`, `name`, `kind` (tipo de cliente), `text`, `url`, `image` (`../shots/…`, 16:10) y `alt`. Solo webs publicadas y con permiso del cliente. |
 | Un experimento | `lab/<id>.yaml` | `order`, `year`, `name`, `line`, `stack`, `image` (`../shots/…`, vertical 4:5) y `alt`. Son tres columnas: procura que sean 3 o 6. |
 
 Los textos fijos de la página (titular, «Cómo trabajo» y sus cuatro datos, el formulario y el pie) están en `src/content/copy.ts`, bloque `dev`. Un título de formación con coma («Grado en…, especialidad en…») se parte solo: lo segundo baja a la línea de la universidad.

@@ -1,0 +1,365 @@
+---
+// «Webs para negocios» en /dev: la parte que vende webs a negocios y artistas, no a reclutadores.
+// Sobre un campo de color propio: webs hechas, paquetes sin precio, cómo va y un botón que prepara el correo.
+// Contenido en src/data/dev/webs; textos, en copy.ts (dev.webs).
+import { getCollection } from 'astro:content';
+import { Image } from 'astro:assets';
+import ArrowRight from '@lucide/astro/icons/arrow-right';
+import ArrowUpRight from '@lucide/astro/icons/arrow-up-right';
+import Check from '@lucide/astro/icons/check';
+import { COPY, LINKS } from '../../content/copy';
+import type { Lang } from '../../../shared/site';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const w = COPY[lang].dev.webs;
+const byOrder = <T extends { data: { order: number } }>(x: T, y: T) => x.data.order - y.data.order;
+const work = (await getCollection('webWork')).sort(byOrder);
+const plans = (await getCollection('webPlans')).sort(byOrder);
+const mailto = `mailto:${LINKS.email}?subject=${encodeURIComponent(w.subject)}`;
+---
+
+<section class="webs pad" id="webs" aria-labelledby="webs-t">
+  <header class="head">
+    <p class="kicker" data-reveal>{w.kicker}</p>
+    <h2 class="sec-title" id="webs-t" data-reveal style="--d: 60ms">{w.title}</h2>
+    <p class="lede" data-reveal style="--d: 120ms">{w.lede}</p>
+    <a class="btn" href={mailto} data-reveal style="--d: 180ms">
+      {w.cta}
+      <ArrowRight size={20} stroke-width={1.5} aria-hidden="true" />
+    </a>
+  </header>
+
+  <h3 class="label" data-reveal>{w.work}</h3>
+  <ul class="work">
+    {
+      work.map(({ data }, i) => (
+        <li data-reveal style={`--d: ${i * 70}ms`}>
+          <a href={data.url}>
+            <div class="ph">
+              <Image src={data.image} alt={data.alt[lang]} widths={[480, 720, 960]} sizes="(max-width: 760px) 92vw, 31vw" format="webp" quality={72} loading="lazy" />
+            </div>
+            <p class="name">
+              <b>{data.name}</b>
+              <span>{data.concept ? `${w.concept} · ${data.kind[lang]}` : data.kind[lang]}</span>
+            </p>
+            <p class="text">{data.text[lang]}</p>
+            {
+              data.url && (
+                <span class="go">
+                  {w.visit}
+                  <ArrowUpRight size={16} stroke-width={1.5} aria-hidden="true" />
+                </span>
+              )
+            }
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+
+  <h3 class="label" data-reveal>{w.plans}</h3>
+  <ol class="plans">
+    {
+      plans.map(({ data }, i) => (
+        <li data-reveal style={`--d: ${i * 70}ms`}>
+          <h4>{data.name[lang]}</h4>
+          <p class="for">{data.for[lang]}</p>
+          <ul>
+            {data.includes.map((x) => (
+              <li>
+                <Check size={16} stroke-width={1.5} aria-hidden="true" />
+                {x[lang]}
+              </li>
+            ))}
+          </ul>
+          <p class="time">
+            <span>{w.time}</span>
+            <b>{data.time[lang]}</b>
+          </p>
+        </li>
+      ))
+    }
+  </ol>
+
+  <h3 class="label" data-reveal>{w.process}</h3>
+  <ol class="steps">
+    {
+      w.steps.map((s, i) => (
+        <li data-reveal style={`--d: ${i * 70}ms`}>
+          <span class="n">{String(i + 1).padStart(2, '0')}</span>
+          <b>{s.title}</b>
+          <p>{s.text}</p>
+        </li>
+      ))
+    }
+  </ol>
+
+  <div class="end" data-reveal>
+    <a class="btn" href={mailto}>
+      {w.cta}
+      <ArrowRight size={20} stroke-width={1.5} aria-hidden="true" />
+    </a>
+    <p>{w.note}</p>
+  </div>
+</section>
+
+<style>
+  .webs {
+    padding-block: 130px 120px;
+    background: var(--peach);
+    color: var(--ink);
+  }
+  .head {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: 24px;
+    align-items: end;
+  }
+  .kicker {
+    grid-column: 1 / 13;
+    margin: 0;
+    font-size: var(--s1);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .head h2 {
+    grid-column: 1 / 8;
+  }
+  .lede {
+    grid-column: 8 / 13;
+    margin: 0;
+    max-width: 30em;
+    text-wrap: pretty;
+  }
+  .head .btn {
+    grid-column: 8 / 13;
+    justify-self: start;
+  }
+  .btn {
+    gap: 10px;
+  }
+  .btn :global(svg) {
+    transition: transform 180ms var(--ease-soft);
+  }
+  .btn:hover :global(svg) {
+    transform: translateX(3px);
+  }
+
+  .label {
+    margin: 104px 0 28px;
+    font-size: var(--s3);
+    font-weight: 300;
+    letter-spacing: -0.02em;
+  }
+
+  /* Webs hechas: la captura entera arriba, el nombre y una frase debajo. */
+  .work,
+  .plans,
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .work a {
+    display: grid;
+    gap: 8px;
+    height: 100%;
+    padding: 10px 10px 18px;
+    background: color-mix(in oklab, var(--ink) 6%, transparent);
+    color: inherit;
+    text-decoration: none;
+    transition: background-color 200ms ease;
+  }
+  .ph {
+    overflow: hidden;
+    margin-bottom: 8px;
+  }
+  .ph :global(img) {
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+    object-position: top;
+    transition: transform 600ms var(--ease-soft);
+  }
+  .name {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    margin: 0 6px;
+  }
+  .name b {
+    font-weight: 600;
+  }
+  .name span,
+  .text {
+    color: var(--soft);
+  }
+  .name span {
+    font-size: var(--s1);
+    padding-top: 3px;
+    text-align: right;
+  }
+  .text {
+    margin: 0 6px;
+    font-size: 15px;
+    line-height: 1.4;
+  }
+  .go {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin: 6px 6px 0;
+    font-size: var(--s1);
+    font-weight: 600;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 4px;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .work a[href]:hover {
+      background: color-mix(in oklab, var(--ink) 11%, transparent);
+    }
+    .work a[href]:hover .ph :global(img) {
+      transform: scale(1.03);
+    }
+  }
+
+  /* Paquetes: tarjetas claras sobre el melocotón; el plazo, abajo, siempre a la misma altura. */
+  .plans > li {
+    display: flex;
+    flex-direction: column;
+    padding: 28px 24px 24px;
+    background: var(--day);
+  }
+  .plans h4 {
+    margin: 0;
+    font-size: var(--s3);
+    font-weight: 500;
+    letter-spacing: -0.02em;
+  }
+  .for {
+    margin: 10px 0 0;
+    color: var(--soft);
+    text-wrap: pretty;
+  }
+  .plans ul {
+    display: grid;
+    gap: 10px;
+    margin: 28px 0 32px;
+    padding: 0;
+    list-style: none;
+  }
+  .plans ul li {
+    display: grid;
+    grid-template-columns: 16px 1fr;
+    gap: 10px;
+    font-size: 15px;
+    line-height: 1.4;
+  }
+  .plans ul :global(svg) {
+    margin-top: 2px;
+  }
+  .time {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    margin: auto 0 0;
+    padding-top: 16px;
+    border-top: 1px solid color-mix(in oklab, var(--ink) 15%, transparent);
+  }
+  .time span {
+    color: var(--soft);
+  }
+  .time b {
+    font-weight: 600;
+  }
+
+  /* Cómo va: cuatro pasos en fila, con su número. */
+  .steps {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 24px;
+  }
+  .steps li {
+    display: grid;
+    align-content: start;
+    gap: 8px;
+    padding-top: 16px;
+    border-top: 1px solid var(--ink);
+  }
+  .n {
+    font-size: var(--s1);
+    font-variant-numeric: tabular-nums;
+  }
+  .steps b {
+    font-size: var(--s3);
+    font-weight: 500;
+    letter-spacing: -0.02em;
+  }
+  .steps p {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.4;
+    color: var(--soft);
+    text-wrap: pretty;
+  }
+
+  .end {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 16px 24px;
+    margin-top: 88px;
+  }
+  .end p {
+    margin: 0;
+    max-width: 34em;
+  }
+
+  @media (max-width: 1024px) {
+    .head h2,
+    .lede,
+    .head .btn {
+      grid-column: 1 / 13;
+    }
+    .work,
+    .plans {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .steps {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 32px 24px;
+    }
+  }
+  @media (max-width: 760px) {
+    .webs {
+      padding-block: 88px 80px;
+    }
+    .label {
+      margin: 72px 0 20px;
+    }
+    .work,
+    .plans,
+    .steps {
+      grid-template-columns: 1fr;
+    }
+    .plans > li {
+      padding: 24px 18px 20px;
+    }
+    .steps {
+      gap: 28px;
+    }
+    .end {
+      margin-top: 64px;
+    }
+    .end .btn {
+      width: 100%;
+    }
+  }
+</style>

@@ -97,6 +97,24 @@ interface Copy {
       subject: string;
     };
     back: { title: string; body: string; otherHalf: string; cv: string };
+    /** «Webs para negocios»: webs hechas, paquetes (src/data/dev/webs) y cómo pedir una. */
+    webs: {
+      nav: string;
+      kicker: string;
+      title: string;
+      lede: string;
+      work: string;
+      visit: string;
+      /** Etiqueta de les maquetes de negocis inventats. */
+      concept: string;
+      plans: string;
+      time: string;
+      process: string;
+      steps: { title: string; text: string }[];
+      cta: string;
+      note: string;
+      subject: string;
+    };
   };
   inApp: string;
   copyLink: string;
@@ -233,6 +251,27 @@ export const COPY: Record<Lang, Copy> = {
         body: 'Si tienes un puesto en mente, escríbeme con el equipo y el stack. El código de mis proyectos personales está en GitHub; del trabajo para clientes te cuento cómo está hecho en una entrevista.',
         otherHalf: 'La otra mitad: ALCO, DJ',
         cv: 'CV en PDF',
+      },
+      webs: {
+        nav: 'Webs',
+        kicker: 'Para negocios',
+        title: 'Webs para negocios',
+        lede: 'También hago webs para negocios y artistas: a medida, rápidas en el móvil y pensadas para que quien entra acabe escribiéndote.',
+        work: 'Hechas',
+        visit: 'Ver la web',
+        concept: 'Maqueta',
+        plans: 'Qué te puedo hacer',
+        time: 'Plazo',
+        process: 'Cómo va',
+        steps: [
+          { title: 'Hablamos', text: 'Me cuentas qué hacéis, a quién queréis llegar y qué tiene que pasar cuando alguien entra.' },
+          { title: 'Propuesta', text: 'Te enseño la portada con tus fotos y tus textos antes de construir el resto.' },
+          { title: 'La construyo', text: 'La ves en un enlace privado mientras avanza y pides cambios.' },
+          { title: 'Publicada', text: 'Con tu dominio y lista para Google. Si quieres, me encargo de mantenerla.' },
+        ],
+        cta: 'Pide presupuesto',
+        note: 'A medida y sin compromiso. Cuéntame qué hacéis y qué necesitáis.',
+        subject: 'Hola Pol, quiero una web',
       },
     },
     inApp: '¿No se abre? Ábrelo en el navegador.',
@@ -380,6 +419,27 @@ export const COPY: Record<Lang, Copy> = {
         otherHalf: "L'altra meitat: ALCO, DJ",
         cv: 'CV en PDF',
       },
+      webs: {
+        nav: 'Webs',
+        kicker: 'Per a negocis',
+        title: 'Webs per a negocis',
+        lede: "També faig webs per a negocis i artistes: a mida, ràpides al mòbil i pensades perquè qui hi entra acabi escrivint-te.",
+        work: 'Fetes',
+        visit: 'Veure la web',
+        concept: 'Maqueta',
+        plans: 'Què et puc fer',
+        time: 'Termini',
+        process: 'Com va',
+        steps: [
+          { title: 'En parlem', text: "M'expliques què feu, a qui voleu arribar i què ha de passar quan algú hi entra." },
+          { title: 'Proposta', text: "T'ensenyo la portada amb les teves fotos i els teus textos abans de construir la resta." },
+          { title: 'La construeixo', text: 'La veus en un enllaç privat mentre avança i demanes canvis.' },
+          { title: 'Publicada', text: "Amb el teu domini i a punt per a Google. Si vols, me n'encarrego del manteniment." },
+        ],
+        cta: 'Demana pressupost',
+        note: "A mida i sense compromís. Explica'm què feu i què necessiteu.",
+        subject: 'Hola Pol, vull una web',
+      },
     },
     inApp: "No s'obre? Obre'l al navegador.",
     copyLink: "Copia l'enllaç",
@@ -525,6 +585,27 @@ export const COPY: Record<Lang, Copy> = {
         body: 'If you have a role in mind, email me with the team and the stack. The code for my personal projects is on GitHub; for client work, I can walk you through how it is built in an interview.',
         otherHalf: 'The other half: ALCO, DJ',
         cv: 'CV (PDF)',
+      },
+      webs: {
+        nav: 'Websites',
+        kicker: 'For businesses',
+        title: 'Websites for businesses',
+        lede: 'I also build websites for businesses and artists: custom made, fast on phones and designed so visitors end up getting in touch.',
+        work: 'Built',
+        visit: 'See the site',
+        concept: 'Mock-up',
+        plans: 'What I can build you',
+        time: 'Timeline',
+        process: 'How it goes',
+        steps: [
+          { title: 'We talk', text: 'You tell me what you do, who you want to reach and what should happen when someone lands.' },
+          { title: 'Proposal', text: 'I show you the homepage with your photos and your words before building the rest.' },
+          { title: 'I build it', text: 'You follow it on a private link as it grows and ask for changes.' },
+          { title: 'Live', text: 'On your own domain and ready for Google. If you want, I look after it.' },
+        ],
+        cta: 'Ask for a quote',
+        note: 'Custom quote, no strings attached. Tell me what you do and what you need.',
+        subject: 'Hi Pol, I need a website',
       },
     },
     inApp: 'Not opening? Open it in your browser.',

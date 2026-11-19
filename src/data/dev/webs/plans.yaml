@@ -1,0 +1,83 @@
+# «Webs para negocios»: los paquetes. Sin precios (presupuesto a medida, decisión del plan).
+# TODO(pol): confirmar plazos y qué incluye cada paquete.
+- id: una-pagina
+  order: 1
+  name:
+    es: Una página
+    ca: Una pàgina
+    en: One page
+  for:
+    es: Para un bar, una tienda, un artista o un profesional que quiere que le encuentren y le escriban.
+    ca: Per a un bar, una botiga, un artista o un professional que vol que el trobin i li escriguin.
+    en: For a bar, a shop, an artist or a freelancer who wants to be found and contacted.
+  time:
+    es: 1–2 semanas
+    ca: 1–2 setmanes
+    en: 1–2 weeks
+  includes:
+    - es: Diseño a medida, sin plantillas
+      ca: Disseny a mida, sense plantilles
+      en: Custom design, no templates
+    - es: Fotos, quiénes sois, qué hacéis y servicios
+      ca: Fotos, qui sou, què feu i serveis
+      en: Photos, who you are, what you do and services
+    - es: Pensada primero para el móvil
+      ca: Pensada primer per al mòbil
+      en: Built for phones first
+    - es: Contacto directo, mapa y horarios
+      ca: Contacte directe, mapa i horaris
+      en: Direct contact, map and opening hours
+    - es: Lista para Google, con dominio propio
+      ca: A punt per a Google, amb domini propi
+      en: Ready for Google, on your own domain
+- id: secciones
+  order: 2
+  name:
+    es: Web con secciones
+    ca: Web amb seccions
+    en: Multi-page site
+  for:
+    es: Para un negocio con varios servicios, carta, galería o clientes que hablan otros idiomas.
+    ca: Per a un negoci amb diversos serveis, carta, galeria o clients que parlen altres idiomes.
+    en: For a business with several services, a menu, a gallery or customers who speak other languages.
+  time:
+    es: 2–4 semanas
+    ca: 2–4 setmanes
+    en: 2–4 weeks
+  includes:
+    - es: Todo lo de «Una página»
+      ca: Tot el d'«Una pàgina»
+      en: Everything in “One page”
+    - es: Una página por servicio, galería o carta
+      ca: Una pàgina per servei, galeria o carta
+      en: A page per service, gallery or menu
+    - es: Hasta tres idiomas
+      ca: Fins a tres idiomes
+      en: Up to three languages
+    - es: Formulario que llega a tu correo
+      ca: Formulari que arriba al teu correu
+      en: A form that lands in your inbox
+- id: mantenimiento
+  order: 3
+  name:
+    es: Mantenimiento
+    ca: Manteniment
+    en: Care plan
+  for:
+    es: Para cuando la web ya está hecha y no quieres preocuparte de ella.
+    ca: Per quan la web ja està feta i no te n'has de preocupar.
+    en: For when the site is live and you'd rather not think about it.
+  time:
+    es: Cada mes
+    ca: Cada mes
+    en: Monthly
+  includes:
+    - es: Cambios de textos, fotos y horarios
+      ca: Canvis de textos, fotos i horaris
+      en: Text, photo and opening-hour changes
+    - es: Alojamiento y dominio al día
+      ca: Allotjament i domini al dia
+      en: Hosting and domain kept up to date
+    - es: Revisión de que todo carga rápido y funciona
+      ca: Revisió que tot carrega ràpid i funciona
+      en: Checks that everything loads fast and works
