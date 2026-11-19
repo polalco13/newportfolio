@@ -1,0 +1,110 @@
+# «Webs para negocios»: webs hechas que se pueden enseñar. Captura en ../shots/ (unos 1440 px de ancho).
+# Solo webs publicadas. TODO(pol): VIIX cuando esté en línea y Marc diga que se puede enseñar.
+- id: alco
+  order: 1
+  name: ALCO
+  kind:
+    es: DJ para eventos
+    ca: DJ per a esdeveniments
+    en: Event DJ
+  text:
+    es: Servicios por tipo de evento, fotos y un formulario para pedir fecha.
+    ca: Serveis per tipus d'esdeveniment, fotos i un formulari per demanar data.
+    en: Services by type of event, photos and a form to ask for a date.
+  url: https://www.polalco.com/alco
+  image: ../shots/alco-desktop.jpg
+  alt:
+    es: Portada de la web de ALCO, con carpetas de colores por tipo de evento sobre fondo oscuro.
+    ca: Portada de la web d'ALCO, amb carpetes de colors per tipus d'esdeveniment sobre fons fosc.
+    en: The ALCO homepage, with colour folders for each type of event on a dark background.
+- id: mondj
+  order: 2
+  name: Mon DJ
+  kind:
+    es: Web de un DJ
+    ca: Web d'un DJ
+    en: A DJ's website
+  text:
+    es: Portfolio pensado para que las visitas acaben pidiendo fecha.
+    ca: Portfolio pensat perquè les visites acabin demanant data.
+    en: A portfolio built to turn visits into booking requests.
+  url: https://mondj-website.vercel.app/
+  image: ../shots/mondj-desktop.jpg
+  alt:
+    es: Portada de la web de Mon DJ.
+    ca: Portada de la web de Mon DJ.
+    en: The Mon DJ homepage.
+- id: busos
+  order: 3
+  name: BusosPenedès
+  kind:
+    es: Servicio local
+    ca: Servei local
+    en: Local service
+  text:
+    es: Horarios de autobús del Alt Penedès, claros en el móvil.
+    ca: Horaris d'autobús de l'Alt Penedès, clars al mòbil.
+    en: Alt Penedès bus timetables, easy to read on a phone.
+  url: https://busos-alco.vercel.app/
+  image: ../shots/busos-desktop.jpg
+  alt:
+    es: Portada de BusosPenedès con el buscador de horarios.
+    ca: Portada de BusosPenedès amb el cercador d'horaris.
+    en: The BusosPenedès homepage with the timetable search.
+# Maquetes de negocis inventats. Codi a ~/Desktop/pol-alcoverro/maquetes; el build es copia a public/maquetes/
+# (cd ../maquetes && pnpm build && rm -rf ../polalco/public/maquetes && cp -R dist ../polalco/public/maquetes).
+# Les captures porten fotos lliures d'altres autors (CC BY / BY-SA): els crèdits són a cada maqueta, enllaçada amb `url`.
+- id: mock-bar
+  order: 4
+  url: https://www.polalco.com/maquetes/bar
+  concept: true
+  name: La Bóta
+  kind:
+    es: Bar de tapas
+    ca: Bar de tapes
+    en: Tapas bar
+  text:
+    es: Carta, menú del día en la pizarra (se abre en el día de hoy) y reservas.
+    ca: Carta, menú del dia a la pissarra (s'obre al dia d'avui) i reserves.
+    en: Menu, today's set lunch on the chalkboard and table bookings.
+  image: ../shots/mock-bar.jpg
+  alt:
+    es: Maqueta de la web de La Bóta, un bar de vermut inventado, con un vaso de vermut a la derecha.
+    ca: Maqueta de la web de La Bóta, un bar de vermut inventat, amb un got de vermut a la dreta.
+    en: Mock-up of La Bóta, an invented vermouth bar, with a glass of vermouth on the right.
+- id: mock-foto
+  order: 5
+  url: https://www.polalco.com/maquetes/foto
+  concept: true
+  name: Contrallum
+  kind:
+    es: Fotógrafo de bodas
+    ca: Fotògraf de casaments
+    en: Wedding photographer
+  text:
+    es: Solo fotos, el día entero por horas, y la hora de la puesta de sol de tu boda.
+    ca: Només fotos, el dia sencer per hores, i l'hora de la posta del teu casament.
+    en: Photos only, the whole day by the hour, and the sunset time on your wedding day.
+  image: ../shots/mock-foto.jpg
+  alt:
+    es: Maqueta de la web de Contrallum, un fotógrafo de bodas inventado, con tiras de fotos de una boda.
+    ca: Maqueta de la web de Contrallum, un fotògraf de casaments inventat, amb tires de fotos d'un casament.
+    en: Mock-up of Contrallum, an invented wedding photographer, with strips of wedding photos.
+- id: mock-fisio
+  order: 6
+  url: https://www.polalco.com/maquetes/fisio
+  concept: true
+  name: Fisio Pinya
+  kind:
+    es: Fisioterapia
+    ca: Fisioteràpia
+    en: Physiotherapy
+  text:
+    es: Servicios, precios y «¿dónde te duele?», que lleva a pedir cita con día y hora.
+    ca: Serveis, preus i «on et fa mal?», que porta a la cita amb dia i hora.
+    en: Services, prices and "where does it hurt?", which leads to a booking with day and time.
+  image: ../shots/mock-fisio.jpg
+  alt:
+    es: Maqueta de la web de Fisio Pinya, una clínica inventada, con el nombre y una foto de castellers.
+    ca: Maqueta de la web de Fisio Pinya, una clínica inventada, amb el nom i una foto de castellers.
+    en: Mock-up of Fisio Pinya, an invented clinic, with its name and a photo of castellers.
