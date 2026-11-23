@@ -9,7 +9,6 @@ import NeedSomeone, { type Area } from './sub/NeedSomeone.astro';
 import Intro from './sub/Intro.astro';
 import Marquee from './sub/Marquee.astro';
 import TaggedTiles from './sub/TaggedTiles.astro';
-import DragRow from './sub/DragRow.astro';
 import Visit, { type Field } from './sub/Visit.astro';
 import BackCard from './sub/BackCard.astro';
 import Webs from './sub/Webs.astro';
@@ -34,7 +33,6 @@ const work = roles.filter((r) => r.data.kind === 'work');
 const education = roles.filter((r) => r.data.kind === 'education');
 const stack = (await getCollection('stack')).sort(byOrder);
 const lab = (await getCollection('lab')).sort(byOrder);
-const steps = (await getCollection('devSteps')).sort(byOrder);
 // La única foto de Pol en /dev: el retrato profesional, de frente y serio (src/data/dev/photos/), en la portada.
 // Nada de fotos de cabina: esas son de /alco. «Cómo trabajo» lleva el peluche del laboratorio.
 const portraitAlt: Record<Lang, string> = {
@@ -88,7 +86,6 @@ const tiles = lab.map(({ data }) => ({
   label: data.stack.join(' · '),
   text: data.line[lang],
 }));
-const rowSteps = steps.map((s) => ({ title: s.data.title[lang], text: s.data.text[lang], image: s.data.image, gap: s.data.gap }));
 
 const fields: Field[] = [
   { name: 'company', label: d.card.company, type: 'text', autocomplete: 'organization' },
@@ -181,8 +178,6 @@ const fields: Field[] = [
     </section>
 
     <TaggedTiles id="lab" title={d.lab} tiles={tiles} cols={3} />
-
-    <DragRow title={d.prepTitle} steps={rowSteps} prev={t.prev} next={t.next} label={t.rowLabel} />
 
     <Visit
       id="escribeme"

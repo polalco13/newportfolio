@@ -25,7 +25,6 @@ Los textos fijos de la página (titular, botones, «Cómo trabajo» y sus cuatro
 | Un tipo de trabajo | `areas/<id>.yaml` | `order`, `color` (`peach`, `lavender`, `mint`, `sky` o `rose`), `front: true` en el que sale primero, `need` (cómo acaba «Necesito a alguien que…»), `title`, `line`, `source` y `sourceNote` (de dónde salen los proyectos). |
 | Un proyecto | `items` dentro de su tipo de trabajo | `name` y `meta` (un nombre propio tal cual, o un texto en los tres idiomas), `summary`, `role`, `stack`, `url` y `source` si los hay, y una captura (`image: ../shots/<archivo>.jpg`) o, si no se puede enseñar, una ficha de texto (`card` con `big` y `small`). |
 | Una captura | `shots/` | JPG de unos 1440 px de ancho. Las usan los proyectos, los pasos y el laboratorio. |
-| Un paso de «Cómo llevo un proyecto» | `steps.yaml` | `id`, `order`, `title`, `text`, `image` (`./shots/…`) y `gap` (aire sobre la captura, en px). |
 | Un puesto o estudio | `experience/<id>.yaml` | `kind` (`work` o `education`), `role`, `org`, `place`, `start` (`2026-10`), `end` (sin `end`, «hoy»), `summary`, `stack`. Se ordenan solos por fecha. |
 | Tecnologías | `stack.yaml` | Grupos con `order`, `label` e `items`. |
 | Un paquete de «Webs para negocios» | `webs/plans.yaml` | `id`, `order`, `name`, `for` (para quién), `time` (plazo) e `includes` (lista de textos). Sin precios. Son tres columnas: procura que sean 3. |

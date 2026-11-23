@@ -85,7 +85,6 @@ interface Copy {
     now: string;
     stack: string;
     lab: string;
-    prepTitle: string;
     card: {
       line: [string, string];
       title: string;
@@ -245,7 +244,6 @@ export const COPY: Record<Lang, Copy> = {
       now: 'hoy',
       stack: 'Stack',
       lab: 'Laboratorio',
-      prepTitle: 'Cómo llevo un proyecto',
       card: {
         line: ['¿Tienes un puesto', 'en mente?'],
         title: 'Escríbeme',
@@ -419,7 +417,6 @@ export const COPY: Record<Lang, Copy> = {
       now: 'avui',
       stack: 'Stack',
       lab: 'Laboratori',
-      prepTitle: 'Com porto un projecte',
       card: {
         line: ['Tens una feina', 'al cap?'],
         title: 'Escriu-me',
@@ -593,7 +590,6 @@ export const COPY: Record<Lang, Copy> = {
       now: 'present',
       stack: 'Stack',
       lab: 'Lab',
-      prepTitle: 'How I run a project',
       card: {
         line: ['Have a role', 'in mind?'],
         title: 'Email me',

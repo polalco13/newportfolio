@@ -125,12 +125,6 @@ const areas = defineCollection({
     }),
 });
 
-/** «Cómo llevo un proyecto»: un paso por elemento; `gap` es el aire sobre la captura. */
-const devSteps = defineCollection({
-  loader: file('./src/data/dev/steps.yaml'),
-  schema: ({ image }) => z.object({ order: z.number(), image: image(), gap: z.number(), title: t, text: t }),
-});
-
 /** Un puesto o estudio por archivo: src/data/dev/experience/<id>.yaml. Sin `end`, sigue hoy. */
 const experience = defineCollection({
   loader: glob({ base: './src/data/dev/experience', pattern: '*.yaml' }),
@@ -192,4 +186,4 @@ const webWork = defineCollection({
     }),
 });
 
-export const collections = { services, steps, brands, gallery, areas, devSteps, experience, stack, lab, webPlans, webWork };
+export const collections = { services, steps, brands, gallery, areas, experience, stack, lab, webPlans, webWork };
