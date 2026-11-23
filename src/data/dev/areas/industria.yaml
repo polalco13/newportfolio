@@ -70,3 +70,5 @@ items:
       ca: Desenvolupador full stack
       en: Full Stack Developer
     stack: [ASP.NET Core, C#, Vue 3, WebSockets]
+# Cómo acaba la frase «Necesito a alguien que…» de la portada de /dev.
+need: { es: 'hable con máquinas', ca: 'parli amb màquines', en: 'talks to machines' }

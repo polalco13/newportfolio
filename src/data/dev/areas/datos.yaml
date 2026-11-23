@@ -61,3 +61,5 @@ items:
       ca: Enginyer de programari, The Etailers
       en: Software Engineer, The Etailers
     stack: [TypeScript, Node.js]
+# Cómo acaba la frase «Necesito a alguien que…» de la portada de /dev.
+need: { es: 'monte pipelines de datos', ca: 'munti pipelines de dades', en: 'builds data pipelines' }

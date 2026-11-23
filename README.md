@@ -17,8 +17,8 @@ pnpm og            # regenera las imágenes para compartir: vestíbulo y, por id
 
 - `src/` Astro estático. Los textos de la interfaz, en `src/content/copy.ts`; el tamaño de cada PDF se lee al compilar.
 - `src/data/` el contenido de las subwebs (servicios, marcas, fotos, proyectos, experiencia, stack, laboratorio) en YAML con esquema (`src/content.config.ts`). Cómo añadir cada cosa: `src/data/README.md`.
-- `src/components/AlcoPage.astro` (de noche) y `DevPage.astro` (de día) las dos subwebs: la misma página con otra luz, dentro de `src/layouts/Channel.astro`. Comparten cada pieza de `src/components/sub/`: la barra con el conmutador DJ | Ingeniero y la hora de Barcelona (`TopBar`), la portada (`Hero`), las carpetas (`FolderStack`) y su hoja (`FolderSheet`), «Cómo trabajo» (`Intro`), la franja de nombres que pasa (`Marquee`), las fotos con etiqueta (`TaggedTiles`), la fila que se arrastra (`DragRow`), el formulario que prepara el correo (`Visit`) y el dorso de la tarjeta con la marca a todo lo ancho (`BackCard`).
-- `src/scripts/subweb.ts` el comportamiento común (entradas, barra que se esconde, reloj, rótulos que llenan su ancho, arrastre, formulario) y `src/scripts/folders.ts` las carpetas. `src/styles/subweb.css` los tokens y el paso entre páginas (transiciones de vista entre el vestíbulo, /alco y /dev).
+- `src/components/AlcoPage.astro` (de noche) y `DevPage.astro` (de día) las dos subwebs: la misma página con otra luz, dentro de `src/layouts/Channel.astro`. Cada una tiene su portada: «A esta hora» en /alco (`AtThisHour`: la hora de Barcelona, lo que suena ahora en cada tipo de evento y la noche hora a hora) y «Necesito a alguien que…» en /dev (`NeedSomeone`: una frase con desplegable que enseña los proyectos de ese tipo de trabajo). El resto lo comparten desde `src/components/sub/`: la barra con el conmutador DJ | Ingeniero y la hora de Barcelona (`TopBar`), «Cómo trabajo» (`Intro`), la franja de nombres que pasa (`Marquee`), las fotos con etiqueta (`TaggedTiles`), la fila que se arrastra (`DragRow`), el formulario que prepara el correo (`Visit`) y el dorso de la tarjeta con la marca a todo lo ancho (`BackCard`).
+- `src/scripts/subweb.ts` el comportamiento común (entradas, barra que se esconde, reloj, rótulos que llenan su ancho, arrastre, formulario). `src/styles/subweb.css` los tokens y el paso entre páginas (transiciones de vista entre el vestíbulo, /alco y /dev).
 - `src/scripts/beam.ts` el logo: un rótulo de luz relleno en un canvas, que se enciende al entrar y toma el color del foco que lo apunta. Sin JavaScript o con «reducir movimiento» se ve el SVG de `src/components/AlcoTrace.astro`.
 - `src/scripts/haze.ts` el fondo: humo y tres focos con su programa, en un shader WebGL. Sin WebGL quedan las manchas en CSS de `src/components/Haze.astro`.
 - `src/scripts/stage.ts` hacia dónde apuntan los focos, compartido entre el fondo y el logo.
@@ -33,7 +33,7 @@ pnpm og            # regenera las imágenes para compartir: vestíbulo y, por id
 | --- | --- |
 | `/` | El vestíbulo con las dos puertas, en el idioma del navegador |
 | `/alco` | Subweb de ALCO: servicios, marcas, fotos, pedir fecha y el PDF |
-| `/dev` | Subweb de Pol ingeniero: carpetas por tipo de trabajo con sus proyectos, experiencia, stack, laboratorio, escribirle y el CV |
+| `/dev` | Subweb de Pol ingeniero: «Necesito a alguien que…» con los proyectos por tipo de trabajo, experiencia, stack, laboratorio, escribirle y el CV |
 | `/cv`, `/xx/cv` | Redirigen (301) a `/dev` y `/xx/dev` |
 | `/es/…`, `/ca/…`, `/en/…` | Lo mismo con el idioma fijo (el selector lleva aquí) |
 | `/alco.pdf`, `/cv.pdf` | Los documentos; `?src=` (ig, li, qr, mail…) y `?ref=` dicen de dónde viene la descarga |

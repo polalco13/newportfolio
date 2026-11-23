@@ -76,8 +76,6 @@ if (fits.length) {
     width = innerWidth;
     all();
   });
-  // Al cambiar de carpeta la columna puede estrenar ancho (la hoja pasa de oculta a visible).
-  addEventListener('folderchange', all);
 }
 
 // Festón del dorso: el alto del dibujo es el radio de cada arco, para que no se recorten.

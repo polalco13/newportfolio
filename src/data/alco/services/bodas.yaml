@@ -109,3 +109,6 @@ moments:
       es: La que todos cantan abrazados. Se elige con tiempo.
       ca: La que tothom canta abraçat. Es tria amb temps.
       en: The one everyone sings arm in arm. We pick it well in advance.
+# Nombre corto del botón y cómo se dice «en una boda» en la portada «A esta hora».
+chip: { es: 'Boda', ca: 'Casament', en: 'Wedding' }
+at: { es: 'una boda', ca: 'un casament', en: 'a wedding' }

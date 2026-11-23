@@ -1,13 +1,11 @@
 ---
-// Subweb de Pol ingeniero (canal R), de día: la misma página que /alco con otra luz. La portada son cinco
-// carpetas, una por tipo de problema, que se abren en sus proyectos. Todo el contenido sale de
+// Subweb de Pol ingeniero (canal R), de día: la misma página que /alco con otra luz. La portada es una frase,
+// «Necesito a alguien que…», que el visitante completa; la página responde con los proyectos de ese tipo. Todo el contenido sale de
 // src/data/dev; los textos, de copy.ts.
 import { getCollection } from 'astro:content';
 import Channel from '../layouts/Channel.astro';
 import TopBar from './sub/TopBar.astro';
-import Hero from './sub/Hero.astro';
-import FolderStack, { type Folder } from './sub/FolderStack.astro';
-import FolderSheet, { type SheetFolder } from './sub/FolderSheet.astro';
+import NeedSomeone, { type Area } from './sub/NeedSomeone.astro';
 import Intro from './sub/Intro.astro';
 import Marquee from './sub/Marquee.astro';
 import TaggedTiles from './sub/TaggedTiles.astro';
@@ -37,8 +35,8 @@ const education = roles.filter((r) => r.data.kind === 'education');
 const stack = (await getCollection('stack')).sort(byOrder);
 const lab = (await getCollection('lab')).sort(byOrder);
 const steps = (await getCollection('devSteps')).sort(byOrder);
-// La única foto de Pol en /dev: el retrato profesional, de frente y serio (src/data/dev/photos/).
-// Nada de fotos de cabina: esas son de /alco.
+// La única foto de Pol en /dev: el retrato profesional, de frente y serio (src/data/dev/photos/), en la portada.
+// Nada de fotos de cabina: esas son de /alco. «Cómo trabajo» lleva el peluche del laboratorio.
 const portraitAlt: Record<Lang, string> = {
   es: 'Pol Alcoverro, retrato de frente con americana oscura y camiseta blanca.',
   ca: 'Pol Alcoverro, retrat de cara amb americana fosca i samarreta blanca.',
@@ -61,24 +59,12 @@ const front = areas.find((x) => x.data.front)?.id ?? areas[0].id;
 const alcoHref = negotiated ? pagePath('alco') : pagePath('alco', lang);
 const card = (c?: { big: string | Record<Lang, string>; small: Record<Lang, string> }) => (c ? { big: L(c.big), small: c.small[lang] } : undefined);
 
-const folders: Folder[] = areas.map(({ id, data }) => ({
+const answers: Area[] = areas.map(({ id, data }) => ({
   id,
   color: data.color,
-  tab: data.title[lang],
-  count: d.count(data.items.length),
   title: data.title[lang],
-  what: data.line[lang],
-  cta: { label: d.folderCta, href: '#escribeme' },
-  peek: data.items.slice(0, 5).map((it) => ({ a: L(it.name), b: L(it.meta) })),
-  more: { label: d.seeAll, href: `#m-${id}` },
-  image: data.items[0].image,
-  card: card(data.items[0].card),
-  caption: L(data.items[0].name),
-}));
-
-const sheet: SheetFolder[] = areas.map(({ id, data }) => ({
-  id,
-  color: data.color,
+  need: data.need[lang],
+  line: data.line[lang],
   source: data.source[lang],
   note: data.sourceNote[lang],
   items: data.items.map((it) => ({
@@ -92,6 +78,7 @@ const sheet: SheetFolder[] = areas.map(({ id, data }) => ({
     links: [...(it.url ? [{ label: d.visit, href: it.url }] : []), ...(it.source ? [{ label: d.source, href: it.source }] : [])],
   })),
 }));
+const plush = lab.find((x) => x.id === 'peluche')?.data ?? lab[0].data;
 
 const tiles = lab.map(({ data }) => ({
   image: data.image,
@@ -125,15 +112,11 @@ const fields: Field[] = [
   />
 
   <main id="main" tabindex="-1">
-    <Hero id="dev-t" headline={d.headline} lede={d.lede}>
-      <FolderStack id="trabajo" folders={folders} front={front} label={d.folders} lang={lang} doc="cv" src="web-dev" timed={false} />
-    </Hero>
-
-    <FolderSheet id="proyectos" giant={d.projects} folders={sheet} front={front} timed={false} />
+    <NeedSomeone id="dev-t" lang={lang} areas={answers} front={front} portrait={portrait} portraitAlt={portraitAlt[lang]} cta={d.cta} copy={d.need} />
 
     <Webs lang={lang} />
 
-    <Intro id="como" title={d.howTitle} body={d.howBody} facts={d.facts} image={portrait} alt={portraitAlt[lang]}>
+    <Intro id="como" title={d.howTitle} body={d.howBody} facts={d.facts} image={plush.image} alt={plush.alt[lang]}>
       <Fragment slot="caption">
         {d.night.text}{' '}
         <a class="link" href={alcoHref}>{d.night.link}</a>.
@@ -227,7 +210,7 @@ const fields: Field[] = [
 </Channel>
 
 <style>
-  /* Experiencia: una barra por puesto, como los proyectos dentro de su carpeta. */
+  /* Experiencia: una barra por puesto. */
   .xp {
     padding-block: 130px 40px;
   }

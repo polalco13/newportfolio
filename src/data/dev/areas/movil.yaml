@@ -57,3 +57,5 @@ items:
       ca: Desenvolupador full stack en pràctiques
       en: Intern Full Stack Developer
     stack: [React, Angular]
+# Cómo acaba la frase «Necesito a alguien que…» de la portada de /dev.
+need: { es: 'haga apps para el móvil', ca: 'faci apps per al mòbil', en: 'builds for the phone' }

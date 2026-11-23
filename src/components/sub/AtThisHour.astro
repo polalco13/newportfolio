@@ -1,0 +1,554 @@
+---
+// Portada de /alco, «A esta hora»: la hora de Barcelona en grande y lo que suena ahora en el tipo de evento
+// elegido, con la foto de ese momento. Debajo, «La noche, hora a hora»: la hora se queda fija y los momentos
+// pasan. Sin JavaScript se ven todas las noches una debajo de otra y la portada enseña el primer momento.
+import { Image, getImage } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import PdfButton from '../PdfButton.astro';
+import type { Lang } from '../../../shared/site';
+
+export interface Moment {
+  h?: string;
+  name: string;
+  meta: string;
+  text: string;
+  image: ImageMetadata;
+  alt: string;
+}
+export interface Night {
+  id: string;
+  color: string;
+  chip: string;
+  /** «una boda»: cómo se dice en la frase de la portada. */
+  at: string;
+  /** Tipo de evento tal como sale en el formulario. */
+  type: string;
+  source: string;
+  note: string;
+  sample?: string;
+  moments: Moment[];
+}
+interface Props {
+  id: string;
+  lang: Lang;
+  headline: [string, string];
+  lede: string;
+  book: string;
+  nights: Night[];
+  front: string;
+  copy: {
+    now: (t: string) => string;
+    at: (w: string, m: string) => string;
+    before: (w: string, m: string, h: string) => string;
+    after: (w: string, m: string, h: string) => string;
+    pick: string;
+    nightTitle: string;
+    nightBody: string;
+  };
+}
+
+const { id, lang, headline, lede, book, nights, front, copy } = Astro.props;
+const first = nights.find((n) => n.id === front) ?? nights[0];
+// La portada solo usa las noches con horas; una ceremonia va por guion, no por reloj.
+const timed = nights.filter((n) => n.moments.every((m) => m.h));
+const lead = (timed.find((n) => n.id === first.id) ?? timed[0]).moments[0];
+
+// Lo que necesita el script para cambiar la foto de la portada: una versión ligera de cada foto.
+const shots = new Map<ImageMetadata, string>();
+for (const n of timed) for (const m of n.moments) if (!shots.has(m.image)) shots.set(m.image, (await getImage({ src: m.image, width: 900, format: 'webp', quality: 70 })).src);
+const data = timed.map((n) => ({
+  id: n.id,
+  color: n.color,
+  at: n.at,
+  type: n.type,
+  moments: n.moments.map((m) => ({ h: m.h!, name: m.name, meta: m.meta, src: shots.get(m.image), alt: m.alt })),
+}));
+---
+
+<section
+  class="now-hero pad"
+  aria-labelledby={id}
+  data-now-hero
+  data-t-now={copy.now('{t}')}
+  data-t-at={copy.at('{w}', '{m}')}
+  data-t-before={copy.before('{w}', '{m}', '{h}')}
+  data-t-after={copy.after('{w}', '{m}', '{h}')}
+  data-t-now1={copy.now('01:{u}')}
+  data-t-before1={copy.before('{w}', '{m}', '01:{u}')}
+  data-t-after1={copy.after('{w}', '{m}', '01:{u}')}
+  style={`--ev: var(--${first.color})`}
+>
+  <div class="left">
+    <h1 class="title" id={id}>
+      <span>{headline[0]}</span> <span>{headline[1]}</span>
+    </h1>
+    <p class="lede">{lede}</p>
+    <p class="clock" aria-hidden="true">
+      <span data-hh>{lead.h!.slice(0, 2)}</span><span class="colon">:</span><span data-mm>{lead.h!.slice(3)}</span>
+    </p>
+    <p class="now" data-now>{copy.at(first.at, lead.name)}</p>
+    <p class="sr" aria-live="polite" data-status></p>
+    <div class="chips" role="group" aria-label={copy.pick} data-chips>
+      {
+        timed.map((n) => (
+          <button type="button" class="chip" data-ev={n.id} data-type={n.type} aria-pressed={String(n.id === first.id)} style={`--c: var(--${n.color})`}>
+            {n.chip}
+          </button>
+        ))
+      }
+    </div>
+    <div class="actions">
+      <a class="btn go" href="#fecha" data-type={first.type}>{book}</a>
+      <PdfButton lang={lang} doc="alco" src="web-alco" />
+    </div>
+  </div>
+  <figure class="shot" data-shutter>
+    <Image src={lead.image} alt={lead.alt} widths={[600, 900, 1200]} sizes="(max-width: 960px) 92vw, 40vw" format="webp" quality={70} loading="eager" fetchpriority="high" data-shot />
+    <figcaption data-cap><b>{lead.h} · {lead.name}</b> · {lead.meta}</figcaption>
+  </figure>
+</section>
+
+<section class="night pad" id="eventos" aria-labelledby="noche-t" style={`--ev: var(--${first.color})`}>
+  <h2 class="sec-title" id="noche-t" data-reveal>{copy.nightTitle}</h2>
+  <p class="body" data-reveal>{copy.nightBody}</p>
+  <div class="chips" role="group" aria-label={copy.pick} data-chips data-reveal>
+    {
+      nights.map((n) => (
+        <button type="button" class="chip" data-ev={n.id} data-type={n.type} aria-pressed={String(n.id === first.id)} style={`--c: var(--${n.color})`}>
+          {n.chip}
+        </button>
+      ))
+    }
+  </div>
+  {
+    nights.map((n) => (
+      <div class:list={['run', { untimed: !n.moments.every((m) => m.h) }]} id={`m-${n.id}`} data-run={n.id} style={`--c: var(--${n.color})`}>
+        <p class="source">
+          <b>{n.source}</b> <span>· {n.note}</span>
+          {n.sample && <span class="flag">{n.sample}</span>}
+        </p>
+        <div class="split">
+          <div class="pin" aria-hidden="true">
+            <span class="h" data-pin-h>{n.moments[0].h ?? n.moments[0].name}</span>
+            <span class="n" data-pin-n>{n.moments[0].h ? n.moments[0].name : n.moments[0].meta}</span>
+          </div>
+          <ol class="moments">
+            {n.moments.map((m, i) => (
+              <li class="moment" data-i={i} data-h={m.h ?? m.name} data-n={m.h ? m.name : m.meta} data-reveal>
+                <Image src={m.image} alt={m.alt} widths={[480, 760, 1100]} sizes="(max-width: 960px) 92vw, 52vw" format="webp" quality={68} loading="lazy" />
+                <div class="txt">
+                  {m.h && <span class="hh">{m.h}</span>}
+                  <h3>{m.name}</h3>
+                  <span class="meta">{m.meta}</span>
+                  <p>{m.text}</p>
+                </div>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </div>
+    ))
+  }
+</section>
+
+<script define:vars={{ nightsData: data }} is:inline>
+  window.__nights = nightsData;
+</script>
+
+<script>
+  type M = { h: string; name: string; meta: string; src: string; alt: string };
+  type N = { id: string; color: string; at: string; type: string; moments: M[] };
+  const nights = (window as unknown as { __nights: N[] }).__nights;
+  const hero = document.querySelector<HTMLElement>('[data-now-hero]');
+  // Las frases llegan ya traducidas, con huecos: {t} la hora, {w} el evento, {m} el momento, {h} su hora.
+  // Las de la 01:xx van aparte (*1, con {u} los minutos): en castellano y catalán, «la 01:30», no «las».
+  const fill = (key: string, v: Record<string, string>) => (hero?.dataset[key] ?? '').replace(/\{(\w)\}/g, (_, k) => v[k] ?? '');
+  const one = (t: string) => t.startsWith('01:');
+  const c = {
+    now: (t: string) => (one(t) ? fill('tNow1', { u: t.slice(3) }) : fill('tNow', { t })),
+    at: (w: string, m: string) => fill('tAt', { w, m }),
+    before: (w: string, m: string, h: string) => (one(h) ? fill('tBefore1', { w, m, u: h.slice(3) }) : fill('tBefore', { w, m, h })),
+    after: (w: string, m: string, h: string) => (one(h) ? fill('tAfter1', { w, m, u: h.slice(3) }) : fill('tAfter', { w, m, h })),
+  };
+  const night = document.getElementById('eventos');
+
+  // Las horas de después de medianoche cuentan como del mismo día de fiesta.
+  const toMin = (t: string) => {
+    const [h, m] = t.split(':').map(Number);
+    const v = h * 60 + m;
+    return v < 720 ? v + 1440 : v;
+  };
+  const bcn = () => {
+    const p = new Intl.DateTimeFormat('es-ES', { timeZone: 'Europe/Madrid', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }).formatToParts(new Date());
+    const get = (k: string) => p.find((x) => x.type === k)?.value ?? '00';
+    return { hh: get('hour'), mm: get('minute') };
+  };
+
+  let current = hero?.querySelector<HTMLElement>('.chip[aria-pressed="true"]')?.dataset.ev ?? nights[0]?.id;
+
+  function paintHero() {
+    if (!hero) return;
+    const n = nights.find((x) => x.id === current);
+    const { hh, mm } = bcn();
+    hero.querySelector('[data-hh]')!.textContent = hh;
+    hero.querySelector('[data-mm]')!.textContent = mm;
+    const time = `${hh}:${mm}`;
+    const nowEl = hero.querySelector('[data-now]')!;
+    if (!n) {
+      nowEl.textContent = c.now(time);
+      return;
+    }
+    const now = toMin(time);
+    const ms = n.moments;
+    const last = ms[ms.length - 1];
+    let show: M;
+    let line: string;
+    if (now < toMin(ms[0].h)) {
+      show = ms[0];
+      line = c.before(n.at, show.name, show.h);
+    } else if (now > toMin(last.h) + 60) {
+      show = last;
+      line = c.after(n.at, show.name, show.h);
+    } else {
+      show = ms.filter((m) => toMin(m.h) <= now).pop()!;
+      line = c.at(n.at, show.name);
+    }
+    const next = `${c.now(time)} ${line}`;
+    if (nowEl.textContent !== next) nowEl.textContent = next;
+    const img = hero.querySelector<HTMLImageElement>('[data-shot]')!;
+    if (img.dataset.src !== show.src) {
+      img.dataset.src = show.src;
+      img.style.opacity = '0';
+      const loader = new Image();
+      loader.src = show.src;
+      loader.onerror = () => (img.style.opacity = '1');
+      loader.onload = () => {
+        if (img.dataset.src !== show.src) return;
+        img.removeAttribute('srcset');
+        img.src = show.src;
+        img.alt = show.alt;
+        img.style.opacity = '1';
+      };
+    }
+    hero.querySelector('[data-cap]')!.innerHTML = '';
+    const b = document.createElement('b');
+    b.textContent = `${show.h} · ${show.name}`;
+    hero.querySelector('[data-cap]')!.append(b, ` · ${show.meta}`);
+    hero.querySelector<HTMLElement>('.btn.go')!.dataset.type = n.type;
+  }
+
+  function pick(id: string) {
+    // Una noche sin horas (ceremonias) solo cambia la lista; la portada se queda con la última que tiene reloj.
+    if (nights.some((n) => n.id === id)) current = id;
+    document.querySelectorAll<HTMLElement>('[data-chips] .chip').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.ev === (b.closest('[data-now-hero]') ? current : id))));
+    document.querySelectorAll<HTMLElement>('[data-run]').forEach((r) => (r.hidden = r.dataset.run !== id));
+    const color = getComputedStyle(document.querySelector<HTMLElement>(`.chip[data-ev="${id}"]`)!).getPropertyValue('--c');
+    if (current === id) hero?.style.setProperty('--ev', color);
+    night?.style.setProperty('--ev', color);
+    paintHero();
+    const status = document.querySelector('[data-status]');
+    if (status) status.textContent = current === id ? (hero?.querySelector('[data-now]')?.textContent ?? '') : (document.querySelector(`[data-run="${id}"] .source`)?.textContent?.trim() ?? '');
+    dispatchEvent(new CustomEvent('nightchange', { detail: document.querySelector<HTMLElement>(`.chip[data-ev="${id}"]`)?.dataset.type }));
+  }
+
+  document.querySelectorAll<HTMLElement>('[data-chips]').forEach((g) =>
+    g.addEventListener('click', (e) => {
+      const b = (e.target as Element).closest<HTMLElement>('.chip');
+      if (b?.dataset.ev) pick(b.dataset.ev);
+    }),
+  );
+
+  // La hora fija de cada noche sigue al momento que está en medio de la pantalla.
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver(
+      (entries) =>
+        entries.forEach((en) => {
+          if (!en.isIntersecting) return;
+          const li = en.target as HTMLElement;
+          const run = li.closest('[data-run]')!;
+          run.querySelector('[data-pin-h]')!.textContent = li.dataset.h ?? '';
+          run.querySelector('[data-pin-n]')!.textContent = li.dataset.n ?? '';
+        }),
+      { rootMargin: '-45% 0px -45% 0px' },
+    );
+    document.querySelectorAll('.moment').forEach((li) => io.observe(li));
+  }
+
+  if (current) {
+    document.querySelectorAll<HTMLElement>('[data-run]').forEach((r) => (r.hidden = r.dataset.run !== current));
+    paintHero();
+    setInterval(paintHero, 20_000);
+  }
+</script>
+
+<style>
+  .now-hero {
+    display: grid;
+    gap: 32px;
+    padding-top: calc(var(--bar) + 24px);
+    padding-bottom: 96px;
+  }
+  .left {
+    display: grid;
+    gap: 18px;
+    align-content: end;
+    min-width: 0;
+  }
+  .title {
+    margin: 0;
+    font-size: clamp(30px, 3.4vw, 52px);
+    font-weight: 600;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    view-transition-name: headline;
+  }
+  .title span {
+    display: inline-block;
+  }
+  .lede {
+    margin: 0;
+    max-width: 46ch;
+    color: var(--muted);
+  }
+  .clock {
+    margin: 8px 0 0 -0.04em;
+    font-size: clamp(104px, 20vw, 320px);
+    font-weight: 800;
+    line-height: 0.82;
+    letter-spacing: -0.055em;
+    font-variant-numeric: tabular-nums;
+  }
+  .colon {
+    animation: blink 2s steps(1) infinite;
+  }
+  @keyframes blink {
+    50% {
+      opacity: 0.25;
+    }
+  }
+  .now {
+    margin: 0;
+    max-width: 34ch;
+    font-size: var(--s3);
+    line-height: 1.25;
+  }
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .chip {
+    min-height: 44px;
+    padding: 0 16px;
+    border: 0;
+    background: var(--night-2);
+    color: inherit;
+    font: inherit;
+    font-size: 16px;
+    cursor: pointer;
+    transition:
+      background-color 200ms ease,
+      color 200ms ease,
+      transform 140ms var(--ease);
+  }
+  .chip:hover {
+    transform: translateY(-1px);
+  }
+  .chip:active {
+    transform: scale(0.97);
+  }
+  .chip[aria-pressed='true'] {
+    background: var(--c);
+    color: var(--ink);
+  }
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    margin-top: 6px;
+  }
+  .btn.go {
+    background: var(--ev);
+    color: var(--ink);
+    transition:
+      background-color 300ms ease,
+      transform 140ms var(--ease);
+  }
+  .btn.go:hover {
+    background: var(--paper);
+  }
+  .shot {
+    margin: 0;
+    min-width: 0;
+  }
+  .shot :global(img) {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    transition: opacity 400ms var(--ease);
+  }
+  .shot figcaption {
+    margin-top: 12px;
+    font-size: 16px;
+    color: var(--muted);
+  }
+  .shot figcaption :global(b) {
+    color: var(--fg);
+    font-weight: 600;
+  }
+  @media (min-width: 960px) {
+    .now-hero {
+      grid-template-columns: 7fr 5fr;
+      column-gap: 48px;
+      align-items: end;
+      min-height: 100svh;
+    }
+  }
+
+  /* La noche, hora a hora. */
+  .night {
+    padding-block: 140px 120px;
+    background: var(--night-2);
+  }
+  .night .body {
+    max-width: 52ch;
+    margin: 20px 0 28px;
+  }
+  .night .chip {
+    background: var(--ground);
+  }
+  .night .chip[aria-pressed='true'] {
+    background: var(--c);
+  }
+  .run {
+    margin-top: 64px;
+  }
+  .run[hidden] {
+    display: none;
+  }
+  .source {
+    margin: 0 0 32px;
+    font-size: var(--s3);
+  }
+  .source span {
+    color: var(--muted);
+  }
+  .flag {
+    display: inline-block;
+    margin-left: 10px;
+    padding: 2px 10px;
+    background: var(--c);
+    color: var(--ink);
+    font-size: 15px;
+    vertical-align: middle;
+  }
+  .split {
+    display: grid;
+    gap: 40px;
+  }
+  .pin {
+    display: none;
+  }
+  .moments {
+    display: grid;
+    gap: 56px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .moment {
+    display: grid;
+    gap: 16px;
+  }
+  .moment :global(img) {
+    width: 100%;
+    aspect-ratio: 3 / 2;
+    object-fit: cover;
+  }
+  .txt {
+    display: grid;
+    gap: 6px;
+  }
+  .hh {
+    font-size: 56px;
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -0.04em;
+    font-variant-numeric: tabular-nums;
+  }
+  .moment h3 {
+    margin: 0;
+    font-size: var(--s3);
+    font-weight: 600;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+  }
+  .meta {
+    color: var(--c);
+    font-size: 16px;
+    font-weight: 600;
+  }
+  .moment p {
+    margin: 0;
+    max-width: 46ch;
+  }
+  @media (min-width: 960px) {
+    .split {
+      grid-template-columns: 5fr 7fr;
+      gap: 64px;
+    }
+    .pin {
+      display: block;
+      position: sticky;
+      top: calc(var(--bar) + 48px);
+      align-self: start;
+    }
+    .pin .h {
+      display: block;
+      font-size: clamp(110px, 13vw, 220px);
+      font-weight: 800;
+      line-height: 0.85;
+      letter-spacing: -0.055em;
+      font-variant-numeric: tabular-nums;
+      overflow-wrap: anywhere;
+    }
+    .pin .n {
+      display: block;
+      margin-top: 16px;
+      font-size: var(--s3);
+      font-weight: 600;
+    }
+    /* La hora fija hace de hora visible; la de cada momento queda para los lectores de pantalla. */
+    .hh {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
+    }
+    .moments {
+      gap: 96px;
+    }
+    .untimed .pin .h {
+      font-size: clamp(48px, 5vw, 84px);
+      line-height: 0.95;
+      overflow-wrap: normal;
+      hyphens: auto;
+    }
+  }
+  .sr {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .colon {
+      animation: none;
+    }
+  }
+</style>

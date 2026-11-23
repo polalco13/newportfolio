@@ -142,3 +142,6 @@ moments:
       es: Campanas e instrumentales para tapar cualquier silencio.
       ca: Campanes i instrumentals per tapar qualsevol silenci.
       en: Bells and instrumentals to cover any silence.
+# Nombre corto del botón y cómo se dice «en una boda» en la portada «A esta hora».
+chip: { es: 'Ceremonia', ca: 'Cerimònia', en: 'Ceremony' }
+at: { es: 'una ceremonia', ca: 'una cerimònia', en: 'a ceremony' }

@@ -29,12 +29,17 @@ interface Copy {
     lede: string;
     book: string;
     nav: { events: string; photos: string };
-    folders: string;
-    moments: string;
     sample: string;
-    real: string;
-    count: (n: number) => string;
-    seeAll: string;
+    /** Portada «A esta hora»: la hora de Barcelona y lo que suena ahora en el tipo de evento elegido. */
+    clock: {
+      now: (time: string) => string;
+      at: (where: string, what: string) => string;
+      before: (where: string, what: string, h: string) => string;
+      after: (where: string, what: string, h: string) => string;
+      pick: string;
+      nightTitle: string;
+      nightBody: string;
+    };
     howTitle: string;
     howBody: string;
     facts: { big: string; small: string }[];
@@ -64,11 +69,9 @@ interface Copy {
     headline: [string, string];
     lede: string;
     cta: string;
-    folderCta: string;
-    folders: string;
     projects: string;
-    count: (n: number) => string;
-    seeAll: string;
+    /** Portada «Necesito a alguien que…». */
+    need: { who: string; ask: string; pick: string; quick: string; others: string };
     role: string;
     visit: string;
     source: string;
@@ -129,6 +132,9 @@ interface Copy {
   notFound: { title: string; body: string; back: string };
 }
 
+/** «La 01:30» va en singular en castellano y en catalán; el resto de horas, en plural. */
+const one = (time: string) => time.startsWith('01:');
+
 export const COPY: Record<Lang, Copy> = {
   es: {
     name: 'Español',
@@ -167,12 +173,16 @@ export const COPY: Record<Lang, Copy> = {
       lede: 'ALCO es Pol Alcoverro, DJ open format en Barcelona. Preparo cada evento por momentos: qué pasa en cada uno y qué tiene que sonar.',
       book: 'Pedir fecha',
       nav: { events: 'Eventos', photos: 'Fotos' },
-      folders: 'Tipo de evento',
-      moments: 'Momentos',
       sample: 'Orden tipo',
-      real: 'evento real',
-      count: (n) => `${n} momentos`,
-      seeAll: 'Ver todos los momentos',
+      clock: {
+        now: (time) => `En Barcelona ${one(time) ? 'es la' : 'son las'} ${time}.`,
+        at: (where, what) => `A esta hora, en ${where}: ${what}.`,
+        before: (where, what, h) => `En ${where} aún estoy montando: ${what} empieza a ${one(h) ? 'la' : 'las'} ${h}.`,
+        after: (where, what, h) => `En ${where} ya se han encendido las luces: ${what} sonó a ${one(h) ? 'la' : 'las'} ${h}.`,
+        pick: 'Tipo de evento',
+        nightTitle: 'La noche, hora a hora.',
+        nightBody: 'Te envío el orden de la noche con la hora de cada momento y lo ajustamos juntos. Así suele quedar:',
+      },
       howTitle: 'Cómo trabajo',
       howBody: 'No llevo una lista cerrada: llevo el evento ordenado por momentos y, para cada uno, más canciones de las que caben. Así puedo leer la pista y cambiar sin que se note.',
       facts: [
@@ -210,11 +220,14 @@ export const COPY: Record<Lang, Copy> = {
       headline: ['Cada dato,', 'en su sitio.'],
       lede: 'Pol Alcoverro, ingeniero de software en Barcelona. Construyo productos web de la interfaz al pipeline de datos; ahora, en The Etailers.',
       cta: 'Escríbeme',
-      folderCta: 'Escríbeme sobre un puesto',
-      folders: 'Tipo de trabajo',
       projects: 'Proyectos',
-      count: (n) => `${n} ${n === 1 ? 'proyecto' : 'proyectos'}`,
-      seeAll: 'Ver los proyectos',
+      need: {
+        who: 'Pol Alcoverro, ingeniero de software en The Etailers, Barcelona.',
+        ask: 'Necesito a alguien que',
+        pick: 'Qué necesitas',
+        quick: 'Elegir rápido',
+        others: 'Otros trabajos',
+      },
       role: 'Mi papel:',
       visit: 'Visitar',
       source: 'Código',
@@ -334,12 +347,16 @@ export const COPY: Record<Lang, Copy> = {
       lede: "ALCO és Pol Alcoverro, DJ open format a Barcelona. Preparo cada esdeveniment per moments: què passa en cadascun i què hi ha de sonar.",
       book: 'Demana data',
       nav: { events: 'Esdeveniments', photos: 'Fotos' },
-      folders: "Tipus d'esdeveniment",
-      moments: 'Moments',
       sample: 'Ordre tipus',
-      real: 'esdeveniment real',
-      count: (n) => `${n} moments`,
-      seeAll: 'Mira tots els moments',
+      clock: {
+        now: (time) => `A Barcelona ${one(time) ? 'és la' : 'són les'} ${time}.`,
+        at: (where, what) => `A aquesta hora, en ${where}: ${what}.`,
+        before: (where, what, h) => `En ${where} encara estic muntant: ${what} comença a ${one(h) ? 'la' : 'les'} ${h}.`,
+        after: (where, what, h) => `En ${where} ja s'han encès els llums: ${what} va sonar a ${one(h) ? 'la' : 'les'} ${h}.`,
+        pick: "Tipus d'esdeveniment",
+        nightTitle: 'La nit, hora a hora.',
+        nightBody: "T'envio l'ordre de la nit amb l'hora de cada moment i l'ajustem junts. Així sol quedar:",
+      },
       howTitle: 'Com treballo',
       howBody: "No porto una llista tancada: porto l'esdeveniment ordenat per moments i, per a cadascun, més cançons de les que hi caben. Així puc llegir la pista i canviar sense que es noti.",
       facts: [
@@ -377,11 +394,14 @@ export const COPY: Record<Lang, Copy> = {
       headline: ['Cada dada,', 'al seu lloc.'],
       lede: 'Pol Alcoverro, enginyer de programari a Barcelona. Construeixo productes web de la interfície al pipeline de dades; ara, a The Etailers.',
       cta: 'Escriu-me',
-      folderCta: 'Escriu-me sobre una feina',
-      folders: 'Tipus de feina',
       projects: 'Projectes',
-      count: (n) => `${n} ${n === 1 ? 'projecte' : 'projectes'}`,
-      seeAll: 'Mira els projectes',
+      need: {
+        who: 'Pol Alcoverro, enginyer de programari a The Etailers, Barcelona.',
+        ask: 'Necessito algú que',
+        pick: 'Què necessites',
+        quick: 'Tria ràpid',
+        others: 'Altres feines',
+      },
       role: 'El meu paper:',
       visit: 'Visita',
       source: 'Codi',
@@ -501,12 +521,16 @@ export const COPY: Record<Lang, Copy> = {
       lede: 'ALCO is Pol Alcoverro, an open format DJ in Barcelona. I plan every event moment by moment: what happens in each one and what needs to play.',
       book: 'Check a date',
       nav: { events: 'Events', photos: 'Photos' },
-      folders: 'Kind of event',
-      moments: 'Moments',
       sample: 'Typical order',
-      real: 'real event',
-      count: (n) => `${n} moments`,
-      seeAll: 'See every moment',
+      clock: {
+        now: (time) => `It is ${time} in Barcelona.`,
+        at: (where, what) => `Right now, at ${where}: ${what}.`,
+        before: (where, what, h) => `At ${where} I am still setting up: ${what} starts at ${h}.`,
+        after: (where, what, h) => `At ${where} the lights are already on: ${what} played at ${h}.`,
+        pick: 'Type of event',
+        nightTitle: 'The night, hour by hour.',
+        nightBody: 'I send you the running order with a time for each moment, and we adjust it together. It usually looks like this:',
+      },
       howTitle: 'How I work',
       howBody: "I don't bring a fixed list. I bring the event in order, moment by moment, with more songs for each than will fit, so I can read the floor and change course without anyone noticing.",
       facts: [
@@ -544,11 +568,14 @@ export const COPY: Record<Lang, Copy> = {
       headline: ['Every number,', 'in its place.'],
       lede: 'Pol Alcoverro, software engineer in Barcelona. I build web products from the interface to the data pipeline, now at The Etailers.',
       cta: 'Email me',
-      folderCta: 'Email me about a role',
-      folders: 'Kind of work',
       projects: 'Projects',
-      count: (n) => `${n} ${n === 1 ? 'project' : 'projects'}`,
-      seeAll: 'See the projects',
+      need: {
+        who: 'Pol Alcoverro, software engineer at The Etailers, Barcelona.',
+        ask: 'I need someone who',
+        pick: 'What you need',
+        quick: 'Quick pick',
+        others: 'Other work',
+      },
       role: 'My role:',
       visit: 'Visit',
       source: 'Source',

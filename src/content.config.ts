@@ -22,8 +22,8 @@ const moment = z.object({
 });
 
 /**
- * Una carpeta por tipo de evento: src/data/alco/services/<id>.yaml. La portada de /alco las apila con
- * pestaña; la que tiene `front: true` sale abierta. `real: false` marca los momentos de ejemplo.
+ * Un tipo de evento por archivo: src/data/alco/services/<id>.yaml. La portada de /alco («A esta hora») elige
+ * uno con un botón; el de `front: true` sale primero. `real: false` marca los momentos de ejemplo.
  */
 const services = defineCollection({
   loader: glob({ base: './src/data/alco/services', pattern: '*.yaml' }),
@@ -35,6 +35,9 @@ const services = defineCollection({
     /** Id de una foto de gallery.yaml para la carpeta abierta. */
     photo: z.string(),
     title: t,
+    /** Nombre corto del botón de la portada y la frase «en una boda». */
+    chip: t,
+    at: t,
     line: t,
     cta: t,
     source: t,
@@ -85,8 +88,8 @@ const gallery = defineCollection({
 const label = z.union([z.string().min(1), t]);
 
 /**
- * Una carpeta por tipo de problema: src/data/dev/areas/<id>.yaml. La portada de /dev las apila con
- * pestaña, igual que los tipos de evento de /alco; dentro, sus proyectos. Un proyecto lleva captura
+ * Un tipo de trabajo por archivo: src/data/dev/areas/<id>.yaml. La portada de /dev («Necesito a alguien
+ * que…») lo elige en un desplegable y enseña sus proyectos. Un proyecto lleva captura
  * (`image`, en ../shots/) o, si no se puede enseñar, una ficha de texto (`card`).
  */
 const areas = defineCollection({
@@ -97,6 +100,8 @@ const areas = defineCollection({
       color: z.enum(['peach', 'lavender', 'mint', 'sky', 'rose']),
       front: z.boolean().default(false),
       title: t,
+      /** Cómo acaba la frase «Necesito a alguien que…». */
+      need: t,
       line: t,
       source: t,
       sourceNote: t,

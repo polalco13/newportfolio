@@ -64,3 +64,5 @@ items:
       ca: Universitat Politècnica de Catalunya
       en: Universitat Politècnica de Catalunya
     stack: [UPC]
+# Cómo acaba la frase «Necesito a alguien que…» de la portada de /dev.
+need: { es: 'venga de la FIB', ca: 'vingui de la FIB', en: 'comes from the FIB' }

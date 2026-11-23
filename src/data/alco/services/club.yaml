@@ -65,3 +65,6 @@ moments:
       es: El momento de las bengalas.
       ca: El moment de les bengales.
       en: Sparkler time.
+# Nombre corto del botón y cómo se dice «en una boda» en la portada «A esta hora».
+chip: { es: 'Club', ca: 'Club', en: 'Club' }
+at: { es: 'un club', ca: 'un club', en: 'a club' }

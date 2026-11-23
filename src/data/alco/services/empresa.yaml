@@ -68,3 +68,6 @@ moments:
       es: El momento más alto de la hora, y la pista entregada al artista siguiente a su hora exacta.
       ca: El moment més alt de l'hora, i la pista lliurada a l'artista següent a l'hora exacta.
       en: The high point of the hour, then the floor handed to the next artist right on time.
+# Nombre corto del botón y cómo se dice «en una boda» en la portada «A esta hora».
+chip: { es: 'Empresa', ca: 'Empresa', en: 'Company' }
+at: { es: 'un evento de empresa', ca: 'un esdeveniment d''empresa', en: 'a company event' }

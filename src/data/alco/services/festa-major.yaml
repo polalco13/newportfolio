@@ -79,3 +79,6 @@ moments:
       es: Las de la fiesta del pueblo, para cerrar cantando.
       ca: Les de la festa del poble, per tancar cantant.
       en: The town's own songs, to close singing.
+# Nombre corto del botón y cómo se dice «en una boda» en la portada «A esta hora».
+chip: { es: 'Festa major', ca: 'Festa major', en: 'Festa major' }
+at: { es: 'una festa major', ca: 'una festa major', en: 'a festa major' }

@@ -1,0 +1,456 @@
+---
+// Portada de /dev, «Necesito a alguien que…»: una frase que el visitante completa con un desplegable, y la
+// página responde con los proyectos de ese tipo de trabajo. Sin JavaScript se ven todos los tipos uno
+// debajo de otro y el desplegable no hace falta.
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import PdfButton from '../PdfButton.astro';
+import type { Lang } from '../../../shared/site';
+
+export interface Work {
+  name: string;
+  meta: string;
+  text: string;
+  image?: ImageMetadata;
+  card?: { big: string; small: string };
+  role: { label: string; value: string };
+  tags: string[];
+  links: { label: string; href: string }[];
+}
+export interface Area {
+  id: string;
+  color: string;
+  title: string;
+  need: string;
+  line: string;
+  source: string;
+  note: string;
+  items: Work[];
+}
+interface Props {
+  id: string;
+  lang: Lang;
+  areas: Area[];
+  front: string;
+  portrait: ImageMetadata;
+  portraitAlt: string;
+  cta: string;
+  copy: { who: string; ask: string; pick: string; quick: string; others: string };
+}
+
+const { id, lang, areas, front, portrait, portraitAlt, cta, copy } = Astro.props;
+const first = areas.find((a) => a.id === front) ?? areas[0];
+/** Una captura de móvil (más alta que ancha) se enseña entera, sin recortar. */
+const tall = (img: ImageMetadata) => img.height > img.width;
+---
+
+<section class="need-hero pad" aria-labelledby={id} data-need style={`--ar: var(--${first.color})`}>
+  <div class="left">
+    <div class="who">
+      <Image class="avatar" src={portrait} alt="" widths={[160]} sizes="64px" format="webp" quality={72} loading="eager" />
+      <h1 id={id}>{copy.who}</h1>
+    </div>
+    <p class="ask">
+      <label for="need-pick">{copy.ask}</label>
+      <span class="pick">
+        <select id="need-pick">
+          {
+            areas.map((a) => (
+              <option value={a.id} selected={a.id === first.id}>
+                {a.need}
+              </option>
+            ))
+          }
+        </select>
+      </span>
+    </p>
+    <div class="quick" role="group" aria-label={copy.quick}>
+      {
+        areas.map((a) => (
+          <button type="button" data-area-pick={a.id} aria-pressed={String(a.id === first.id)} style={`--c: var(--${a.color})`}>
+            {a.title}
+          </button>
+        ))
+      }
+    </div>
+    <div class="actions">
+      <a class="btn" href="#escribeme">{cta}</a>
+      <PdfButton lang={lang} doc="cv" src="web-dev" />
+    </div>
+  </div>
+  <Image class="portrait" src={portrait} alt={portraitAlt} widths={[480, 760]} sizes="(max-width: 1100px) 0px, 30vw" format="webp" quality={72} loading="eager" />
+</section>
+
+<p class="sr" aria-live="polite" data-need-status></p>
+
+<section class="answer pad" id="proyectos" style={`--ar: var(--${first.color})`}>
+  {
+    areas.map((a) => (
+      <div class="area" id={`m-${a.id}`} data-area={a.id} style={`--c: var(--${a.color})`}>
+        <h2 class="lead" data-reveal>
+          {a.line}
+        </h2>
+        <p class="source" data-reveal>
+          <b>{a.source}</b> <span>· {a.note}</span>
+        </p>
+        <div class="works">
+          {a.items.map((w, i) => (
+            <article class:list={['work', { main: i === 0 }]} data-reveal>
+              <div class="vis">
+                {w.image ? (
+                  <Image class:list={{ tall: tall(w.image) }} src={w.image} alt="" widths={[480, 760, 1200]} sizes={i === 0 ? '(max-width: 960px) 92vw, 56vw' : '(max-width: 960px) 92vw, 30vw'} format="webp" quality={70} loading="lazy" />
+                ) : (
+                  w.card && (
+                    <div class="card" aria-hidden="true">
+                      <b>{w.card.big}</b>
+                      <span>{w.card.small}</span>
+                    </div>
+                  )
+                )}
+              </div>
+              <div class="txt">
+                <h3>{w.name}</h3>
+                <p class="role">
+                  {w.role.value} · {w.meta}
+                </p>
+                <p>{w.text}</p>
+                <ul class="tags">
+                  {w.tags.map((tag) => (
+                    <li>{tag}</li>
+                  ))}
+                </ul>
+                {w.links.length > 0 && (
+                  <p class="links">
+                    {w.links.map((l) => (
+                      <a class="link" href={l.href}>
+                        {l.label}
+                      </a>
+                    ))}
+                  </p>
+                )}
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    ))
+  }
+  <div class="others">
+    <p>{copy.others}</p>
+    <div class="quick">
+      {
+        areas.map((a) => (
+          <button type="button" data-area-pick={a.id} aria-pressed={String(a.id === first.id)} style={`--c: var(--${a.color})`}>
+            {a.title}
+          </button>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<script>
+  const hero = document.querySelector<HTMLElement>('[data-need]');
+  const answer = document.getElementById('proyectos');
+  const select = document.querySelector<HTMLSelectElement>('#need-pick');
+  const pick = select?.parentElement;
+
+  // El desplegable mide lo que mide su opción elegida, no la más larga.
+  const meter = document.createElement('span');
+  meter.className = 'meter';
+  meter.setAttribute('aria-hidden', 'true');
+  pick?.append(meter);
+  const fit = () => {
+    if (!select || !pick) return;
+    meter.textContent = select.options[select.selectedIndex].text;
+    const room = pick.closest('.left')!.clientWidth;
+    const cs = getComputedStyle(select);
+    const pad = parseFloat(cs.paddingLeft) + parseFloat(cs.paddingRight);
+    select.style.width = `${Math.min(Math.ceil(meter.getBoundingClientRect().width + pad + 2), room)}px`;
+  };
+
+  function show(id: string, scroll = false) {
+    if (select) select.value = id;
+    document.querySelectorAll<HTMLElement>('[data-area-pick]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.areaPick === id)));
+    document.querySelectorAll<HTMLElement>('[data-area]').forEach((a) => (a.hidden = a.dataset.area !== id));
+    const color = getComputedStyle(document.querySelector<HTMLElement>(`[data-area="${id}"]`)!).getPropertyValue('--c');
+    hero?.style.setProperty('--ar', color);
+    answer?.style.setProperty('--ar', color);
+    document.querySelectorAll(`[data-area="${id}"] [data-reveal]`).forEach((el) => el.classList.add('is-in'));
+    const status = document.querySelector('[data-need-status]');
+    if (status && started) status.textContent = document.querySelector(`[data-area="${id}"] .lead`)?.textContent?.trim() ?? '';
+    fit();
+    if (scroll) answer?.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+  }
+
+  select?.addEventListener('change', () => show(select.value));
+  document.querySelectorAll<HTMLElement>('[data-area-pick]').forEach((b) =>
+    b.addEventListener('click', () => show(b.dataset.areaPick!, !!b.closest('.others'))),
+  );
+  let started = false;
+  if (select) {
+    show(select.value);
+    started = true;
+    document.fonts?.ready.then(fit);
+    addEventListener('resize', fit);
+  }
+</script>
+
+<style>
+  .need-hero {
+    display: grid;
+    gap: 28px;
+  }
+  .sr {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  @media (max-width: 480px) {
+    .need-hero .ask {
+      font-size: clamp(22px, 6.8vw, 34px);
+    }
+  }
+  .left {
+    display: grid;
+    gap: 28px;
+    align-content: end;
+    min-width: 0;
+  }
+  .need-hero {
+    padding-top: calc(var(--bar) + 40px);
+    padding-bottom: 72px;
+  }
+  .portrait {
+    display: none;
+  }
+  .who {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .who :global(.avatar) {
+    flex: none;
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+  .who h1 {
+    margin: 0;
+    max-width: 40ch;
+    font-size: clamp(19px, 1.5vw, 24px);
+    font-weight: 500;
+    line-height: 1.3;
+  }
+  .ask {
+    margin: 0;
+    max-width: 20ch;
+    font-size: clamp(22px, 4.6vw, 80px);
+    font-weight: 800;
+    line-height: 1.04;
+    letter-spacing: -0.045em;
+    view-transition-name: headline;
+  }
+  .pick {
+    position: relative;
+    display: inline-block;
+    max-width: 100%;
+  }
+  .pick select {
+    appearance: none;
+    max-width: 100%;
+    padding: 0 0.9em 0.04em 0.18em;
+    border: 0;
+    background: var(--ar);
+    color: var(--ink);
+    font: inherit;
+    letter-spacing: inherit;
+    line-height: 1.08;
+    cursor: pointer;
+    transition: background-color 300ms ease;
+  }
+  .pick::after {
+    content: '';
+    position: absolute;
+    right: 0.32em;
+    top: 50%;
+    width: 0.24em;
+    height: 0.24em;
+    border-right: 0.08em solid currentColor;
+    border-bottom: 0.08em solid currentColor;
+    transform: translateY(-70%) rotate(45deg);
+    pointer-events: none;
+  }
+  .pick :global(.meter) {
+    position: absolute;
+    left: 0;
+    top: 0;
+    visibility: hidden;
+    white-space: pre;
+    pointer-events: none;
+  }
+  .quick {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .quick button {
+    min-height: 44px;
+    padding: 0 16px;
+    border: 0;
+    background: color-mix(in oklab, var(--ink) 7%, transparent);
+    color: inherit;
+    font: inherit;
+    font-size: 16px;
+    cursor: pointer;
+    transition:
+      background-color 200ms ease,
+      transform 140ms var(--ease);
+  }
+  .quick button:hover {
+    transform: translateY(-1px);
+  }
+  .quick button:active {
+    transform: scale(0.97);
+  }
+  .quick button[aria-pressed='true'] {
+    background: var(--c);
+  }
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+  }
+  @media (min-width: 1100px) {
+    .need-hero {
+      grid-template-columns: 8fr 4fr;
+      column-gap: 48px;
+      align-items: end;
+      min-height: 92svh;
+    }
+    .need-hero :global(.portrait) {
+      display: block;
+      align-self: end;
+      width: 100%;
+      aspect-ratio: 4 / 5;
+      object-fit: cover;
+    }
+  }
+
+  /* La respuesta: el primer proyecto en grande y los demás debajo. */
+  .answer {
+    padding-block: 40px 140px;
+  }
+  .area[hidden] {
+    display: none;
+  }
+  .lead {
+    margin: 0;
+    max-width: 30ch;
+    font-size: var(--s3);
+    font-weight: 400;
+    line-height: 1.25;
+  }
+  .source {
+    margin: 12px 0 48px;
+    color: var(--muted);
+  }
+  .source b {
+    color: var(--fg);
+    font-weight: 600;
+  }
+  .works {
+    display: grid;
+    gap: 72px;
+  }
+  .work {
+    display: grid;
+    gap: 20px;
+    align-items: end;
+  }
+  .vis {
+    container-type: inline-size;
+    background: color-mix(in oklab, var(--ink) 6%, transparent);
+  }
+  .vis :global(img) {
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+    object-position: top;
+  }
+  .vis :global(img.tall) {
+    object-fit: contain;
+  }
+  .card {
+    display: grid;
+    align-content: end;
+    gap: 10px;
+    aspect-ratio: 16 / 10;
+    padding: 28px;
+    background: var(--c);
+    color: var(--ink);
+  }
+  .card b {
+    /* La palabra llena la ficha sin partirse: «Opsmonitor» cabe igual en la grande que en la pequeña. */
+    font-size: min(15cqi, 140px);
+    font-weight: 800;
+    line-height: 0.85;
+    letter-spacing: -0.05em;
+  }
+  .work h3 {
+    margin: 0 0 8px;
+    font-size: var(--s4);
+    font-weight: 800;
+    line-height: 0.95;
+    letter-spacing: -0.035em;
+  }
+  .work p {
+    margin: 0 0 14px;
+    max-width: 46ch;
+  }
+  .role {
+    font-weight: 600;
+  }
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 0 0 14px;
+    padding: 0;
+    list-style: none;
+  }
+  .tags li {
+    padding: 4px 10px;
+    background: color-mix(in oklab, var(--ink) 7%, transparent);
+    font-size: 15px;
+  }
+  .links {
+    display: flex;
+    gap: 20px;
+  }
+  .others {
+    margin-top: 96px;
+  }
+  .others p {
+    margin: 0 0 12px;
+    color: var(--muted);
+  }
+  @media (min-width: 960px) {
+    .work.main {
+      grid-template-columns: 7fr 5fr;
+      gap: 48px;
+    }
+    .work:not(.main) {
+      grid-template-columns: 4fr 8fr;
+      gap: 40px;
+    }
+    .work:not(.main) h3 {
+      font-size: var(--s3);
+    }
+  }
+</style>

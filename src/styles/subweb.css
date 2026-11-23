@@ -146,7 +146,7 @@
 }
 
 /* Paso entre páginas: el vestíbulo y las dos subwebs se funden, y lo que comparten (la marca, el
-   titular, el montón de carpetas) viaja de una a otra. Donde no hay transiciones de vista, carga normal. */
+   titular) viaja de una a otra. Donde no hay transiciones de vista, carga normal. */
 @view-transition {
   navigation: auto;
 }

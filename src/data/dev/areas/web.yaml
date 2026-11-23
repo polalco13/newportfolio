@@ -100,3 +100,5 @@ items:
       ca: Desenvolupador frontend, en remot
       en: Frontend Developer, remote
     stack: [React, TypeScript]
+# Cómo acaba la frase «Necesito a alguien que…» de la portada de /dev.
+need: { es: 'haga un producto web', ca: 'faci un producte web', en: 'builds a web product' }
