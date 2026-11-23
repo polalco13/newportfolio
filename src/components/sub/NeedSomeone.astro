@@ -1,9 +1,12 @@
 ---
 // Portada de /dev, «Necesito a alguien que…»: una frase que el visitante completa con un desplegable, y la
-// página responde con los proyectos de ese tipo de trabajo. Sin JavaScript se ven todos los tipos uno
-// debajo de otro y el desplegable no hace falta.
+// página responde con los proyectos de ese tipo de trabajo. El desplegable es propio (un popover con
+// role=listbox), no el <select> del sistema. Sin JavaScript se ven todos los tipos uno debajo de otro y
+// cada opción del desplegable es un enlace a su bloque.
 import { Image } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
+import Check from '@lucide/astro/icons/check';
+import ChevronDown from '@lucide/astro/icons/chevron-down';
 import PdfButton from '../PdfButton.astro';
 import type { Lang } from '../../../shared/site';
 
@@ -51,19 +54,44 @@ const tall = (img: ImageMetadata) => img.height > img.width;
       <h1 id={id}>{copy.who}</h1>
     </div>
     <p class="ask">
-      <label for="need-pick">{copy.ask}</label>
-      <span class="pick">
-        <select id="need-pick">
-          {
-            areas.map((a) => (
-              <option value={a.id} selected={a.id === first.id}>
-                {a.need}
-              </option>
-            ))
-          }
-        </select>
-      </span>
+      <span id="need-ask">{copy.ask}</span>
+      {' '}
+      <button
+        type="button"
+        class="pick"
+        id="need-pick"
+        popovertarget="need-list"
+        aria-haspopup="listbox"
+        aria-expanded="false"
+        aria-controls="need-list"
+        aria-labelledby="need-ask need-value"
+      >
+        <span class="hl"><span id="need-value" data-need-value>{first.need}</span><ChevronDown class="chev" stroke-width={1.5} aria-hidden="true" /></span>
+      </button>
     </p>
+    <div class="menu" id="need-list" popover role="listbox" aria-label={copy.pick}>
+      {
+        areas.map((a, i) => (
+          <a
+            class="opt"
+            href={`#m-${a.id}`}
+            role="option"
+            tabindex="-1"
+            id={`need-opt-${a.id}`}
+            data-opt={a.id}
+            aria-selected={String(a.id === first.id)}
+            style={`--c: var(--${a.color}); --i: ${i}`}
+          >
+            <span class="dot" aria-hidden="true" />
+            <span class="say">
+              <b>{a.need}</b>
+              <small>{a.items.map((w) => w.name).join(' · ')}</small>
+            </span>
+            <Check class="tick" size={20} stroke-width={1.5} aria-hidden="true" />
+          </a>
+        ))
+      }
+    </div>
     <div class="quick" role="group" aria-label={copy.quick}>
       {
         areas.map((a) => (
@@ -152,25 +180,18 @@ const tall = (img: ImageMetadata) => img.height > img.width;
 <script>
   const hero = document.querySelector<HTMLElement>('[data-need]');
   const answer = document.getElementById('proyectos');
-  const select = document.querySelector<HTMLSelectElement>('#need-pick');
-  const pick = select?.parentElement;
-
-  // El desplegable mide lo que mide su opción elegida, no la más larga.
-  const meter = document.createElement('span');
-  meter.className = 'meter';
-  meter.setAttribute('aria-hidden', 'true');
-  pick?.append(meter);
-  const fit = () => {
-    if (!select || !pick) return;
-    meter.textContent = select.options[select.selectedIndex].text;
-    const room = pick.closest('.left')!.clientWidth;
-    const cs = getComputedStyle(select);
-    const pad = parseFloat(cs.paddingLeft) + parseFloat(cs.paddingRight);
-    select.style.width = `${Math.min(Math.ceil(meter.getBoundingClientRect().width + pad + 2), room)}px`;
-  };
+  const trigger = document.querySelector<HTMLButtonElement>('#need-pick');
+  const menu = document.querySelector<HTMLElement>('#need-list');
+  const value = document.querySelector<HTMLElement>('[data-need-value]');
+  const opts = [...document.querySelectorAll<HTMLAnchorElement>('[data-opt]')];
+  let current = opts.find((o) => o.getAttribute('aria-selected') === 'true')?.dataset.opt ?? opts[0]?.dataset.opt;
+  let started = false;
 
   function show(id: string, scroll = false) {
-    if (select) select.value = id;
+    current = id;
+    opts.forEach((o) => o.setAttribute('aria-selected', String(o.dataset.opt === id)));
+    const chosen = opts.find((o) => o.dataset.opt === id);
+    if (value && chosen) value.textContent = chosen.querySelector('b')!.textContent;
     document.querySelectorAll<HTMLElement>('[data-area-pick]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.areaPick === id)));
     document.querySelectorAll<HTMLElement>('[data-area]').forEach((a) => (a.hidden = a.dataset.area !== id));
     const color = getComputedStyle(document.querySelector<HTMLElement>(`[data-area="${id}"]`)!).getPropertyValue('--c');
@@ -179,20 +200,96 @@ const tall = (img: ImageMetadata) => img.height > img.width;
     document.querySelectorAll(`[data-area="${id}"] [data-reveal]`).forEach((el) => el.classList.add('is-in'));
     const status = document.querySelector('[data-need-status]');
     if (status && started) status.textContent = document.querySelector(`[data-area="${id}"] .lead`)?.textContent?.trim() ?? '';
-    fit();
     if (scroll) answer?.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
   }
 
-  select?.addEventListener('change', () => show(select.value));
+  // El menú se abre pegado a la frase, debajo. Si no cabe, la página sube lo justo (sin esconder la frase
+  // bajo la barra); solo si ni así cabe se abre encima. Nunca sale de la pantalla.
+  function place(opening = false) {
+    if (!trigger || !menu) return;
+    const gap = 10;
+    const edge = 16;
+    menu.classList.add('placed');
+    menu.style.maxHeight = '';
+    const h = menu.offsetHeight;
+    if (opening) {
+      const r0 = trigger.getBoundingClientRect();
+      const short = r0.bottom + gap + h + edge - innerHeight;
+      const bar = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--bar')) || 64;
+      const lift = Math.min(short, r0.top - bar - edge, document.documentElement.scrollHeight - innerHeight - scrollY);
+      if (short > 0 && lift > 0) scrollBy({ top: lift, behavior: 'instant' });
+    }
+    const r = trigger.getBoundingClientRect();
+    const w = Math.min(menu.offsetWidth, innerWidth - edge * 2);
+    const below = innerHeight - r.bottom - gap - edge;
+    const above = r.top - gap - edge;
+    const up = h > below && above > below;
+    const room = up ? above : below;
+    menu.style.maxHeight = `${Math.max(room, 220)}px`;
+    menu.style.left = `${Math.max(edge, Math.min(r.left, innerWidth - w - edge))}px`;
+    menu.style.top = up ? `${Math.max(edge, r.top - gap - Math.min(h, room))}px` : `${r.bottom + gap}px`;
+    menu.dataset.side = up ? 'up' : 'down';
+  }
+
+  const isOpen = () => !!menu?.matches(':popover-open');
+  const focusOpt = (i: number) => opts[(i + opts.length) % opts.length]?.focus();
+  const index = () => opts.indexOf(document.activeElement as HTMLAnchorElement);
+
+  function open(at?: 'first' | 'last') {
+    if (!menu) return;
+    if (!isOpen()) menu.showPopover();
+    const sel = opts.findIndex((o) => o.dataset.opt === current);
+    focusOpt(at === 'first' ? 0 : at === 'last' ? opts.length - 1 : Math.max(sel, 0));
+  }
+  function close(refocus = true) {
+    if (isOpen()) menu!.hidePopover();
+    if (refocus) trigger?.focus();
+  }
+
+  menu?.addEventListener('toggle', (e) => {
+    const opened = (e as ToggleEvent).newState === 'open';
+    trigger?.setAttribute('aria-expanded', String(opened));
+    if (opened) {
+      place(true);
+      // Con ratón el foco va a la opción elegida, para poder seguir con las flechas.
+      if (!menu.contains(document.activeElement)) open();
+    }
+  });
+  trigger?.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      open(e.key === 'ArrowUp' ? 'last' : undefined);
+    }
+  });
+  menu?.addEventListener('keydown', (e) => {
+    const i = index();
+    if (e.key === 'ArrowDown') focusOpt(i + 1);
+    else if (e.key === 'ArrowUp') focusOpt(i - 1);
+    else if (e.key === 'Home') focusOpt(0);
+    else if (e.key === 'End') focusOpt(opts.length - 1);
+    else if (e.key === ' ' || e.key === 'Enter') (document.activeElement as HTMLElement)?.click();
+    else if (e.key === 'Escape') close();
+    else if (e.key === 'Tab') return close(false);
+    else return;
+    e.preventDefault();
+  });
+  opts.forEach((o) => {
+    o.addEventListener('click', (e) => {
+      e.preventDefault();
+      show(o.dataset.opt!);
+      close();
+    });
+    o.addEventListener('pointermove', () => o !== document.activeElement && o.focus({ preventScroll: true }));
+  });
+  addEventListener('resize', () => isOpen() && place());
+  addEventListener('scroll', () => isOpen() && place(), { passive: true });
+
   document.querySelectorAll<HTMLElement>('[data-area-pick]').forEach((b) =>
     b.addEventListener('click', () => show(b.dataset.areaPick!, !!b.closest('.others'))),
   );
-  let started = false;
-  if (select) {
-    show(select.value);
+  if (current) {
+    show(current);
     started = true;
-    document.fonts?.ready.then(fit);
-    addEventListener('resize', fit);
   }
 </script>
 
@@ -255,43 +352,188 @@ const tall = (img: ImageMetadata) => img.height > img.width;
     letter-spacing: -0.045em;
     view-transition-name: headline;
   }
+  /* La opción elegida, subrayada con el color de su tipo de trabajo; si no cabe, parte en líneas. */
   .pick {
-    position: relative;
-    display: inline-block;
-    max-width: 100%;
-  }
-  .pick select {
-    appearance: none;
-    max-width: 100%;
-    padding: 0 0.9em 0.04em 0.18em;
+    display: inline;
+    padding: 0;
     border: 0;
-    background: var(--ar);
-    color: var(--ink);
+    background: none;
+    color: inherit;
     font: inherit;
     letter-spacing: inherit;
-    line-height: 1.08;
+    text-align: start;
     cursor: pointer;
+  }
+  .pick:focus-visible {
+    outline: none;
+  }
+  .pick:focus-visible .hl {
+    outline: 3px solid var(--ink);
+    outline-offset: 4px;
+  }
+  .hl {
+    padding: 0 0.12em 0.02em 0.16em;
+    background: var(--ar);
+    color: var(--ink);
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
     transition: background-color 300ms ease;
   }
-  .pick::after {
-    content: '';
-    position: absolute;
-    right: 0.32em;
-    top: 50%;
-    width: 0.24em;
-    height: 0.24em;
-    border-right: 0.08em solid currentColor;
-    border-bottom: 0.08em solid currentColor;
-    transform: translateY(-70%) rotate(45deg);
-    pointer-events: none;
+  .hl :global(.chev) {
+    display: inline-block;
+    width: 0.62em;
+    height: 0.62em;
+    margin-left: 0.08em;
+    vertical-align: 0.02em;
+    stroke-width: 2.2;
+    transition: transform 260ms var(--ease);
   }
-  .pick :global(.meter) {
-    position: absolute;
-    left: 0;
-    top: 0;
-    visibility: hidden;
-    white-space: pre;
-    pointer-events: none;
+  .pick[aria-expanded='true'] .hl :global(.chev) {
+    transform: rotate(180deg);
+  }
+  @media (hover: hover) {
+    .pick:hover .hl :global(.chev) {
+      transform: translateY(0.06em);
+    }
+    .pick[aria-expanded='true']:hover .hl :global(.chev) {
+      transform: rotate(180deg);
+    }
+  }
+
+  /* El menú: una ficha oscura en la capa superior con las cinco respuestas posibles. */
+  .menu {
+    width: min(560px, calc(100vw - 32px));
+    max-height: calc(100svh - 32px);
+    margin: auto;
+    padding: 8px;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+    scrollbar-color: color-mix(in oklab, var(--paper) 30%, transparent) transparent;
+    border: 0;
+    border-radius: 14px;
+    background: var(--ink);
+    color: var(--paper);
+    box-shadow: 0 24px 60px -18px rgb(26 20 32 / 0.45);
+    opacity: 1;
+    transform: none;
+    transform-origin: top left;
+    transition:
+      opacity 180ms ease,
+      transform 220ms var(--ease),
+      overlay 220ms allow-discrete,
+      display 220ms allow-discrete;
+  }
+  .menu.placed {
+    position: fixed;
+    inset: auto;
+    margin: 0;
+  }
+  .menu[data-side='up'] {
+    transform-origin: bottom left;
+  }
+  .menu:not(:popover-open) {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.97);
+  }
+  @starting-style {
+    .menu:popover-open {
+      opacity: 0;
+      transform: translateY(-6px) scale(0.97);
+    }
+  }
+  .menu::backdrop {
+    background: transparent;
+  }
+  .opt {
+    position: relative;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 16px 14px 14px;
+    border-radius: 9px;
+    color: inherit;
+    text-decoration: none;
+    outline: none;
+    transition:
+      background-color 160ms ease,
+      color 160ms ease;
+  }
+  .opt + .opt {
+    margin-top: 2px;
+  }
+  .dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--c);
+    transition: transform 200ms var(--ease);
+  }
+  .say {
+    display: grid;
+    gap: 3px;
+    min-width: 0;
+  }
+  .say b {
+    font-size: clamp(20px, 1rem + 0.9vw, 26px);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+  }
+  .say small {
+    overflow: hidden;
+    color: color-mix(in oklab, currentColor 62%, transparent);
+    font-size: 14px;
+    line-height: 1.35;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .opt :global(.tick) {
+    opacity: 0;
+    transform: scale(0.6);
+    transition:
+      opacity 160ms ease,
+      transform 220ms var(--ease);
+  }
+  .opt[aria-selected='true'] :global(.tick) {
+    opacity: 1;
+    transform: none;
+  }
+  .opt:focus-visible,
+  .opt:focus {
+    background: var(--c);
+    color: var(--ink);
+  }
+  .opt:focus .dot {
+    transform: scale(0);
+  }
+  .opt:active {
+    transform: scale(0.99);
+  }
+  @media (max-width: 480px) {
+    .menu {
+      padding: 6px;
+    }
+    .opt {
+      gap: 12px;
+      padding: 11px 12px 11px 12px;
+    }
+    .dot {
+      width: 10px;
+      height: 10px;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .menu,
+    .menu:not(:popover-open) {
+      transform: none;
+    }
+    @starting-style {
+      .menu:popover-open {
+        transform: none;
+      }
+    }
   }
   .quick {
     display: flex;
